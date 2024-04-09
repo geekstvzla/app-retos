@@ -3,7 +3,9 @@
     <img :alt="props.data.event_name" :src="coverImage" class="card-img-top" />
     <div class="card-body">
       <h5 class="card-title">{{ props.data.event_name }}</h5>
-      <router-link :to="{ name: 'event', params: linkParams }" class="btn btn-primary d-block"
+      <router-link
+        :to="{ name: 'event', params: { event_id: props.data.event_id } }"
+        class="btn btn-primary d-block"
         >Ver más información</router-link
       >
     </div>
@@ -26,14 +28,8 @@ export default defineComponent({
       '/' +
       props.data.event_cover_image
 
-    const linkParams = {
-      description: props.data.event_name,
-      id: props.data.event_id
-    }
-
     return {
       coverImage,
-      linkParams,
       props
     }
   }
