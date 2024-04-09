@@ -21,7 +21,7 @@ const router = createRouter({
       component: Events,
       children: [
         {
-          path: 'events/:event_id?',
+          path: 'event/:event_id?',
           name: 'event',
           component: Event
         }
