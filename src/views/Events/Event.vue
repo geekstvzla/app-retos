@@ -2,13 +2,18 @@
     <div class="container-lg">
         <div class="row justify-content-center">
             <div class="col-12 col-md-10">
+                <h2 class="title">{{ route.params.event_title }}</h2>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-4">
                 <img
                     :alt="route.params.event_title"
                     :src="event.event_cover_image"
                     class="card-img-top"
                 />
             </div>
-            <div class="col-12 col-md-10">
+            <div class="col-12 col-md-6">
                 <h2 class="title">{{ route.params.event_title }}</h2>
                 <!-- <Alert :closeButton="alertStore.state.close"
                        :message="alertStore.state.message"
