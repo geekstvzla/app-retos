@@ -16,7 +16,7 @@ const router = createRouter({
             component: () => import('../views/signup/ActivateUserAccount.vue')
         },
         {
-            path: '/event/:event_id/:event_title',
+            path: '/event/:event_title',
             name: 'event',
             component: Event
         },

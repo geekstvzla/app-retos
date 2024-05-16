@@ -1,10 +1,15 @@
 <template>
     <div class="container-lg">
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-10">
-                <h2 class="title">{{ route.params.event_title }}</h2>
-            </div>
-        </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <router-link :to="{ name: 'home' }"> Inicio </router-link>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    {{ route.params.event_title }}
+                </li>
+            </ol>
+        </nav>
         <div class="row justify-content-center">
             <div class="col-12 col-md-4">
                 <img
@@ -30,6 +35,7 @@
 <script>
 import { defineComponent, onBeforeMount, ref } from 'vue'
 import { onBeforeRouteLeave, useRoute } from 'vue-router'
+import { useEventStore } from '../../stores/Event.js'
 import { useUserAccountStore } from '../../stores/UserAccount.js'
 import { ajax } from '../../utils/AjaxRequest'
 import Alert from '../../components/Alert.vue'
@@ -48,7 +54,10 @@ export default defineComponent({
             next()
         })
 
-        const event = ref()
+        const event = ref({
+            event_cover_image: ''
+        })
+        const eventStore = useEventStore()
         const route = useRoute()
         const userAccount = useUserAccountStore()
 
@@ -56,7 +65,7 @@ export default defineComponent({
             let ajaxData = {
                 method: 'get',
                 params: {
-                    eventId: route.params.event_id
+                    eventId: eventStore.state.id
                 },
                 url: import.meta.env.VITE_API_BASE_URL + '/events/event-data'
             }
@@ -68,10 +77,9 @@ export default defineComponent({
                         event.value.event_cover_image =
                             import.meta.env.VITE_API_BASE_URL +
                             '/images/events/' +
-                            route.params.event_id +
+                            eventStore.state.id +
                             '/' +
                             event.value.event_cover_image
-                        console.log(event.value.event_cover_image)
                     } else {
                         console.log('error')
                         throw {
