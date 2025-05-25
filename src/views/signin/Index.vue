@@ -1,90 +1,58 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-12 col-md-8 col-lg-6 col-xl-4">
-                <h3 class="title">{{ translation.signIn.title }}</h3>
-                <form>
-                    <div :class=" (v$.email.$errors.length > 0) ? 'field-error input-group mb-2' : 'input-group mb-2'">
-                        <label class="form-label">{{ translation.signIn.inputs.email.label }}</label>
-                        <span class="input-group-text">
-                            <i class="bi bi-person"></i>
-                        </span>
-                        <input class="form-control"
-                               :disabled="attrs.email.disabled"
-                               id="email"
-                               type="text"
-                               v-model="data.email">
-                        <div class="error-msg" v-for="error of v$.email.$errors" :key="error.$uid">
-                            <p>{{ error.$message }}</p>
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <h3 class="title">{{ t('title') }}</h3>
+                <div id="login-carousel" class="carousel slide">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <EmailForm @response="generatedAccessCode" 
+                                       :is-visible="forms.email.visible"/>
                         </div>
-                  </div>
-                  <div :class=" (v$.password.$errors.length > 0) ? 'field-error input-group mb-2' : 'input-group mb-2'">
-                      <label class="form-label">{{ translation.signIn.inputs.password.label }}</label>
-                      <span class="input-group-text">
-                          <i class="bi bi-lock"></i>
-                      </span>
-                      <input class="form-control"
-                             :disabled="attrs.password.disabled"
-                             id="password"
-                             :type="attrs.password.type"
-                             v-model="data.password">
-                     <span class="input-group-text">
-                         <i @click="passwordType" :class="'bi bi-'+attrs.password.seeClass"></i>
-                     </span>
-                      <div class="error-msg" v-for="error of v$.password.$errors" :key="error.$uid">
-                          <p>{{ error.$message }}</p>
-                      </div>
-                  </div>
-                  <div class="d-grid">
-                      <button :disabled="attrs.saveButton.disabled"
-                              @click="login"
-                              class="btn btn-filled"
-                              id="btn-sign-in"
-                              type="button"
-                              v-html="attrs.saveButton.html"></button>
-                      <button class="btn btn-forgot-password"
-                              data-bs-target="#recoverPassword"
-                              data-bs-toggle="modal"
-                              type="button">{{ translation.signIn.forgotYourPassword }}</button>
-                      <Alert :options="alertProps" />
-                  </div>
-                  <div class="d-grid wrapper-sign-up">
-                    <span class="text-center">{{ translation.signIn.areYouNotRegisteredYet }}</span>
-                    <router-link :to="{ name: 'sign-up' }" class="btn btn-sign-up">{{ translation.signIn.signUp }}</router-link>
-                  </div>
-                </form>
+                        <div class="carousel-item">
+                            <AccessCodeForm @goBack="goToEmailFrom" 
+                                            @response="loginGranted"
+                                            :email="forms.accessCode.email" 
+                                            :is-visible="forms.accessCode.visible" />
+                        </div>
+                    </div>
+                </div>
+                <div class="d-grid">
+                    <Alert :options="alertProps" />
+                </div>
+                <div class="d-grid wrapper-sign-up">
+                    <span class="text-center">{{ t('areYouNotRegisteredYet') }}</span>
+                    <router-link :to="{ name: 'sign-up' }" class="btn btn-link btn-sign-up">{{ t('signUp') }}</router-link>
+                </div>
             </div>
         </div>
-        <RecoverPass />
     </div>
 </template>
 
 <script>
 
-import { defineComponent, onMounted, reactive } from 'vue'
-import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
-import useVuelidate from '@vuelidate/core'
-import { helpers, required } from '@vuelidate/validators'
-import Alert from '../../components/Alert.vue'
-import RecoverPass from './RecoverPassword.vue'
-import { useEncryptionStore } from '../../stores/encryption.js'
-import { useTranslatorStore } from '../../stores/Translator.js'
-import { useUserAccountStore } from '../../stores/UserAccount.js'
-import { ajax } from '../../utils/AjaxRequest'
+import { defineComponent, onMounted, reactive, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import en from './langs/IndexEng';
+import es from './langs/IndexEsp';
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
+import Alert from '../../components/Alert.vue';
+import { useUserAccountStore } from '../../stores/UserAccount.js';
+import * as bootstrap from 'bootstrap';
+import AccessCodeForm from './AccessCodeForm.vue';
+import EmailForm from './EmailForm.vue';
 
 export default defineComponent({
     components: {
+        AccessCodeForm,
         Alert,
-        RecoverPass
+        EmailForm
     },
     setup() {
 
         onMounted(() => {
-
-            attrs.saveButton.html = attrs.saveButton.initHtml
-            attrs.saveButton.disabled = false
-            attrs.email.disabled = false
-            attrs.password.disabled = false
+            
+            carousel.value = new bootstrap.Carousel('#login-carousel');
 
             if(route.query.message) {
 
@@ -92,12 +60,31 @@ export default defineComponent({
                     message: route.query.message,
                     show: true,
                     type: route.query.type_response
-                }
-                Object.assign(alertProps, alertData)
+                };
+                Object.assign(alertProps, alertData);
 
+            };
+
+        });
+        
+        const carousel = ref(null);
+        const forms = reactive({
+            accessCode: {
+                email: "",
+                visible: false
+            },
+            email: {
+                visible: false
             }
-
-        })
+        });
+        const userAccountStore = useUserAccountStore();
+        const messages = {
+            en: en,
+            es: es
+        };
+        const { t } = useI18n({
+            messages
+        });
 
         const alertProps = reactive({
             iconCloseButton: false,
@@ -105,193 +92,67 @@ export default defineComponent({
             show: false,
             timer: 0,
             type: null
-        })
-        const encryptionStore = useEncryptionStore()
-        const route = useRoute()
-        const router = useRouter()
-        const userAccountStore = useUserAccountStore()
-        const translation = useTranslatorStore().translation(userAccountStore.state.langId)
-
-        const data = reactive({
-            email: "",
-            password: ""
-        })
-        
-        const attrs = reactive({
-            saveButton:{
-                disabled: true,
-                html: "",
-                initHtml: translation.signIn.btnInitText,
-                loadingHtml: '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only"> '+translation.signIn.btnLoadingText+'</span>'
-            },
-            email: {
-                disabled: true
-            },
-            password: {
-                disabled: true,
-                seeClass: "eye",
-                type: "password"
-            }
         });
-        
-        const rules = {
-            email: { required: helpers.withMessage(translation.validator.required, required) },
-            password: { required: helpers.withMessage(translation.validator.required, required) }
-        }
-
-        const v$ = useVuelidate(rules, data, { $scope: false })
+        const route = useRoute();
+        const router = useRouter();
         
         onBeforeRouteLeave((to, from, next) => {
-            alertProps.show = false
+
+            alertProps.show = false;
             next();
-        })
 
-        async function login() {
+        });
 
-            alertProps.show = false
+        const generatedAccessCode = (data) => {
+            
+            Object.assign(alertProps, data.alertData);
 
-            let isFormCorrect = await this.v$.$validate()
-            if(isFormCorrect) {
+            if(data.alertData.type === "success") {
 
-                attrs.saveButton.disabled = true
-                attrs.saveButton.html =  attrs.saveButton.loadingHtml
-                
-                let ajaxData = {
-                    method: "post",
-                    params: {
-                        email: encryptionStore.encrypt(data.email),
-                        langId: userAccountStore.state.langId,
-                        password: encryptionStore.encrypt(data.password)
-                    },
-                    url: import.meta.env.VITE_API_BASE_URL+"/users/sign-in"
-                }
-              
-                ajax(ajaxData)
-                .then(function (response) {
-                
-                    if(response.status === 200 && response.data.response) {
-
-                        if(response.data.response.statusCode === 1) {
-                            
-                            setTimeout(() => {
-                                
-                                sessionData(response.data.response)
-                                router.push({ name: "home" });
-
-                            }, 3000)
-
-                        } else if(response.data.response.statusCode === 2) {
-
-                            var message = response.data.response.message
-                            var typeMessage = "warning"
-
-                        } else if(response.data.response.statusCode === 3) {
-
-                            var message = translation.signIn.alert.accountPendingVerification
-                            var typeMessage = "warning"
-
-                        } else if(response.data.response.statusCode === 4) {
-
-                            var message = translation.signIn.alert.invalidPassword
-                            var typeMessage = "warning"
-
-                        } else {
-
-                            var message = translation.signIn.alert.error
-                            var typeMessage = "error"
-
-                        }
-
-                        if(response.data.response.statusCode !== 1) {
-
-                            let alertData = {
-                                message: message,
-                                show: true,
-                                type: typeMessage
-                            }
-                            Object.assign(alertProps, alertData)
-
-                            attrs.saveButton.disabled = false
-                            attrs.saveButton.html = attrs.saveButton.initHtml
-
-                        }
-
-                    } else if(response.status === 200 && !response.data.response) {
-
-                        throw {
-                            message: translation.signIn.alert.error,
-                            type: "error"
-                        }
-
-                    } else {
-
-                        throw {
-                            close: true,
-                            message: translation.signIn.alert.error,
-                            timer: true,
-                            timerSeconds: 3,
-                            type: "error"
-                        }
-                        
-                    }
-
-                })
-                .catch(error => {
-
-                    attrs.saveButton.disabled = false
-                    attrs.saveButton.html =  attrs.saveButton.initHtml
-
-                    if(error.message) {
-
-                        let alertData = {
-                            close: (error.close) ? error.close : false,
-                            message: error.message,
-                            show: true,
-                            timer: (error.timer) ? error.timer : false,
-                            timerSeconds: (error.timerSeconds) ? error.timerSeconds : 0,
-                            type: (error.type) ? error.type : "error"
-                        }
-
-                        Object.assign(alertProps, alertData)
-
-                    }
-
-                })
+                forms.accessCode.email = data.email;
+                forms.accessCode.visible = true;
+                forms.email.visible = false;
+                carousel.value.next();
 
             }
 
-        }
+        };
 
-        const passwordType = () => {
-            attrs.password.type = (attrs.password.type === "password") ? "text" : "password"
-            attrs.password.seeClass = (attrs.password.type === "password") ? "eye" : "eye-slash"
-        }
+        const goToEmailFrom = () => {
+           
+            forms.email.visible = true;
+            carousel.value.prev();
+            alertProps.show = false;
 
+        };
+
+        const loginGranted = (data) => {
+
+        }
+    
         const sessionData = (data) => {
 
             localStorage.setItem("userAvatar", data.avatar)
             localStorage.setItem("userId", data.userId)
-            localStorage.setItem("userNickname", data.nickname)
+            localStorage.setItem("username", data.username)
 
             userAccountStore.$patch((store) => {
                 store.state.avatar = data.avatar
                 store.state.id = data.userId
-                store.state.nickname = data.nickname
+                store.state.username = data.username
             })
 
         }
 
         return {
             alertProps,
-            attrs,
-            data,
-            encryptionStore,
-            login,
-            passwordType,
+            generatedAccessCode,
+            goToEmailFrom,
+            forms,
+            loginGranted,
             route,
-            translation,
-            userAccountStore,
-            v$
+            t,
+            userAccountStore
         }
 
     }
@@ -300,4 +161,3 @@ export default defineComponent({
 </script>
 
 <style lang="less" src="../../assets/less/signIn/Index.less" scoped></style>
-../../stores/Translator.js

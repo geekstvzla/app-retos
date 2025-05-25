@@ -7,15 +7,15 @@ export const useUserAccountStore = defineStore('userAccount', () => {
         avatar: (localStorage.getItem('userAvatar')) ? localStorage.getItem('userAvatar') : null,
         email: null,
         id: (localStorage.getItem('userId')) ? localStorage.getItem('userId') : null,
-        langId: 1,
+        langId: 'es',
         logged: (localStorage.getItem('userId')) ? true : false,
-        nickname: (localStorage.getItem('userNickname')) ? localStorage.getItem('userNickname') : null
+        username: (localStorage.getItem('username')) ? localStorage.getItem('username') : null
     })
 
     const updateState = (userData = {}) => {
         state.avatar = (userData.avatar) ? userData.avatar : null
         state.id = (userData.id) ? userData.id : null
-        state.nickname = (userData.nickname) ? userData.nickname : null
+        state.username = (userData.username) ? userData.username : null
     }
 
     return { state, updateState }

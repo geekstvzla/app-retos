@@ -1,11 +1,11 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-12 col-md-8 col-lg-6 col-xl-4">
-                <h3 class="title">{{ translation.signUp.title }}</h3>
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <h3 class="title">{{ t('title') }}</h3>
                 <form>
                     <div :class=" (v$.email.$errors.length > 0) ? 'field-error input-group mb-2' : 'input-group mb-2'">
-                        <label class="form-label">{{ translation.signUp.inputs.email.label }}</label>
+                        <label class="form-label">{{ t('inputs.email.label') }}</label>
                         <span class="input-group-text">
                             <i class="bi bi-envelope-at"></i>
                         </span>
@@ -18,42 +18,8 @@
                             <p>{{ error.$message }}</p>
                         </div>
                   </div>
-                  <div :class=" (v$.password.$errors.length > 0) ? 'field-error input-group mb-2' : 'input-group mb-2'">
-                      <label class="form-label">{{ translation.signUp.inputs.password.label }}</label>
-                      <span class="input-group-text">
-                          <i class="bi bi-lock"></i>
-                      </span>
-                      <input class="form-control"
-                             :disabled="attrs.password.disabled"
-                             id="password"
-                             :type="attrs.password.type"
-                             v-model.trim="v$.password.$model">
-                     <span class="input-group-text">
-                         <i @click="passwordType('password')" :class="'bi bi-'+attrs.password.seeClass"></i>
-                     </span>
-                      <div class="error-msg" v-for="error of v$.password.$errors" :key="error.$uid">
-                          <p>{{ error.$message }}</p>
-                      </div>
-                  </div>
-                  <div :class=" (v$.confirmPassword.$errors.length > 0) ? 'field-error input-group mb-2' : 'input-group mb-2'">
-                      <label class="form-label">{{ translation.signUp.inputs.confirmPassword.label }}</label>
-                      <span class="input-group-text">
-                          <i class="bi bi-lock"></i>
-                      </span>
-                      <input class="form-control"
-                             :disabled="attrs.confirmPassword.disabled"
-                             id="confirm-password"
-                             :type="attrs.confirmPassword.type"
-                             v-model="v$.confirmPassword.$model">
-                     <span class="input-group-text">
-                         <i @click="passwordType('confirmPassword')" :class="'bi bi-'+attrs.confirmPassword.seeClass"></i>
-                     </span>
-                      <div class="error-msg" v-for="error of v$.confirmPassword.$errors" :key="error.$uid">
-                          <p>{{ error.$message }}</p>
-                      </div>
-                  </div>
                   <div :class=" (v$.username.$errors.length > 0) ? 'field-error input-group mb-2' : 'input-group mb-2'">
-                      <label class="form-label">{{ translation.signUp.inputs.username.label }}</label>
+                      <label class="form-label">{{ t('inputs.username.label') }}</label>
                       <span class="input-group-text">
                           <i class="bi bi-person"></i>
                       </span>
@@ -69,9 +35,6 @@
                           </div>
                           <i :class="'bi '+attrs.username.iconClass" v-else></i>
                       </span>
-                      <div id="usernameHelpBlock" class="form-text">
-                          {{ translation.signUp.inputs.username.helpText }}
-                      </div>
                       <div class="error-msg" v-for="error of v$.username.$errors" :key="error.$uid">
                           <p>{{ error.$message }}</p>
                       </div>
@@ -86,8 +49,8 @@
                       <Alert :options="alertProps" />
                   </div>
                   <div class="d-grid wrapper-sign-in">
-                      <span class="text-center">{{ translation.signUp.haveAnAccount }}</span>
-                      <router-link :to="{ name: 'sign-in' }" class="btn btn-sign-in">{{ translation.signUp.signIn }}</router-link>
+                      <span class="text-center">{{ t('haveAnAccount') }}</span>
+                      <router-link :to="{ name: 'sign-in' }" class="btn btn-link btn-sign-in">{{ t('signIn') }}</router-link>
                   </div>
                 </form>
             </div>
@@ -97,15 +60,16 @@
 
 <script>
 
-import { computed, defineComponent, onMounted, reactive, ref, watch } from 'vue'
-import useVuelidate from '@vuelidate/core'
-import { email, helpers, minLength, required, sameAs } from '@vuelidate/validators'
-import Alert from '../../components/Alert.vue'
-import { useTranslatorStore } from '../../stores/Translator.js'
-import { useEncryptionStore } from '../../stores/encryption.js'
-import { useUserAccountStore } from '../../stores/UserAccount.js'
-import { onBeforeRouteLeave, useRoute } from 'vue-router'
-import { ajax } from '../../utils/AjaxRequest'
+import { computed, defineComponent, onMounted, reactive, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import en from './langs/IndexEng';
+import es from './langs/IndexEsp';
+import useVuelidate from '@vuelidate/core';
+import { email, helpers, minLength, required } from '@vuelidate/validators';
+import Alert from '../../components/Alert.vue';
+import { useUserAccountStore } from '../../stores/UserAccount.js';
+import { onBeforeRouteLeave, useRoute } from 'vue-router';
+import { ajax } from '../../utils/AjaxRequest';
 
 export default defineComponent({
     components: {
@@ -114,13 +78,20 @@ export default defineComponent({
     setup() {
 
         onMounted(() => {
-            attrs.saveButton.html = attrs.saveButton.initHtml
-            attrs.saveButton.disabled = false
-            attrs.email.disabled = false
-            attrs.password.disabled = false
-            attrs.confirmPassword.disabled = false
-            attrs.username.disabled = false
-        })
+            attrs.saveButton.html = attrs.saveButton.initHtml;
+            attrs.saveButton.disabled = false;
+            attrs.email.disabled = false;
+            attrs.username.disabled = false;
+        });
+
+        const userAccountStore = useUserAccountStore();
+        const messages = {
+            en: en,
+            es: es
+        };
+        const { t } = useI18n({
+            messages
+        });
 
         const alertProps = reactive({
             iconCloseButton: false,
@@ -130,16 +101,11 @@ export default defineComponent({
             type: null
         })
 
-        const encryptionStore = useEncryptionStore()
-        const minLengthUsername = ref(5)
-        const route = useRoute()
-        const userAccountStore = useUserAccountStore()
-        const translation = useTranslatorStore().translation(userAccountStore.state.langId)
+        const minLengthUsername = ref(5);
+        const route = useRoute();
 
         const data = reactive({
             email: "",
-            password: "",
-            confirmPassword: "",
             username: ""
         })
 
@@ -147,21 +113,11 @@ export default defineComponent({
             saveButton: {
                 disabled: true,
                 html: "",
-                initHtml: translation.signUp.btnInitText,
-                loadingHtml: '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only"> '+translation.signUp.btnLoadingText+'</span>'
-            },
-            confirmPassword: {
-                disabled: true,
-                seeClass: "eye",
-                type: "password"
+                initHtml: t('signUpBtn.initText'),
+                loadingHtml: '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only"> '+ t('signUpBtn.loadingText') +'</span>'
             },
             email: {
                 disabled: true
-            },
-            password: {
-                disabled: true,
-                seeClass: "eye",
-                type: "password"
             },
             username: {
                 disabled: true,
@@ -198,14 +154,14 @@ export default defineComponent({
                     .then(function (response) {
 
                         attrs.username.searching = false
-                        
-                        if(response.status === 200 && response.data.response) {
+                   
+                        if(response.status === 200 && response.data) {
 
-                            let available = (response.data.response.usernameAvailable === 1) ? true : false
+                            let available = (response.data.usernameAvailable === 1) ? true : false
                             attrs.username.iconClass = (available) ? "bi-check-circle-fill" : "bi-x-circle-fill"
                             resolve(available)
 
-                        } else if(response.status === 200 && !response.data.response) {
+                        } else if(response.status === 200 && !response.data) {
 
                             throw {
                                 message: response.data.message,
@@ -227,8 +183,9 @@ export default defineComponent({
                     })
                     .catch(error => {
 
-                        attrs.saveButton.disabled = false
-                        attrs.saveButton.html =  attrs.saveButton.initHtml
+                        attrs.saveButton.disabled = false;
+                        attrs.saveButton.html =  attrs.saveButton.initHtml;
+                        attrs.username.iconClass = "bi-x-circle-fill";
 
                         if(error.message){
                             let alertData = {
@@ -257,24 +214,17 @@ export default defineComponent({
             
         }
 
-        const noSpecialChars = helpers.regex(/^[0-9a-z_.]*$/)
+        const noSpecialChars = helpers.regex(/^[0-9a-z_.]*$/);
         const rules = computed(() => ({
             email: {
-                email: helpers.withMessage(translation.validator.email, email),
-                required: helpers.withMessage(translation.validator.required, required)
-            },
-            password: {
-                minLength: helpers.withMessage(translation.validator.minLength(8), minLength(8)),
-                required: helpers.withMessage(translation.validator.required, required)
-            },
-            confirmPassword: {
-                sameAs: helpers.withMessage(translation.validator.sameAs("contraseña"),sameAs(data.password))
+                email: helpers.withMessage(t('validator.email'), email),
+                required: helpers.withMessage(t('validator.required'), required)
             },
             username: {
-                available: helpers.withMessage(translation.signUp.inputs.username.notAvailable, helpers.withAsync(checkUserExist)),
-                minLength: helpers.withMessage(translation.validator.minLength(minLengthUsername.value), minLength(minLengthUsername.value)),
-                noSpecialChars: helpers.withMessage(translation.validator.noSpecialChars, noSpecialChars),
-                required: helpers.withMessage(translation.validator.required, required)
+                available: helpers.withMessage(t('inputs.username.notAvailable'), helpers.withAsync(checkUserExist)),
+                minLength: helpers.withMessage(t('validator.minLength', { min: minLengthUsername.value }), minLength(minLengthUsername.value)),
+                noSpecialChars: helpers.withMessage(t('validator.noSpecialChars'), noSpecialChars),
+                required: helpers.withMessage(t('validator.required'), required)
             }
         }))
         const v$ = useVuelidate(rules, data)
@@ -292,43 +242,40 @@ export default defineComponent({
                 let ajaxData = {
                     method: "post",
                     params: {
-                        email: encryptionStore.encrypt(data.email),
+                        email: data.email,
                         langId: userAccountStore.state.langId,
-                        password: encryptionStore.encrypt(data.password),
-                        username: encryptionStore.encrypt(data.username)
+                        username: data.username
                     },
                     url: import.meta.env.VITE_API_BASE_URL+"/users/sign-up"
                 }
                 
                 ajax(ajaxData)
                 .then(function (response) {
+               
+                    if(response.status === 200 && response.data) {
 
-                    if(response.status === 200 && response.data.response) {
+                        attrs.saveButton.disabled = false;
+                        attrs.saveButton.html =  attrs.saveButton.initHtml;
 
-                        attrs.saveButton.disabled = false
-                        attrs.saveButton.html =  attrs.saveButton.initHtml
+                        if(response.data.statusCode === 1) {
 
-                        if(response.data.response.statusCode === 1) {
+                            data.email = "";
+                            data.username = "";
 
-                            data.email = ""
-                            data.password = ""
-                            data.confirmPassword = ""
-                            data.username = ""
+                            v$.value.$reset();
 
-                            v$.value.$reset()
+                            var message = t('alert.success');
+                            var typeMessage = "success";
 
-                            var message = translation.signUp.alert.success
-                            var typeMessage = "success"
+                        } else if(response.data.statusCode === 2) {
 
-                        } else if(response.data.response.statusCode === 2) {
-
-                            var message = translation.signUp.alert.warning
-                            var typeMessage = "warning"
+                            var message = t('alert.warning');
+                            var typeMessage = "warning";
 
                         } else {
 
-                            var message = translation.signUp.alert.error
-                            var typeMessage = "warning"
+                            var message = t('alert.error');
+                            var typeMessage = "warning";
 
                         }
 
@@ -336,13 +283,13 @@ export default defineComponent({
                             message: message,
                             show: true,
                             type: typeMessage
-                        }
-                        Object.assign(alertProps, alertData)
+                        };
+                        Object.assign(alertProps, alertData);
 
-                    } else if(response.status === 200 && !response.data.response) {
+                    } else if(response.status === 200 && !response.data) {
 
                         throw {
-                            message: translation.signUp.alert.error,
+                            message: t('alert.error'),
                             type: "warning"
                         }
 
@@ -350,7 +297,7 @@ export default defineComponent({
 
                         throw {
                             close: true,
-                            message: translation.signUp.alert.error,
+                            message: t('alert.error'),
                             timer: true,
                             timerSeconds: 3,
                             type: "error"
@@ -382,21 +329,14 @@ export default defineComponent({
 
         }
 
-        const passwordType = (input) => {
-            attrs[input].type = (attrs[input].type === "password") ? "text" : "password"
-            attrs[input].seeClass = (attrs[input].type === "password") ? "eye" : "eye-slash"
-        }
-
         return {
             alertProps,
             attrs,
             checkUserExist,
             data,
-            encryptionStore,
-            passwordType,
             route,
             signup,
-            translation,
+            t,
             userAccountStore,
             v$
         }
@@ -406,4 +346,4 @@ export default defineComponent({
 
 </script>
 
-<style lang="less" src="../../assets/less/signup/Index.less" scoped></style>
+<style lang="less" src="../../assets/less/signUp/Index.less" scoped></style>

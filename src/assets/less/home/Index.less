@@ -1,0 +1,176 @@
+@import "../Variables.less";
+
+.container {
+    min-height: calc(100vh - 70px);
+    padding-bottom: 50px;
+    padding-top: 50px;
+
+    .title {
+        margin-bottom: 10px;
+    }
+
+    form {
+        background-color: #fff;
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 30px;
+        padding: 15px;
+
+        .input-wrapper {
+
+            .input-group {
+
+                &:hover {
+
+                    .open-map {
+
+                        .bi {
+                            color: #D5483B;
+                        }
+
+                    }
+
+                }
+
+                .input-group-text {
+                    background-color: @input-background-color;
+                    border: @input-border;
+                    border-left: 0px !important;
+                    border-radius: @input-border-radius;
+                    padding: .1rem .35rem;
+                    transition: all ease .3s;
+
+                    &.open-map {
+
+                        .bi {
+                            font-size: 1.4rem;
+                        }
+
+                    }
+    
+                    &:hover {
+                        cursor: pointer;
+                    }
+        
+                }
+
+                .form-control {
+                    border-right: 0px;
+                }
+
+            }
+
+            .error-msg,
+            .form-text {
+                padding-left: 15px;
+            }
+    
+            .form-control,
+            .form-select {
+                background-color: @input-background-color;
+                border: @input-border;
+                border-radius: @input-border-radius;
+                padding-left: 15px;
+
+                &:disabled {
+                    background-color: #e9ecef;
+                }
+
+                &:focus {
+                    background-color: #fff;
+                }
+
+            }
+
+            .wrapper-products-list {
+                border: @input-border;
+                border-radius: @input-border-radius;
+                border-top-left-radius: 0px;
+                border-top-right-radius: 0px;
+            }
+
+            &.list-opened {
+                position:relative;
+
+                // Product field
+                &:nth-child(2) {
+
+                    .input-group-text {
+                        border-bottom: 0px;
+                        border-bottom-right-radius: 0px;
+                    }
+
+                    .form-control {
+                        border-bottom: 0px;
+                        border-bottom-left-radius: 0px;
+                        border-bottom-right-radius: 0px;
+                    }
+
+                }
+
+                .wrapper-products-list {
+                    background-color: #fff;
+                    position: absolute;
+                    width: calc(100% - 16px);
+                    z-index: 10;
+
+                    ul {
+                        list-style: none;
+                        margin-bottom: 0px;
+                        padding-left: 10px;
+
+                        li {
+                            padding: 10px 5px;
+
+                            &:hover {
+                                cursor: pointer;
+                            }
+
+                        }
+
+                    }
+
+                }
+                
+            }
+
+            &.field-error {
+
+                .wrapper-products-list {
+                    border-color: #cc0000;
+                }
+
+            }
+
+        }
+
+        .btn {
+            background-color: @background-color-primary;
+            border: 1px solid @btn-border-color !important;
+            border-radius: @btn-border-radius;
+            //font-size: 1rem !important;
+            font-weight: bold;
+            //padding-left: 15px !important;
+            padding: .57rem .75rem !important;
+            text-transform: uppercase;
+            width: 100%;
+
+            &:hover {
+                background-color: @background-color-primary-hover;
+                color: @btn-color-hover;
+            }
+
+            @media (width <= 766px) {
+                margin-top: 0px !important;
+                padding: 1rem .75rem;
+                
+            }
+
+        }
+
+    }
+
+    .wrapper-orders {
+        padding-top: 30px;
+    }
+
+}
