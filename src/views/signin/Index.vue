@@ -15,6 +15,12 @@
                                             :email="forms.accessCode.email" 
                                             :is-visible="forms.accessCode.visible" />
                         </div>
+                        <div class="carousel-item">
+                            <NewAccountForm @goBack="goToEmailFrom" 
+                                            @response="loginGranted"
+                                            :email="forms.accessCode.email" 
+                                            :is-visible="forms.accessCode.visible" />
+                        </div>
                     </div>
                 </div>
                 <div class="d-grid">
@@ -41,12 +47,14 @@ import { useUserAccountStore } from '../../stores/UserAccount.js';
 import * as bootstrap from 'bootstrap';
 import AccessCodeForm from './AccessCodeForm.vue';
 import EmailForm from './EmailForm.vue';
+import NewAccountForm from './NewAccountForm.vue';
 
 export default defineComponent({
     components: {
         AccessCodeForm,
         Alert,
-        EmailForm
+        EmailForm,
+        NewAccountForm
     },
     setup() {
 
