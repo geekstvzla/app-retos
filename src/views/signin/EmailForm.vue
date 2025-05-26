@@ -124,13 +124,14 @@ export default defineComponent({
           
                         let alertData = {
                             message: message,
-                            show: true,
+                            show: (response.data.statusCode !== 0) ? true : false,
                             type: typeMessage
                         };
 
                         let dataR = {
                             alertData: alertData,
-                            email: data.email
+                            email: data.email,
+                            statusCode: response.data.statusCode
                         };
                     
                         emit("response", dataR);

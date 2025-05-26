@@ -6,7 +6,7 @@
                 <div id="login-carousel" class="carousel slide">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <EmailForm @response="generatedAccessCode" 
+                            <EmailForm @response="emailFormResponse" 
                                        :is-visible="forms.email.visible"/>
                         </div>
                         <div class="carousel-item">
@@ -18,17 +18,12 @@
                         <div class="carousel-item">
                             <NewAccountForm @goBack="goToEmailFrom" 
                                             @response="loginGranted"
-                                            :email="forms.accessCode.email" 
-                                            :is-visible="forms.accessCode.visible" />
+                                            :is-visible="forms.newAccount.visible" />
                         </div>
                     </div>
                 </div>
                 <div class="d-grid">
                     <Alert :options="alertProps" />
-                </div>
-                <div class="d-grid wrapper-sign-up">
-                    <span class="text-center">{{ t('areYouNotRegisteredYet') }}</span>
-                    <router-link :to="{ name: 'sign-up' }" class="btn btn-link btn-sign-up">{{ t('signUp') }}</router-link>
                 </div>
             </div>
         </div>
@@ -83,6 +78,9 @@ export default defineComponent({
             },
             email: {
                 visible: false
+            },
+            newAccount: {
+                visible: false
             }
         });
         const userAccountStore = useUserAccountStore();
@@ -111,16 +109,30 @@ export default defineComponent({
 
         });
 
-        const generatedAccessCode = (data) => {
-            
+        const emailFormResponse = (data) => {
+
+            if(data.statusCode === 0) {
+
+                goToNewAccountForm(data.email);
+
+            } else if(data.statusCode === 1) {
+
+                generatedAccessCode(data);
+
+            }
+
             Object.assign(alertProps, data.alertData);
 
+        }
+
+        const generatedAccessCode = (data) => {
+            
             if(data.alertData.type === "success") {
 
                 forms.accessCode.email = data.email;
                 forms.accessCode.visible = true;
                 forms.email.visible = false;
-                carousel.value.next();
+                carousel.value.to(1);
 
             }
 
@@ -129,10 +141,16 @@ export default defineComponent({
         const goToEmailFrom = () => {
            
             forms.email.visible = true;
-            carousel.value.prev();
+            carousel.value.to(0);
             alertProps.show = false;
 
         };
+
+        const goToNewAccountForm = () => {
+
+            carousel.value.to(2);
+
+        }
 
         const loginGranted = (data) => {
 
@@ -154,6 +172,7 @@ export default defineComponent({
 
         return {
             alertProps,
+            emailFormResponse,
             generatedAccessCode,
             goToEmailFrom,
             forms,

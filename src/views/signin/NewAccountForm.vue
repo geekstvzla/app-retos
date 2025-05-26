@@ -20,11 +20,11 @@
                 <i class="bi bi-person"></i>
             </span>
             <input class="form-control"
-                    :disabled="attrs.username.disabled"
-                    id="username"
-                    @keyup="checkUserExist"
-                    type="text"
-                    v-model="v$.username.$model">
+                   :disabled="attrs.username.disabled"
+                   id="username"
+                   @keyup="checkUserExist"
+                   type="text"
+                   v-model="v$.username.$model">
             <span class="input-group-text">
                 <div class="spinner-border spinner-border-sm" role="status" v-if="attrs.username.searching">
                     <span class="visually-hidden">Loading...</span>
@@ -53,7 +53,7 @@ import { useI18n } from 'vue-i18n';
 import en from './langs/NewAccountFormEng.js';
 import es from './langs/NewAccountFormEsp.js';
 import useVuelidate from '@vuelidate/core';
-import { helpers, required } from '@vuelidate/validators';
+import { email, helpers, minLength, required } from '@vuelidate/validators';
 import { ajax } from '../../utils/AjaxRequest.js';
 import { useUserAccountStore } from '../../stores/UserAccount.js';
 
