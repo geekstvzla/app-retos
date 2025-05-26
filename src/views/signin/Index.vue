@@ -18,6 +18,7 @@
                         <div class="carousel-item">
                             <NewAccountForm @goBack="goToEmailFrom" 
                                             @response="loginGranted"
+                                            :email="forms.newAccount.email" 
                                             :is-visible="forms.newAccount.visible" />
                         </div>
                     </div>
@@ -80,6 +81,7 @@ export default defineComponent({
                 visible: false
             },
             newAccount: {
+                email: "",
                 visible: false
             }
         });
@@ -113,7 +115,8 @@ export default defineComponent({
 
             if(data.statusCode === 0) {
 
-                goToNewAccountForm(data.email);
+                forms.newAccount.email(data.email);
+                goToNewAccountForm();
 
             } else if(data.statusCode === 1) {
 
