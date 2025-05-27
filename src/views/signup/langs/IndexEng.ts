@@ -4,7 +4,7 @@ export const IndexEng = {
         success: "You have successfully registered!. An email has been sent to you to verify your account.",
         warning: "The email is already registered!"
     },
-    haveAnAccount: "Do you already have an account?",
+    backBtn: "Back",
     inputs: {
         email: {
             label: "Email"
@@ -15,12 +15,10 @@ export const IndexEng = {
             
         }
     },
-    signIn: "Login",
     signUpBtn: {
         initText: "Register",
         loadingText: "Loading"
     },
-    title: "Sign Up",
     validator: {
         alphaNum: "Accepts only alphanumerics",
         email: "Incorrect email format",
@@ -29,5 +27,4 @@ export const IndexEng = {
         noSpecialChars: "Only lowercase letters, hyphen, period and numbers are accepted, without spaces"
     }
 }
-
 export default IndexEng

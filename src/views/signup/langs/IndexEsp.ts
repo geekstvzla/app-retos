@@ -4,7 +4,7 @@ export const IndexEsp = {
         success: "Te haz registrado con éxito!. Se te ha enviado un correo para verificar tu cuenta.",
         warning: "El correo ya se encuentra resgistrado!"
     },
-    haveAnAccount: "¿Ya tienes una cuenta?",
+    backBtn: "Atrás",
     inputs: {
         email: {
             label: "Correo electrónico"
@@ -14,12 +14,10 @@ export const IndexEsp = {
             notAvailable: "Usuario no disponible"
         }
     },
-    signIn: "Entrar",
     signUpBtn: {
         initText: "Registrarme",
         loadingText: "Cargando"
     },
-    title: "Registro",
     validator: {
         alphaNum: "Solo acepta alfanuméricos",
         email: "Formato de correo electrónico incorrecto",
@@ -28,5 +26,6 @@ export const IndexEsp = {
         noSpecialChars: "Sólo se aceptan letras minúsculas, guión, punto y números, sin espacios"
     }
 }
+
 
 export default IndexEsp

@@ -1,87 +1,84 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-                <h3 class="title">{{ t('title') }}</h3>
-                <form>
-                    <div :class=" (v$.email.$errors.length > 0) ? 'field-error input-group mb-2' : 'input-group mb-2'">
-                        <label class="form-label">{{ t('inputs.email.label') }}</label>
-                        <span class="input-group-text">
-                            <i class="bi bi-envelope-at"></i>
-                        </span>
-                        <input class="form-control"
-                               :disabled="attrs.email.disabled"
-                               id="email"
-                               type="text"
-                               v-model.trim="v$.email.$model">
-                        <div class="error-msg" v-for="error of v$.email.$errors" :key="error.$uid">
-                            <p>{{ error.$message }}</p>
-                        </div>
-                  </div>
-                  <div :class=" (v$.username.$errors.length > 0) ? 'field-error input-group mb-2' : 'input-group mb-2'">
-                      <label class="form-label">{{ t('inputs.username.label') }}</label>
-                      <span class="input-group-text">
-                          <i class="bi bi-person"></i>
-                      </span>
-                      <input class="form-control"
-                             :disabled="attrs.username.disabled"
-                             id="username"
-                             @keyup="checkUserExist"
-                             type="text"
-                             v-model="v$.username.$model">
-                      <span class="input-group-text">
-                          <div class="spinner-border spinner-border-sm" role="status" v-if="attrs.username.searching">
-                              <span class="visually-hidden">Loading...</span>
-                          </div>
-                          <i :class="'bi '+attrs.username.iconClass" v-else></i>
-                      </span>
-                      <div class="error-msg" v-for="error of v$.username.$errors" :key="error.$uid">
-                          <p>{{ error.$message }}</p>
-                      </div>
-                  </div>
-                  <div class="d-grid">
-                      <button :disabled="attrs.saveButton.disabled"
-                              @click="signup"
-                              class="btn btn-filled"
-                              id="btn-sign-up"
-                              type="button"
-                              v-html="attrs.saveButton.html"></button>
-                      <Alert :options="alertProps" />
-                  </div>
-                  <div class="d-grid wrapper-sign-in">
-                      <span class="text-center">{{ t('haveAnAccount') }}</span>
-                      <router-link :to="{ name: 'sign-in' }" class="btn btn-link btn-sign-in">{{ t('signIn') }}</router-link>
-                  </div>
-                </form>
+    <form>
+        <div :class=" (v$.email.$errors.length > 0) ? 'field-error input-group mb-2' : 'input-group mb-2'">
+            <label class="form-label">{{ t('inputs.email.label') }}</label>
+            <span class="input-group-text">
+                <i class="bi bi-envelope-at"></i>
+            </span>
+            <input class="form-control"
+                    :disabled="attrs.email.disabled"
+                    id="email"
+                    type="text"
+                    v-model.trim="v$.email.$model">
+            <div class="error-msg" v-for="error of v$.email.$errors" :key="error.$uid">
+                <p>{{ error.$message }}</p>
             </div>
         </div>
-    </div>
+        <div :class=" (v$.username.$errors.length > 0) ? 'field-error input-group mb-2' : 'input-group mb-2'">
+            <label class="form-label">{{ t('inputs.username.label') }}</label>
+            <span class="input-group-text">
+                <i class="bi bi-person"></i>
+            </span>
+            <input class="form-control"
+                   :disabled="attrs.username.disabled"
+                   id="username"
+                   @keyup="checkUserExist"
+                   type="text"
+                   v-model="v$.username.$model">
+            <span class="input-group-text">
+                <div class="spinner-border spinner-border-sm" role="status" v-if="attrs.username.searching">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <i :class="'bi '+attrs.username.iconClass" v-else></i>
+            </span>
+            <div class="error-msg" v-for="error of v$.username.$errors" :key="error.$uid">
+                <p>{{ error.$message }}</p>
+            </div>
+        </div>
+        <div class="d-grid">
+            <div class="btn-group" role="group">
+                <button :disabled="attrs.goBackBtn.disabled"
+                        @click="goBack"
+                        class="btn"
+                        id="btn-sign-in"
+                        type="button">{{ t('backBtn') }}</button>
+                <button :disabled="attrs.signUpBtn.disabled"
+                        @click="login"
+                        class="btn"
+                        id="btn-sign-in"
+                        type="button"
+                        v-html="attrs.signUpBtn.html"></button>
+            </div>
+        </div>
+    </form>
 </template>
 
 <script>
 
-import { computed, defineComponent, onMounted, reactive, ref, watch } from 'vue';
+import { computed, defineComponent, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import en from './langs/IndexEng';
 import es from './langs/IndexEsp';
 import useVuelidate from '@vuelidate/core';
 import { email, helpers, minLength, required } from '@vuelidate/validators';
-import Alert from '../../components/Alert.vue';
+import { ajax } from '../../utils/AjaxRequest.js';
 import { useUserAccountStore } from '../../stores/UserAccount.js';
-import { onBeforeRouteLeave, useRoute } from 'vue-router';
-import { ajax } from '../../utils/AjaxRequest';
 
 export default defineComponent({
-    components: {
-        Alert
+    emits: ['goBack', 'response'],
+    props: {
+        email: String,
+        isVisible: Boolean
     },
-    setup() {
+    setup(props, { emit }) {
 
-        onMounted(() => {
-            attrs.saveButton.html = attrs.saveButton.initHtml;
-            attrs.saveButton.disabled = false;
-            attrs.email.disabled = false;
-            attrs.username.disabled = false;
+        watch(() => [
+            props.isVisible
+        ], (newValue, oldValue) => {
+          
+            attrs.email.disabled = (newValue[0]) ? false : true;
+            attrs.requestAccessCodeButton.disabled = (newValue[0]) ? false : true;
+
         });
 
         const userAccountStore = useUserAccountStore();
@@ -93,16 +90,7 @@ export default defineComponent({
             messages
         });
 
-        const alertProps = reactive({
-            iconCloseButton: false,
-            message: "",
-            show: false,
-            timer: 0,
-            type: null
-        })
-
         const minLengthUsername = ref(5);
-        const route = useRoute();
 
         const data = reactive({
             email: "",
@@ -110,7 +98,10 @@ export default defineComponent({
         })
 
         const attrs = reactive({
-            saveButton: {
+            goBackBtn: {
+                disabled: false
+            },
+            signUpBtn: {
                 disabled: true,
                 html: "",
                 initHtml: t('signUpBtn.initText'),
@@ -125,11 +116,6 @@ export default defineComponent({
                 searching: false
             }
         });
-
-        onBeforeRouteLeave((to, from, next) => {
-            alertProps.show = false
-            next();
-        })
 
         const checkUserExist = () => {
 
@@ -183,8 +169,8 @@ export default defineComponent({
                     })
                     .catch(error => {
 
-                        attrs.saveButton.disabled = false;
-                        attrs.saveButton.html =  attrs.saveButton.initHtml;
+                        attrs.signUpBtn.disabled = false;
+                        attrs.signUpBtn.html =  attrs.signUpBtn.initHtml;
                         attrs.username.iconClass = "bi-x-circle-fill";
 
                         if(error.message){
@@ -196,7 +182,7 @@ export default defineComponent({
                                 timerSeconds: (error.timerSeconds) ? error.timerSeconds : 0,
                                 type: (error.type) ? error.type : "error"
                             }
-                            Object.assign(alertProps, alertData)
+                            //Object.assign(alertProps, alertData)
                         }
 
                         reject(false)
@@ -212,7 +198,7 @@ export default defineComponent({
 
             })
             
-        }
+        };
 
         const noSpecialChars = helpers.regex(/^[0-9a-z_.]*$/);
         const rules = computed(() => ({
@@ -227,17 +213,20 @@ export default defineComponent({
                 required: helpers.withMessage(t('validator.required'), required)
             }
         }))
-        const v$ = useVuelidate(rules, data)
+        const v$ = useVuelidate(rules, data);
+
+        const goBack = () => {
+            emit('goBack');
+        };
 
         async function signup() {
 
-            alertProps.show = false
             const isFormCorrect = await this.v$.$validate()
       
             if(isFormCorrect){
       
-                attrs.saveButton.disabled = true
-                attrs.saveButton.html =  attrs.saveButton.loadingHtml
+                attrs.signUpBtn.disabled = true
+                attrs.signUpBtn.html =  attrs.signUpBtn.loadingHtml
                 
                 let ajaxData = {
                     method: "post",
@@ -254,8 +243,8 @@ export default defineComponent({
                
                     if(response.status === 200 && response.data) {
 
-                        attrs.saveButton.disabled = false;
-                        attrs.saveButton.html =  attrs.saveButton.initHtml;
+                        attrs.signUpBtn.disabled = false;
+                        attrs.signUpBtn.html =  attrs.signUpBtn.initHtml;
 
                         if(response.data.statusCode === 1) {
 
@@ -284,7 +273,7 @@ export default defineComponent({
                             show: true,
                             type: typeMessage
                         };
-                        Object.assign(alertProps, alertData);
+                        //Object.assign(alertProps, alertData);
 
                     } else if(response.status === 200 && !response.data) {
 
@@ -308,8 +297,8 @@ export default defineComponent({
                 })
                 .catch(error => {
 
-                    attrs.saveButton.disabled = false
-                    attrs.saveButton.html =  attrs.saveButton.initHtml
+                    attrs.signUpBtn.disabled = false
+                    attrs.signUpBtn.html =  attrs.signUpBtn.initHtml
 
                     if(error.message){
                         let alertData = {
@@ -320,7 +309,7 @@ export default defineComponent({
                             timerSeconds: (error.timerSeconds) ? error.timerSeconds : 0,
                             type: (error.type) ? error.type : "error"
                         }
-                        Object.assign(alertProps, alertData)
+                        //Object.assign(alertProps, alertData)
                     }
 
                 })
@@ -330,11 +319,10 @@ export default defineComponent({
         }
 
         return {
-            alertProps,
             attrs,
             checkUserExist,
             data,
-            route,
+            goBack,
             signup,
             t,
             userAccountStore,

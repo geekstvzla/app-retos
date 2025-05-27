@@ -160,7 +160,7 @@ export default defineComponent({
                     let dataR = {
                         alertData: alertData
                     };
-                    console.log("pasooooo")
+                    
                     emit("response", dataR);
 
                 });

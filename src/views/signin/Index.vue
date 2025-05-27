@@ -17,7 +17,7 @@
                         </div>
                         <div class="carousel-item">
                             <NewAccountForm @goBack="goToEmailFrom" 
-                                            @response="loginGranted"
+                                            @response="signUpGranted"
                                             :email="forms.newAccount.email" 
                                             :is-visible="forms.newAccount.visible" />
                         </div>
@@ -43,7 +43,7 @@ import { useUserAccountStore } from '../../stores/UserAccount.js';
 import * as bootstrap from 'bootstrap';
 import AccessCodeForm from './AccessCodeForm.vue';
 import EmailForm from './EmailForm.vue';
-import NewAccountForm from './NewAccountForm.vue';
+import NewAccountForm from '../signup/Index.vue';
 
 export default defineComponent({
     components: {
@@ -115,7 +115,7 @@ export default defineComponent({
 
             if(data.statusCode === 0) {
 
-                forms.newAccount.email(data.email);
+                forms.newAccount.email = data.email;
                 goToNewAccountForm();
 
             } else if(data.statusCode === 1) {
@@ -153,11 +153,11 @@ export default defineComponent({
 
             carousel.value.to(2);
 
-        }
+        };
 
         const loginGranted = (data) => {
 
-        }
+        };
     
         const sessionData = (data) => {
 
@@ -171,6 +171,10 @@ export default defineComponent({
                 store.state.username = data.username
             })
 
+        };
+
+        const signUpGranted = () => {
+
         }
 
         return {
@@ -181,6 +185,7 @@ export default defineComponent({
             forms,
             loginGranted,
             route,
+            signUpGranted,
             t,
             userAccountStore
         }
