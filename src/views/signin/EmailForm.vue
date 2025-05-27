@@ -34,8 +34,8 @@
 
 import { defineComponent, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import en from './langs/EmailFormEng.js';
-import es from './langs/EmailFormEsp.js';
+import en from './langs/EmailFormEng';
+import es from './langs/EmailFormEsp';
 import useVuelidate from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
 import { ajax } from '../../utils/AjaxRequest.js';

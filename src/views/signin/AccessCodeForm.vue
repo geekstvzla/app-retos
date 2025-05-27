@@ -41,8 +41,8 @@
 
 import { defineComponent, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import en from './langs/AccessCodeFormEng.js';
-import es from './langs/AccessCodeFormEsp.js';
+import en from './langs/AccessCodeFormEng';
+import es from './langs/AccessCodeFormEsp';
 import useVuelidate from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
 import { ajax } from '../../utils/AjaxRequest.js';
@@ -123,7 +123,6 @@ export default defineComponent({
               
                 ajax(ajaxData)
                 .then(function (response) {
-                    console.log(response.data)
 
                     attrs.goBackBtn.disabled = false;
                     attrs.loginBtn.disabled = false;
@@ -131,64 +130,37 @@ export default defineComponent({
 
                     if(response.status === 200) {
 
-                        if(response.data.response.statusCode === 1) {
+                        var message = response.data.message;
+                        var typeMessage = response.data.status;
+
+                        if(response.data.statusCode === 1) {
                             
-                            /*setTimeout(() => {
-                                
-                                sessionData(response.data.response)
-                                router.push({ name: "home" })
+                            attrs.loginBtn.disabled = true;
 
-                            }, 3000)*/
+                        };
 
-                        } else if(response.data.response.statusCode === 2) {
+                        let alertData = {
+                            message: message,
+                            show: true,
+                            type: typeMessage
+                        };
 
-                            var message = response.data.response.message
-                            var typeMessage = "warning"
-
-                        } else if(response.data.response.statusCode === 3) {
-
-                            var message = t('alert.accountPendingVerification')
-                            var typeMessage = "warning"
-
-                        } else {
-
-                            var message = t('alert.error')
-                            var typeMessage = "error"
-
-                        }
-
-                        if(response.data.response.statusCode !== 1) {
-
-                            let alertData = {
-                                message: message,
-                                show: true,
-                                type: typeMessage
-                            }
-                            //Object.assign(alertProps, alertData)
-
-                           // attrs.loginBtn.disabled = false;
-                            //attrs.loginBtn.html = t('loginBtn.text');
-
-                        }
-
-                    } else if(response.status === 200 && !response.data.response) {
-
-                        throw {
-                            message: t('alert.error'),
-                            type: "error"
-                        }
+                        let dataR = {
+                            alertData: alertData,
+                            userData: response.data.userData,
+                            statusCode: response.data.statusCode
+                        };
+                    
+                        emit("response", dataR);
 
                     } else {
 
                         throw {
-                            close: true,
                             message: t('alert.error'),
-                            timer: true,
-                            timerSeconds: 3,
                             type: "error"
-                        }
-                        
-                    }
+                        };
+
+                    };
 
                 })
                 .catch(error => {
@@ -196,22 +168,22 @@ export default defineComponent({
                     attrs.loginBtn.disabled = false;
                     attrs.loginBtn.html =  t('loginBtn.text');
 
-                    if(error.message) {
+                    let alertData = {
+                        close: (error.close) ? error.close : false,
+                        message: (error.message) ? error.message : t('loginBtn.text'),
+                        show: true,
+                        timer: (error.timer) ? error.timer : false,
+                        timerSeconds: (error.timerSeconds) ? error.timerSeconds : 0,
+                        type: (error.type) ? error.type : "error"
+                    };
 
-                        let alertData = {
-                            close: (error.close) ? error.close : false,
-                            message: error.message,
-                            show: true,
-                            timer: (error.timer) ? error.timer : false,
-                            timerSeconds: (error.timerSeconds) ? error.timerSeconds : 0,
-                            type: (error.type) ? error.type : "error"
-                        }
+                    let dataR = {
+                        alertData: alertData
+                    };
+                    
+                    emit("response", dataR);
 
-                        //Object.assign(alertProps, alertData)
-
-                    }
-
-                })
+                });
 
             }
 

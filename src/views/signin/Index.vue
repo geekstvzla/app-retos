@@ -11,13 +11,13 @@
                         </div>
                         <div class="carousel-item">
                             <AccessCodeForm @goBack="goToEmailFrom" 
-                                            @response="loginGranted"
+                                            @response="accessCodeFormResponse"
                                             :email="forms.accessCode.email" 
                                             :is-visible="forms.accessCode.visible" />
                         </div>
                         <div class="carousel-item">
                             <NewAccountForm @goBack="goToEmailFrom" 
-                                            @response="signUpGranted"
+                                            @response="newAccountFormResponse"
                                             :email="forms.newAccount.email" 
                                             :is-visible="forms.newAccount.visible" />
                         </div>
@@ -155,7 +155,23 @@ export default defineComponent({
 
         };
 
-        const loginGranted = (data) => {
+        const accessCodeFormResponse = (data) => {
+
+            console.log("-------------")
+            console.log(data);
+
+            if(data.statusCode === 1) {
+
+                 setTimeout(() => {
+                                
+                    sessionData(data.userData)
+                    router.push({ name: "home" })
+
+                }, 3000)
+
+            };
+
+            Object.assign(alertProps, data.alertData);
 
         };
     
@@ -173,19 +189,19 @@ export default defineComponent({
 
         };
 
-        const signUpGranted = () => {
+        const newAccountFormResponse = () => {
 
         }
 
         return {
+            accessCodeFormResponse,
             alertProps,
             emailFormResponse,
             generatedAccessCode,
             goToEmailFrom,
             forms,
-            loginGranted,
+            newAccountFormResponse,
             route,
-            signUpGranted,
             t,
             userAccountStore
         }
