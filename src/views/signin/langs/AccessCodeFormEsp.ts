@@ -7,8 +7,8 @@ export const AccessCodeFormEsp = {
         }
     },
     loginBtn: {
-        text: "Entrar",
-        loading: "Cargando"
+        loading: "Cargando",
+        text: "Entrar"
     },
     validator: {
         required: "Este campo es requerido"

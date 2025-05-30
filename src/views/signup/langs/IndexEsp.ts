@@ -5,6 +5,7 @@ export const IndexEsp = {
         warning: "El correo ya se encuentra resgistrado!"
     },
     backBtn: "Atrás",
+    help: "Si estas viendo este formulario es porque este correo no está registrado en el sistema.",
     inputs: {
         email: {
             label: "Correo electrónico"
@@ -15,8 +16,8 @@ export const IndexEsp = {
         }
     },
     signUpBtn: {
-        initText: "Registrarme",
-        loadingText: "Cargando"
+        loadingText: "Cargando",
+        text: "Registrarme"
     },
     validator: {
         alphaNum: "Solo acepta alfanuméricos",

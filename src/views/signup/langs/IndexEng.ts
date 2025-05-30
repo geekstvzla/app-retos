@@ -5,6 +5,7 @@ export const IndexEng = {
         warning: "The email is already registered!"
     },
     backBtn: "Back",
+    help: "",
     inputs: {
         email: {
             label: "Email"
@@ -16,8 +17,8 @@ export const IndexEng = {
         }
     },
     signUpBtn: {
-        initText: "Register",
-        loadingText: "Loading"
+        loadingText: "Loading",
+        text: "Register"
     },
     validator: {
         alphaNum: "Accepts only alphanumerics",

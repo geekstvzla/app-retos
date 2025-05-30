@@ -115,8 +115,7 @@ export default defineComponent({
 
             if(data.statusCode === 0) {
 
-                forms.newAccount.email = data.email;
-                goToNewAccountForm();
+                goToNewAccountForm(data);
 
             } else if(data.statusCode === 1) {
 
@@ -149,16 +148,15 @@ export default defineComponent({
 
         };
 
-        const goToNewAccountForm = () => {
-
+        const goToNewAccountForm = (data) => {
+       
+            forms.newAccount.email = data.email;
+            forms.newAccount.visible = true;
             carousel.value.to(2);
 
         };
 
         const accessCodeFormResponse = (data) => {
-
-            console.log("-------------")
-            console.log(data);
 
             if(data.statusCode === 1) {
 
@@ -189,9 +187,21 @@ export default defineComponent({
 
         };
 
-        const newAccountFormResponse = () => {
+        const newAccountFormResponse = (data) => {
 
-        }
+            if(data.statusCode === 1) {
+
+                 setTimeout(() => {
+                                
+                    goToEmailFrom();
+
+                }, 3000)
+
+            };
+
+            Object.assign(alertProps, data.alertData);
+
+        };
 
         return {
             accessCodeFormResponse,
@@ -202,8 +212,7 @@ export default defineComponent({
             forms,
             newAccountFormResponse,
             route,
-            t,
-            userAccountStore
+            t
         }
 
     }

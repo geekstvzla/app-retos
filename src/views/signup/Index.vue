@@ -1,5 +1,8 @@
 <template>
     <form>
+        <div class="d-grid">
+            {{ t('help') }}
+        </div>
         <div :class=" (v$.email.$errors.length > 0) ? 'field-error input-group mb-2' : 'input-group mb-2'">
             <label class="form-label">{{ t('inputs.email.label') }}</label>
             <span class="input-group-text">
@@ -43,7 +46,7 @@
                         id="btn-sign-in"
                         type="button">{{ t('backBtn') }}</button>
                 <button :disabled="attrs.signUpBtn.disabled"
-                        @click="login"
+                        @click="signup"
                         class="btn"
                         id="btn-sign-in"
                         type="button"
@@ -73,11 +76,13 @@ export default defineComponent({
     setup(props, { emit }) {
 
         watch(() => [
+            props.email,
             props.isVisible
         ], (newValue, oldValue) => {
-          
-            attrs.email.disabled = (newValue[0]) ? false : true;
-            attrs.requestAccessCodeButton.disabled = (newValue[0]) ? false : true;
+            
+            attrs.email.disabled = (newValue[1]) ? false : true;
+            attrs.signUpBtn.disabled = (newValue[1]) ? false : true;
+            data.email = newValue[0];
 
         });
 
@@ -103,15 +108,14 @@ export default defineComponent({
             },
             signUpBtn: {
                 disabled: true,
-                html: "",
-                initHtml: t('signUpBtn.initText'),
+                html: t('signUpBtn.text'),
                 loadingHtml: '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only"> '+ t('signUpBtn.loadingText') +'</span>'
             },
             email: {
                 disabled: true
             },
             username: {
-                disabled: true,
+                disabled: false,
                 iconClass: "",
                 searching: false
             }
@@ -170,7 +174,7 @@ export default defineComponent({
                     .catch(error => {
 
                         attrs.signUpBtn.disabled = false;
-                        attrs.signUpBtn.html =  attrs.signUpBtn.initHtml;
+                        attrs.signUpBtn.html =  t('signUpBtn.text');
                         attrs.username.iconClass = "bi-x-circle-fill";
 
                         if(error.message){
@@ -224,9 +228,12 @@ export default defineComponent({
             const isFormCorrect = await this.v$.$validate()
       
             if(isFormCorrect){
-      
-                attrs.signUpBtn.disabled = true
-                attrs.signUpBtn.html =  attrs.signUpBtn.loadingHtml
+                
+                attrs.email.disabled = true;
+                attrs.goBackBtn.disabled = true;
+                attrs.signUpBtn.disabled = true;
+                attrs.signUpBtn.html =  attrs.signUpBtn.loadingHtml;
+                attrs.username.disabled = true;
                 
                 let ajaxData = {
                     method: "post",
@@ -240,11 +247,17 @@ export default defineComponent({
                 
                 ajax(ajaxData)
                 .then(function (response) {
-               
-                    if(response.status === 200 && response.data) {
 
-                        attrs.signUpBtn.disabled = false;
-                        attrs.signUpBtn.html =  attrs.signUpBtn.initHtml;
+                    attrs.email.disabled = false;
+                    attrs.goBackBtn.disabled = false;
+                    attrs.signUpBtn.disabled = false;
+                    attrs.signUpBtn.html = t('signUpBtn.text');
+                    attrs.username.disabled = false;
+
+                    if(response.status === 200) {
+
+                        var message = response.data.message;
+                        var typeMessage = response.data.status;
 
                         if(response.data.statusCode === 1) {
 
@@ -253,19 +266,6 @@ export default defineComponent({
 
                             v$.value.$reset();
 
-                            var message = t('alert.success');
-                            var typeMessage = "success";
-
-                        } else if(response.data.statusCode === 2) {
-
-                            var message = t('alert.warning');
-                            var typeMessage = "warning";
-
-                        } else {
-
-                            var message = t('alert.error');
-                            var typeMessage = "warning";
-
                         }
 
                         let alertData = {
@@ -273,23 +273,19 @@ export default defineComponent({
                             show: true,
                             type: typeMessage
                         };
-                        //Object.assign(alertProps, alertData);
-
-                    } else if(response.status === 200 && !response.data) {
-
-                        throw {
-                            message: t('alert.error'),
-                            type: "warning"
-                        }
+                        console.log(alertData)
+                        let dataR = {
+                            alertData: alertData,
+                            statusCode: response.data.statusCode
+                        };
+                    
+                        emit("response", dataR);
 
                     } else {
 
                         throw {
-                            close: true,
                             message: t('alert.error'),
-                            timer: true,
-                            timerSeconds: 3,
-                            type: "error"
+                            type: "warning"
                         }
 
                     }
@@ -297,8 +293,27 @@ export default defineComponent({
                 })
                 .catch(error => {
 
-                    attrs.signUpBtn.disabled = false
-                    attrs.signUpBtn.html =  attrs.signUpBtn.initHtml
+                    attrs.email.disabled = false;
+                    attrs.goBackBtn.disabled = false;
+                    attrs.signUpBtn.disabled = false;
+                    attrs.signUpBtn.html = t('signUpBtn.text');
+                    attrs.username.disabled = false;
+
+                    let alertData = {
+                        close: (error.close) ? error.close : false,
+                        message: (error.message) ? error.message : t('loginBtn.text'),
+                        show: true,
+                        timer: (error.timer) ? error.timer : false,
+                        timerSeconds: (error.timerSeconds) ? error.timerSeconds : 0,
+                        type: (error.type) ? error.type : "error"
+                    };
+
+                    let dataR = {
+                        alertData: alertData
+                    };
+                    
+                    emit("response", dataR);
+
 
                     if(error.message){
                         let alertData = {
@@ -325,7 +340,6 @@ export default defineComponent({
             goBack,
             signup,
             t,
-            userAccountStore,
             v$
         }
 
