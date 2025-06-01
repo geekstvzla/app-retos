@@ -1,12 +1,12 @@
 <template>
-    <div class="container" id="wrapper-menu">
-        <div class="row d-flex">
-            <div class="col-auto me-auto">
+    <div :class="(showMenu) ? 'container' : 'container signinView'" id="wrapper-menu">
+        <div :class="(showMenu) ? 'row d-flex' : 'row justify-content-center'">
+            <div :class="(showMenu) ? 'col-auto me-auto' : 'col-auto'">
                 <router-link :to="{ name: 'home' }" class="navbar-brand">
-                    Sumando Kilómetros
+                    <img src="/images/logo-menu-letras-negras.webp" alt="Sumando Kilometros Logo" class="logo">
                 </router-link>
             </div>
-            <div class="col-auto">
+            <div class="col-auto" v-if="showMenu">
                 <nav class="navbar navbar-expand-lg">
                     <button class="navbar-toggler"
                             data-bs-toggle="collapse"
@@ -28,7 +28,7 @@
                     </div>
                 </nav>
             </div>
-            <div class="col-auto">
+            <div class="col-auto" v-if="showMenu">
                 <div class="dropdown" v-if="userLogged">
                     <button aria-expanded="false"
                             class="btn dropdown-toggle user-account"
@@ -47,8 +47,7 @@
                     </ul>
                 </div>
                 <div class="btn-group" role="group">
-                    <router-link :to="{ name: 'sign-in' }" class="btn" v-if="showLogin">Entrar</router-link>
-                    <router-link :to="{ name: 'sign-up' }" class="btn" v-if="showSignUp">Registrarse</router-link> 
+                    <router-link :to="{ name: 'sign-in' }" class="btn">Entrar</router-link>
                 </div>
             </div>
         </div>
@@ -57,33 +56,29 @@
 
 <script lang="ts">
 
-import { computed, defineComponent } from 'vue'
-import { useRoute } from 'vue-router'
-import { useUserAccountStore } from '../../stores/UserAccount.js'
-import { ajax } from '../../utils/AjaxRequest'
+import { computed, defineComponent } from 'vue';
+import { useRoute } from 'vue-router';
+import { useUserAccountStore } from '../../stores/UserAccount.js';
+import { ajax } from '../../utils/AjaxRequest';
 
 export default defineComponent({
     setup() {
 
         const route = useRoute()
-        const userAccount = useUserAccountStore()
+        const userAccount = useUserAccountStore();
 
-        const showLogin = computed(function() {
-            return (route.name !== 'sign-in' && userAccount.state.id === null)
-        })
-
-        const showSignUp = computed(function() {
-            return (route.name !== 'sign-up' && userAccount.state.id === null)
-        })
+        const showMenu = computed(function() {
+            return (route.name !== 'sign-in' && userAccount.state.id === null);
+        });
 
         const userLogged = computed(function() {
-            return userAccount.state.id !== null
-        })
+            return userAccount.state.id !== null;
+        });
 
         const logout = function() {
 
             localStorage.clear();
-            userAccount.updateState()
+            userAccount.updateState();
             this.$router.push({ name: "home" });
 
         }
@@ -91,8 +86,7 @@ export default defineComponent({
         return {
             logout,
             route,
-            showLogin,
-            showSignUp,
+            showMenu,
             userAccount,
             userLogged
         }

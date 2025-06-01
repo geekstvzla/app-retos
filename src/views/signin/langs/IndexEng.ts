@@ -1,5 +1,5 @@
 export const indexEng = {
-    title: "Login"
+    title: "Access your account"
 }
 
 export default indexEng;

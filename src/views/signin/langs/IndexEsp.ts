@@ -1,5 +1,5 @@
 export const indexEsp = {
-    title: "Login"
+    title: "Accede a tu cuenta"
 }
 
 export default indexEsp;
