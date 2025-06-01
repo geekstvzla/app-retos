@@ -3,7 +3,7 @@
         <div class="row d-flex">
             <div class="col-auto me-auto">
                 <router-link :to="{ name: 'home' }" class="navbar-brand">
-                    Retos
+                    Sumando Kilómetros
                 </router-link>
             </div>
             <div class="col-auto">
@@ -20,14 +20,8 @@
                                     Eventos
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Abdomen</a></li>
-                                    <li><a class="dropdown-item" href="#">Brazos</a></li>
-                                    <li><a class="dropdown-item" href="#">Glúteos</a></li>
-                                    <li><a class="dropdown-item" href="#">Espalda</a></li>
-                                    <li><a class="dropdown-item" href="#">Hombros</a></li>
-                                    <li><a class="dropdown-item" href="#">Pectoral</a></li>
-                                    <li><a class="dropdown-item" href="#">Piernas</a></li>
-                                    <li><a class="dropdown-item" href="#">Trapecio</a></li>
+                                    <li><a class="dropdown-item" href="#">Caminata</a></li>
+                                    <li><a class="dropdown-item" href="#">Carrera</a></li>
                                 </ul>
                             </li>
                         </ul>
