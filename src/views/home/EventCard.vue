@@ -20,8 +20,8 @@
 
 import { defineComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import en from './locales/Eng';
-import es from './locales/Esp';
+import en from './langs/IndexEng.js';
+import es from './langs/IndexEsp.js';
 import { useUserAccountStore } from '../../stores/UserAccount.js';
 
 export default defineComponent({
@@ -69,4 +69,4 @@ export default defineComponent({
 
 </script>
 
-<style lang="less" scoped src="../../assets/less/home/CardOrder.less"></style>
+<style lang="less" scoped src="../../assets/less/home/EventCard.less"></style>
