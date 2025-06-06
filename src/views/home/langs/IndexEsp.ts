@@ -1,5 +1,5 @@
 export const esp = {
-    title: "¿Qué quieres hacer?"
+    title: "Eventos disponibles"
 }
 
-export default esp
+export default esp;

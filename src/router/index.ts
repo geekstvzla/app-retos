@@ -16,6 +16,11 @@ const router = createRouter({
       component: () => import('../views/signup/ActivateUserAccount.vue')
     },
     {
+      path: "/event/:url",
+      name: "event-detail",
+      component: () => import('../views/events/event/EventDetail.vue')
+    },
+    {
       path: '/sign-in',
       name: 'sign-in',
       component: () => import('../views/signin/Index.vue')

@@ -9,7 +9,7 @@
             <div class="col" v-if="events.length === 0">
                 <Alert :options="alertProps"/>
             </div>
-            <EventCard v-for="(event, index) in events" />
+            <EventCard :data="event" v-for="(event, index) in events" />
         </div>
     </div>
 

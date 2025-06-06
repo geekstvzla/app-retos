@@ -1,15 +1,12 @@
 <template>
     <div class="col-12 col-sm-2 col-md-4">
         <div class="card">
-            <div class="card-header">
-                <img :src="userAvatar" class="avatar d-block">
-                <span class="username">{{ props.data.username }}</span>
-            </div>
+            <img :src="props.data.featured_image" class="card-img-top" alt="...">
             <div class="card-body">
-                <h5 class="card-title">{{ props.data.product_price }} / {{ props.data.weighing_unit_abb }}</h5>
-                <p class="card-text"><b>Cantidad:</b> {{ props.data.product_amount }}</p>
-                <p class="card-text"><b>Distancia:</b> {{ props.data.distance }}</p>
-                <button class="btn" @click="trade" type="button">Comerciar</button>
+                <h5 class="card-title">{{ props.data.title }}</h5>
+                <p class="card-text"><b>Fecha:</b> {{ departureDate }}</p>
+                <p class="card-text"><b>Lugar:</b> {{ props.data.departure_place_name }}</p>
+                <router-link :to="{ name: 'event-detail', params: { url : props.data.title } }" class="btn">Ver información</router-link>
                 <button class="btn" @click="location" data-bs-target="#modal-order-location" data-bs-toggle="modal" type="button" >Ver ubicación</button>
             </div>
         </div>
@@ -18,11 +15,13 @@
 
 <script>
 
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import en from './langs/IndexEng.js';
 import es from './langs/IndexEsp.js';
 import { useUserAccountStore } from '../../stores/UserAccount.js';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
 
 export default defineComponent({
     emits: ['openLocation'],
@@ -31,37 +30,47 @@ export default defineComponent({
     },
     setup(props, { emit }) {
 
-        const userAccountStore = useUserAccountStore();
+        const departureDate = ref(null);
         const messages = {
             en: en,
             es: es
         };
+        const userAccountStore = useUserAccountStore();
         const { t } = useI18n({
             messages
         });
 
-        const userAvatar = ref('');
+        const dateFormat = () => {
 
-        onMounted(() => {
-            userAvatar.value = import.meta.env.VITE_API_BASE_URL+"/images/users/default-avatar.webp"
-        });
+            var format = "";
+            var locale = "";
 
-        const location = () => {
-            console.log(props.data.latitude)
-            console.log(props.data.longitude)
-            emit("openLocation");
-        }
+            if(userAccountStore.state.langId === "esp") {
+                format = "DD MMMM YYYY hh:mm a";
+                locale = "es";
+            } else {
+                format = "MMMM D, YYYY";
+                locale = "en";
+            }
+
+            departureDate.value = dayjs(props.data.departure_date).locale(locale).format(format);
+
+        };
 
         const trade = () => {
 
         }
+
+        onMounted(() => {
+            dateFormat();
+        });
         
         return {
+            departureDate,
             location,
             props,
             trade,
-            t,
-            userAvatar
+            t
         };
 
     }

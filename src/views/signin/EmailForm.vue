@@ -44,7 +44,7 @@ import { useUserAccountStore } from '../../stores/UserAccount.js';
 export default defineComponent({
     emits: ['response'],
     props: {
-        isVisible:  Boolean
+        isVisible: Boolean
     },
     setup(props, { emit }) {
 

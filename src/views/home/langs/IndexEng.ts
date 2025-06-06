@@ -1,6 +1,6 @@
 export const eng = {
 
-    title: "What do you want to do?"
+    title: "Available events"
 }
 
-export default eng
+export default eng;
