@@ -9,9 +9,10 @@
             <div class="col" v-if="events.length === 0">
                 <Alert :options="alertProps"/>
             </div>
-            <EventCard :data="event" v-for="(event, index) in events" />
+            <EventCard @openEventDeparturePlace="setEventDeparturePlace" :data="event" v-for="(event, index) in events" />
         </div>
     </div>
+    <ModalEventDeparturePlace :urlMap="urlMap"/>
 
 </template>
 <script>
@@ -23,12 +24,14 @@ import es from './langs/IndexEsp';
 import { ajax } from '../../utils/AjaxRequest';
 import Alert from '../../components/Alert.vue';
 import EventCard from './EventCard.vue';
+import ModalEventDeparturePlace from './ModalEventDeparturePlace.vue';
 import { useUserAccountStore } from '../../stores/UserAccount.js';
 
 export default defineComponent({
     components: {
         Alert,
-        EventCard
+        EventCard,
+        ModalEventDeparturePlace
     },
     setup() {
        
@@ -61,6 +64,7 @@ export default defineComponent({
         const { t } = useI18n({
             messages
         });
+        const urlMap = ref("");
 
         const alertProps = reactive({
             iconCloseButton: false,
@@ -96,10 +100,16 @@ export default defineComponent({
 
         };
 
+        const setEventDeparturePlace = (url) => {
+            urlMap.value = url;
+        };
+
         return {
             alertProps,
             events,
-            t
+            setEventDeparturePlace,
+            t,
+            urlMap
         }
 
     }

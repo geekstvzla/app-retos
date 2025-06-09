@@ -7,7 +7,11 @@
                 <p class="card-text"><b>Fecha:</b> {{ departureDate }}</p>
                 <p class="card-text"><b>Lugar:</b> {{ props.data.departure_place_name }}</p>
                 <router-link :to="{ name: 'event-detail', params: { url : props.data.title } }" class="btn">Ver información</router-link>
-                <button class="btn" @click="location" data-bs-target="#modal-order-location" data-bs-toggle="modal" type="button" >Ver ubicación</button>
+                <button class="btn" 
+                        @click="setEventDeparturePlace"
+                        data-bs-target="#modal-event-departure-place" 
+                        data-bs-toggle="modal" 
+                        type="button">Ver ubicación</button>
             </div>
         </div>
     </div>
@@ -24,7 +28,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 
 export default defineComponent({
-    emits: ['openLocation'],
+    emits: ["openEventDeparturePlace"],
     props: {
         data: Object
     },
@@ -64,11 +68,15 @@ export default defineComponent({
         onMounted(() => {
             dateFormat();
         });
+
+        const setEventDeparturePlace = () => {
+            emit("openEventDeparturePlace", props.data.departure_place_url_map);
+        };
         
         return {
             departureDate,
-            location,
             props,
+            setEventDeparturePlace,
             trade,
             t
         };
