@@ -6,7 +6,8 @@
                 <h5 class="card-title">{{ props.data.title }}</h5>
                 <p class="card-text"><b>Fecha:</b> {{ departureDate }}</p>
                 <p class="card-text"><b>Lugar:</b> {{ props.data.departure_place_name }}</p>
-                <router-link :to="{ name: 'event-detail', params: { url : props.data.title } }" class="btn">Ver información</router-link>
+                <button class="btn"
+                        @click="goToEventInfo">Ver información</button>
                 <button class="btn" 
                         @click="setEventDeparturePlace"
                         data-bs-target="#modal-event-departure-place" 
@@ -19,10 +20,12 @@
 
 <script>
 
-import { defineComponent, onMounted, ref, watch } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import en from './langs/IndexEng.js';
 import es from './langs/IndexEsp.js';
+import { useEventStore } from '../../stores/Event.js';
 import { useUserAccountStore } from '../../stores/UserAccount.js';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
@@ -39,6 +42,8 @@ export default defineComponent({
             en: en,
             es: es
         };
+        const router = useRouter();
+        const eventStore = useEventStore();
         const userAccountStore = useUserAccountStore();
         const { t } = useI18n({
             messages
@@ -61,23 +66,32 @@ export default defineComponent({
 
         };
 
-        const trade = () => {
+        const goToEventInfo = () => {
 
-        }
+            localStorage.setItem("eventId", props.data.event_id);
+            localStorage.setItem("eventEditionId", props.data.event_edition_id);
+            
+            eventStore.$patch((store) => {
+                store.state.editionId = props.data.event_edition_id;
+                store.state.id = props.data.event_id;
+            });
+            router.push({ name: "event-detail", params: { url : props.data.title } });
 
-        onMounted(() => {
-            dateFormat();
-        });
+        } 
 
         const setEventDeparturePlace = () => {
             emit("openEventDeparturePlace", props.data.departure_place_url_map);
         };
+
+        onMounted(() => {
+            dateFormat();
+        });
         
         return {
             departureDate,
+            goToEventInfo,
             props,
             setEventDeparturePlace,
-            trade,
             t
         };
 

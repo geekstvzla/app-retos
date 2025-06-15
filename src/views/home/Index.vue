@@ -46,7 +46,7 @@ export default defineComponent({
             if(events.value.length === 0) {
                 
                 let alertData = {
-                    message: "No eventos disponibles en este momento",
+                    message: "No hay eventos disponibles en este momento",
                     show: true,
                     type: "warning"
                 }
