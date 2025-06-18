@@ -17,7 +17,7 @@
 </template>
 <script>
 
-import { defineComponent, onBeforeMount, onMounted, reactive, ref } from 'vue';
+import { defineComponent, onBeforeMount, onMounted, reactive, ref, renderSlot } from 'vue';
 import { useI18n } from 'vue-i18n';
 import en from './langs/IndexEng';
 import es from './langs/IndexEsp';
@@ -85,10 +85,10 @@ export default defineComponent({
             };
 
             ajax(ajaxData)
-            .then(function (response) {
+            .then(function (rs) {
 
-                if(response.status === 200 && response.data.response) {
-                    events.value = response.data.response.events;
+                if(rs.status === 200 && rs.data.events) {
+                    events.value = rs.data.events;
                 };
 
             })

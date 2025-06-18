@@ -6,6 +6,7 @@
                 <h5 class="card-title">{{ props.data.title }}</h5>
                 <p class="card-text"><b>Fecha:</b> {{ departureDate }}</p>
                 <p class="card-text"><b>Lugar:</b> {{ props.data.departure_place_name }}</p>
+                <p class="card-text"><b>Modalidad(es):</b> <span class="badge rounded-pill text-bg-primary" v-for="(data, index) in props.data.event_modes">{{ data.mode }}</span></p>
                 <button class="btn"
                         @click="goToEventInfo">Ver información</button>
                 <button class="btn" 
@@ -84,7 +85,9 @@ export default defineComponent({
         };
 
         onMounted(() => {
+
             dateFormat();
+
         });
         
         return {

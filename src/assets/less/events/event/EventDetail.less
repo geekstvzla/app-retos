@@ -1,3 +1,5 @@
+@import "../../Variables.less";
+
 .wrapper-event-banner {
     
     .row {
@@ -15,8 +17,44 @@
 
 }
 
-.event-title {
-    font-size: 25px;
-    margin-top: 30px;
-    text-align: center;
+.wrapper-event-info {
+    padding-top: 30px;
+
+    h1, h2 {
+        font-family: "poppins-bold";
+    }
+
+    .event-title {
+        color: #212529;
+        font-size: 3rem;
+        margin-top: 30px;
+        text-align: left;
+    }
+
+    .featured-image {
+        border-radius: 6px;
+        max-width: 350px;
+    }
+
+    .wrapper-technical-sheet {
+        margin-top: 30px;
+
+        .technical-sheet-data {
+            background-color: #fff;
+            border-radius: 6px;
+            padding: 25px;
+
+            .title {
+                font-family: "poppins-bold";
+            }
+
+            .badge,
+            .distance {
+                margin-right: 5px;
+            }
+
+        }
+
+    }
+
 }
