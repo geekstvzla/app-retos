@@ -15,6 +15,7 @@
                         <div class="technical-sheet-data">
                             <h2>Ficha Técnica</h2>
                             <p><strong class="title">Fecha:</strong> {{ eventInfo.departureDate }}</p>
+                            <p><strong class="title">Cierre de inscripciones:</strong> {{ eventInfo.enrollmentEndtDate }}</p>
                             <p><strong class="title">Lugar de salida:</strong> {{ eventInfo.departurePlaceName }}</p>
                             <p><strong class="title">Lugar de llegada:</strong> {{ eventInfo.arrivalPlaceName }}</p>
                             <p><strong class="title">Modalidad(es):</strong> <span class="badge rounded-pill text-bg-primary" v-for="(data, index) in eventInfo.modes">{{ data.mode }}</span></p>
@@ -51,6 +52,7 @@ export default defineComponent({
             departureDate: "",
             departurePlaceName: "",
             distances: "",
+            enrollmentEndtDate: "",
             featuredImage: "",
             modes: "",
             title: ""
@@ -106,6 +108,7 @@ export default defineComponent({
                     eventInfo.departureDate = dateFormat(rs.data.response.departure_date);
                     eventInfo.departurePlaceName = rs.data.response.departure_place_name;
                     eventInfo.distances = rs.data.response.event_distances;
+                    eventInfo.enrollmentEndtDate = dateFormat(rs.data.response.enrollment_end_date);
                     eventInfo.featuredImage = rs.data.response.featured_image;
                     eventInfo.modes = rs.data.response.event_modes;
                     eventInfo.title = rs.data.response.title;
