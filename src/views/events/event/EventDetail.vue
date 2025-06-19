@@ -13,13 +13,14 @@
                 <div class="row wrapper-technical-sheet">
                     <div class="col">
                         <div class="technical-sheet-data">
-                            <h2>Ficha Técnica</h2>
-                            <p><strong class="title">Fecha:</strong> {{ eventInfo.departureDate }}</p>
-                            <p><strong class="title">Cierre de inscripciones:</strong> {{ eventInfo.enrollmentEndtDate }}</p>
-                            <p><strong class="title">Lugar de salida:</strong> {{ eventInfo.departurePlaceName }}</p>
-                            <p><strong class="title">Lugar de llegada:</strong> {{ eventInfo.arrivalPlaceName }}</p>
-                            <p><strong class="title">Modalidad(es):</strong> <span class="badge rounded-pill text-bg-primary" v-for="(data, index) in eventInfo.modes">{{ data.mode }}</span></p>
-                            <p><strong class="title">Distancia(s):</strong> <span class="distance" v-for="(data, index) in eventInfo.distances">{{ data.distance }}</span></p>
+                            <h2 class="title">Ficha Técnica</h2>
+                            <p><strong class="subtitle">Fecha:</strong> {{ eventInfo.departureDate }}</p>
+                            <p><strong class="subtitle">Cierre de inscripciones:</strong> {{ eventInfo.enrollmentEndtDate }}</p>
+                            <p><strong class="subtitle">Lugar de salida:</strong> {{ eventInfo.departurePlaceName }}</p>
+                            <p><strong class="subtitle">Lugar de llegada:</strong> {{ eventInfo.arrivalPlaceName }}</p>
+                            <p><strong class="subtitle">Modalidad(es):</strong> <span class="badge rounded-pill text-bg-primary" v-for="(data, index) in eventInfo.modes">{{ data.mode }}</span></p>
+                            <p><strong class="subtitle">Distancia(s):</strong> <span class="distance">{{ eventInfo.distances }}</span></p>
+                            <p><strong class="subtitle">¿Qué incluye?:</strong> <span class="distance">{{ eventInfo.includes }}</span></p>
                         </div>
                     </div>
                 </div>
@@ -54,6 +55,7 @@ export default defineComponent({
             distances: "",
             enrollmentEndtDate: "",
             featuredImage: "",
+            includes: "",
             modes: "",
             title: ""
         });
@@ -110,6 +112,7 @@ export default defineComponent({
                     eventInfo.distances = rs.data.response.event_distances;
                     eventInfo.enrollmentEndtDate = dateFormat(rs.data.response.enrollment_end_date);
                     eventInfo.featuredImage = rs.data.response.featured_image;
+                    eventInfo.includes = rs.data.response.event_includes;
                     eventInfo.modes = rs.data.response.event_modes;
                     eventInfo.title = rs.data.response.title;
 

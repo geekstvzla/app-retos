@@ -20,7 +20,7 @@
 .wrapper-event-info {
     padding-top: 30px;
 
-    h1, h2 {
+    .event-title {
         font-family: "poppins-bold";
     }
 
@@ -44,8 +44,14 @@
             border-radius: 6px;
             padding: 25px;
 
-            .title {
+            .title,
+            .subtitle {
                 font-family: "poppins-bold";
+            }
+
+            .title {
+                border-bottom: 1px solid #21252930;
+                margin-bottom: 25px;
             }
 
             .badge,
