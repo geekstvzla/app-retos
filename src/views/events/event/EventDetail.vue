@@ -20,7 +20,98 @@
                             <p><strong class="subtitle">Lugar de llegada:</strong> {{ eventInfo.arrivalPlaceName }}</p>
                             <p><strong class="subtitle">Modalidad(es):</strong> <span class="badge rounded-pill text-bg-primary" v-for="(data, index) in eventInfo.modes">{{ data.mode }}</span></p>
                             <p><strong class="subtitle">Distancia(s):</strong> <span class="distance">{{ eventInfo.distances }}</span></p>
+                            <p><strong class="subtitle">Costo:</strong></p>
                             <p><strong class="subtitle">¿Qué incluye?:</strong> <span class="distance">{{ eventInfo.includes }}</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row wrapper-personal-data">
+                    <div class="col">
+                        <div class="personal-data">
+                            <h2 class="title">¿Quieres participar?</h2>
+                            <p><strong class="subtitle">Tu información personal; esta se utilizará para saber a nombre de quien está la inscripción.</strong></p>
+                            <form class="row">
+                                <div class="mb-3 col-md-6">
+                                    <label for="firstName" class="form-label">Primer nombre</label>
+                                    <input class="form-control"
+                                        :disabled="attrs.firstName.disabled"
+                                        id="firstName"
+                                        type="text"
+                                        v-model="data.firstName">
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="firstName" class="form-label">Segundo nombre</label>
+                                    <input class="form-control"
+                                        :disabled="attrs.firstName.disabled"
+                                        id="firstName"
+                                        type="text"
+                                        v-model="data.firstName">
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="firstName" class="form-label">Primer apellido</label>
+                                    <input class="form-control"
+                                        :disabled="attrs.firstName.disabled"
+                                        id="firstName"
+                                        type="text"
+                                        v-model="data.firstName">
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="firstName" class="form-label">Segundo apellido</label>
+                                    <input class="form-control"
+                                        :disabled="attrs.firstName.disabled"
+                                        id="firstName"
+                                        type="text"
+                                        v-model="data.firstName">
+                                </div>
+                                <div class="mb-3 col-md-4">
+                                    <label for="firstName" class="form-label">Número de cédula</label>
+                                    <input class="form-control"
+                                        :disabled="attrs.firstName.disabled"
+                                        id="firstName"
+                                        type="text"
+                                        v-model="data.firstName">
+                                </div>
+                                <div class="mb-3 col-md-4">
+                                    <label for="firstName" class="form-label">Fecha de nacimiento</label>
+                                    <input class="form-control"
+                                        :disabled="attrs.firstName.disabled"
+                                        id="firstName"
+                                        type="text"
+                                        v-model="data.firstName">
+                                </div>
+                                <div class="mb-3 col-md-4">
+                                    <label for="firstName" class="form-label">Tipo de sangre</label>
+                                    <input class="form-control"
+                                        :disabled="attrs.firstName.disabled"
+                                        id="firstName"
+                                        type="text"
+                                        v-model="data.firstName">
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="firstName" class="form-label">Teléfono móvil</label>
+                                    <input class="form-control"
+                                        :disabled="attrs.firstName.disabled"
+                                        id="firstName"
+                                        type="text"
+                                        v-model="data.firstName">
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="firstName" class="form-label">Teléfono móvil de emergencia</label>
+                                    <input class="form-control"
+                                        :disabled="attrs.firstName.disabled"
+                                        id="firstName"
+                                        type="text"
+                                        v-model="data.firstName">
+                                </div>
+                                <div class="mb-3 col-12">
+                                    <label for="firstName" class="form-label">¿Es alérgico a algún medicamento, alimento, mordedura o picada de animales, o insectos?</label>
+                                    <textarea class="form-control" id="firstName" rows="3"></textarea>
+                                </div>
+                                <div class="mb-3 col-12">
+                                    <label for="firstName" class="form-label">¿Tiene alguna condición médica o discapacidad que debamos saber?</label>
+                                    <textarea class="form-control" id="firstName" rows="3"></textarea>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -39,6 +130,8 @@ import { useI18n } from 'vue-i18n';
 import { ajax } from '../../../utils/AjaxRequest';
 import en from './langs/EventDetailEng.js';
 import es from './langs/EventDetailEsp.js';
+import useVuelidate from '@vuelidate/core';
+import { helpers, required } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import dayjs from 'dayjs';
@@ -47,6 +140,11 @@ import 'dayjs/locale/es';
 export default defineComponent({
     setup() {
 
+        const attrs = reactive({
+            firstName: {
+                disabled: false
+            }
+        });
         const eventInfo = reactive({
             arrivalPlaceName: "",
             banner: "",
@@ -59,16 +157,22 @@ export default defineComponent({
             modes: "",
             title: ""
         });
+        const data = reactive({
+            firstName: ""
+        });
         const departureDate = ref(null);
         const messages = {
             en: en,
             es: es
         };
-        const eventStore = useEventStore();
-        const userAccountStore = useUserAccountStore();
         const { t } = useI18n({
             messages
         });
+        const eventStore = useEventStore();
+        const rules = {
+            firstName: { required: helpers.withMessage(t('validator.required'), required) }
+        };
+        const userAccountStore = useUserAccountStore();
 
         const dateFormat = (dateString) => {
 
@@ -132,7 +236,10 @@ export default defineComponent({
         });
 
         return {
+            attrs,
+            data,
             eventInfo,
+            rules,
             t
         };
 
