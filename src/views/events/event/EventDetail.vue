@@ -25,96 +25,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row wrapper-personal-data">
-                    <div class="col">
-                        <div class="personal-data">
-                            <h2 class="title">¿Quieres participar?</h2>
-                            <p><strong class="subtitle">Tu información personal; esta se utilizará para saber a nombre de quien está la inscripción.</strong></p>
-                            <form class="row">
-                                <div class="mb-3 col-md-6">
-                                    <label for="firstName" class="form-label">Primer nombre</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="firstName" class="form-label">Segundo nombre</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="firstName" class="form-label">Primer apellido</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="firstName" class="form-label">Segundo apellido</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-4">
-                                    <label for="firstName" class="form-label">Número de cédula</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-4">
-                                    <label for="firstName" class="form-label">Fecha de nacimiento</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-4">
-                                    <label for="firstName" class="form-label">Tipo de sangre</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="firstName" class="form-label">Teléfono móvil</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="firstName" class="form-label">Teléfono móvil de emergencia</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-12">
-                                    <label for="firstName" class="form-label">¿Es alérgico a algún medicamento, alimento, mordedura o picada de animales, o insectos?</label>
-                                    <textarea class="form-control" id="firstName" rows="3"></textarea>
-                                </div>
-                                <div class="mb-3 col-12">
-                                    <label for="firstName" class="form-label">¿Tiene alguna condición médica o discapacidad que debamos saber?</label>
-                                    <textarea class="form-control" id="firstName" rows="3"></textarea>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                <PersonalData />
             </div>
             <div class="col-auto">
                 <img :alt="eventInfo.title" class="featured-image img-fluid" :src="eventInfo.featuredImage">
@@ -136,8 +47,12 @@ import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
+import PersonalData from './PersonalData.vue';
 
 export default defineComponent({
+    components: {
+        PersonalData
+    },
     setup() {
 
         const attrs = reactive({
