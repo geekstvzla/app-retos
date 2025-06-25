@@ -3,8 +3,7 @@
         <div class="col">
             <div class="personal-data">
                 <h2 class="title">¿Quieres participar?</h2>
-                <p><strong class="subtitle">Tu información personal; esta se utilizará para saber a nombre de quien está la inscripción.</strong></p>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#personalDataModal">
+                <button type="button" class="btn btn-filled" data-bs-toggle="modal" data-bs-target="#personalDataModal">
                     Ver tu información personal
                 </button>
                 <div class="modal fade" id="personalDataModal" tabindex="-1" aria-labelledby="personalDataModalLabel" aria-hidden="true">
@@ -15,6 +14,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                            <p><strong class="subtitle">Tu información personal se utilizará para saber a nombre de quien está la inscripción.</strong></p>
                             <form class="row">
                                 <div class="mb-3 col-md-6">
                                     <label for="firstName" class="form-label">Primer nombre</label>
@@ -99,8 +99,8 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-primary">Guardar</button>
                         </div>
                         </div>
                     </div>
@@ -235,4 +235,4 @@ export default defineComponent({
 
 </script>
 
-<style lang="less" scoped src="../../../assets/less/events/event/EventDetail.less"></style>
+<style lang="less" scoped src="../../../assets/less/events/event/PersonalData.less"></style>
