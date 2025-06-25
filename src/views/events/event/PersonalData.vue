@@ -6,105 +6,105 @@
                 <button type="button" class="btn btn-filled" data-bs-toggle="modal" data-bs-target="#personalDataModal">
                     Ver tu información personal
                 </button>
-                <div class="modal fade" id="personalDataModal" tabindex="-1" aria-labelledby="personalDataModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-fullscreen">
-                        <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="personalDataModalLabel">Tus datos personales</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p><strong class="subtitle">Tu información personal se utilizará para saber a nombre de quien está la inscripción.</strong></p>
-                            <form class="row">
-                                <div class="mb-3 col-md-6">
-                                    <label for="firstName" class="form-label">Primer nombre</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="firstName" class="form-label">Segundo nombre</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="firstName" class="form-label">Primer apellido</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="firstName" class="form-label">Segundo apellido</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-4">
-                                    <label for="firstName" class="form-label">Número de cédula</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-4">
-                                    <label for="firstName" class="form-label">Fecha de nacimiento</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-4">
-                                    <label for="firstName" class="form-label">Tipo de sangre</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="firstName" class="form-label">Teléfono móvil</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="firstName" class="form-label">Teléfono móvil de emergencia</label>
-                                    <input class="form-control"
-                                        :disabled="attrs.firstName.disabled"
-                                        id="firstName"
-                                        type="text"
-                                        v-model="data.firstName">
-                                </div>
-                                <div class="mb-3 col-12">
-                                    <label for="firstName" class="form-label">¿Es alérgico a algún medicamento, alimento, mordedura o picada de animales, o insectos?</label>
-                                    <textarea class="form-control" id="firstName" rows="3"></textarea>
-                                </div>
-                                <div class="mb-3 col-12">
-                                    <label for="firstName" class="form-label">¿Tiene alguna condición médica o discapacidad que debamos saber?</label>
-                                    <textarea class="form-control" id="firstName" rows="3"></textarea>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="button" class="btn btn-primary">Guardar</button>
-                        </div>
-                        </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="personalDataModal" tabindex="-1" aria-labelledby="personalDataModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="personalDataModalLabel">Tus datos personales</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong class="subtitle">Tu información personal se utilizará para saber a nombre de quien está la inscripción.</strong></p>
+                <form class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="firstName" class="form-label">Primer nombre</label>
+                        <input class="form-control"
+                            :disabled="attrs.firstName.disabled"
+                            id="firstName"
+                            type="text"
+                            v-model="data.firstName">
                     </div>
-                </div>
+                    <div class="mb-3 col-md-6">
+                        <label for="firstName" class="form-label">Segundo nombre</label>
+                        <input class="form-control"
+                            :disabled="attrs.firstName.disabled"
+                            id="firstName"
+                            type="text"
+                            v-model="data.firstName">
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label for="firstName" class="form-label">Primer apellido</label>
+                        <input class="form-control"
+                            :disabled="attrs.firstName.disabled"
+                            id="firstName"
+                            type="text"
+                            v-model="data.firstName">
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label for="firstName" class="form-label">Segundo apellido</label>
+                        <input class="form-control"
+                            :disabled="attrs.firstName.disabled"
+                            id="firstName"
+                            type="text"
+                            v-model="data.firstName">
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label for="firstName" class="form-label">Número de cédula</label>
+                        <input class="form-control"
+                            :disabled="attrs.firstName.disabled"
+                            id="firstName"
+                            type="text"
+                            v-model="data.firstName">
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label for="firstName" class="form-label">Fecha de nacimiento</label>
+                        <input class="form-control"
+                            :disabled="attrs.firstName.disabled"
+                            id="firstName"
+                            type="text"
+                            v-model="data.firstName">
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label for="firstName" class="form-label">Tipo de sangre</label>
+                        <input class="form-control"
+                            :disabled="attrs.firstName.disabled"
+                            id="firstName"
+                            type="text"
+                            v-model="data.firstName">
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label for="firstName" class="form-label">Teléfono móvil</label>
+                        <input class="form-control"
+                            :disabled="attrs.firstName.disabled"
+                            id="firstName"
+                            type="text"
+                            v-model="data.firstName">
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label for="firstName" class="form-label">Teléfono móvil de emergencia</label>
+                        <input class="form-control"
+                            :disabled="attrs.firstName.disabled"
+                            id="firstName"
+                            type="text"
+                            v-model="data.firstName">
+                    </div>
+                    <div class="mb-3 col-12">
+                        <label for="firstName" class="form-label">¿Es alérgico a algún medicamento, alimento, mordedura o picada de animales, o insectos?</label>
+                        <textarea class="form-control" id="firstName" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3 col-12">
+                        <label for="firstName" class="form-label">¿Tiene alguna condición médica o discapacidad que debamos saber?</label>
+                        <textarea class="form-control" id="firstName" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-filled" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-filled">Guardar</button>
+            </div>
             </div>
         </div>
     </div>
@@ -112,7 +112,7 @@
 
 <script>
 
-import { defineComponent, onBeforeMount, onMounted, reactive, ref } from 'vue';
+import { defineComponent, onBeforeMount, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ajax } from '../../../utils/AjaxRequest.js';
 import en from './langs/EventDetailEng.js';
@@ -178,16 +178,15 @@ export default defineComponent({
 
         };
         
-        const getEventDetail = () => {
+        const getPersonalData = () => {
 
             let ajaxData = {
                 method: "get",
                 params: {
-                    eventEditionId: eventStore.state.editionId,
-                    eventId: eventStore.state.id,
+                    userId: userAccountStore.state.id,
                     langId: userAccountStore.state.langId
                 },
-                url: import.meta.env.VITE_API_BASE_URL+"/events/event-detail"
+                url: import.meta.env.VITE_API_BASE_URL+"/users/get-persona-data"
             };
 
             ajax(ajaxData)
@@ -219,7 +218,7 @@ export default defineComponent({
         };
 
         onBeforeMount(() => {
-            getEventDetail();
+            getPersonalData();
         });
 
         return {

@@ -1,6 +1,6 @@
 @import "../../Variables.less";
 
-.wrapper-personal-data{
+.wrapper-personal-data {
     margin-top: 30px;
 
     .personal-data {
@@ -17,6 +17,65 @@
             border-bottom: 1px solid #21252930;
             margin-bottom: 25px;
             padding-bottom: 5px;
+        }
+
+    }
+
+}
+
+.modal {
+
+    .modal-dialog {
+
+        .modal-header {
+            background-color: @color-grey-1;
+            padding-left: 30px;
+            padding-right: 30px;
+
+            .modal-title {
+                font-family: "poppins-bold";
+            }
+
+        }
+
+        .modal-body {
+            background-color: @color-grey-1;
+
+            p {
+                margin-bottom: 25px;
+            }
+
+            .subtitle {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            form {
+
+                .form-label {
+                    margin-bottom: 0px;
+                    padding-left: 15px;
+                    width: 100%;
+                }
+
+                .form-control {
+                    background-color: @input-background-color;
+                    border: @input-border;
+                    border-radius: @input-border-radius;
+
+                    &#email {
+                        border-bottom-right-radius: @input-border-radius !important;
+                        border-top-right-radius: @input-border-radius !important;
+                    }
+
+                }
+
+            }
+
+        }
+
+        .modal-footer {
+            background-color: @color-grey-1;
         }
 
     }
