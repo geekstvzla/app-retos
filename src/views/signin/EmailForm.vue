@@ -122,6 +122,13 @@ export default defineComponent({
                            
                             attrs.requestAccessCodeButton.disabled = true;
                           
+                        } else if(response.data.statusCode === 4) { // Error con el servidor de correo
+
+                            throw {
+                                message: t('alert.error.emailNoConnction'),
+                                type: "error"
+                            };
+
                         };
           
                         let alertData = {

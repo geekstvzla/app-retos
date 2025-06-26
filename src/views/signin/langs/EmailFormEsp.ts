@@ -1,6 +1,9 @@
 export const EmailFormEsp = {
     alert: {
-        error: "¡Ocurrió un error!"
+        error: {
+            emailNoConnction: "¡No se pudo enviar el correo con tu código de acceso, prueba nuevamente!",
+            general: "¡Ocurrió un error!"
+        }
     },
     getAccessCodeBtn: {
         text: "Solicitar código de acceso",

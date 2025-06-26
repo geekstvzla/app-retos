@@ -68,6 +68,14 @@
                             v-model="data.firstName">
                     </div>
                     <div class="mb-3 col-md-4">
+                        <label for="firstName" class="form-label">Sexo</label>
+                        <input class="form-control"
+                            :disabled="attrs.firstName.disabled"
+                            id="firstName"
+                            type="text"
+                            v-model="data.firstName">
+                    </div>
+                    <div class="mb-3 col-md-4">
                         <label for="firstName" class="form-label">Tipo de sangre</label>
                         <input class="form-control"
                             :disabled="attrs.firstName.disabled"
@@ -75,7 +83,7 @@
                             type="text"
                             v-model="data.firstName">
                     </div>
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-4">
                         <label for="firstName" class="form-label">Teléfono móvil</label>
                         <input class="form-control"
                             :disabled="attrs.firstName.disabled"
@@ -83,7 +91,7 @@
                             type="text"
                             v-model="data.firstName">
                     </div>
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-4">
                         <label for="firstName" class="form-label">Teléfono móvil de emergencia</label>
                         <input class="form-control"
                             :disabled="attrs.firstName.disabled"
@@ -132,21 +140,23 @@ export default defineComponent({
                 disabled: false
             }
         });
-        const eventInfo = reactive({
-            arrivalPlaceName: "",
-            banner: "",
-            departureDate: "",
-            departurePlaceName: "",
-            distances: "",
-            enrollmentEndtDate: "",
-            featuredImage: "",
-            includes: "",
-            modes: "",
-            title: ""
-        });
+
         const data = reactive({
-            firstName: ""
+            firstName: "",
+            middleName: "",
+            lastName: "",
+            secondLastName: "",
+            documentTypeId: "",
+            document: "",
+            birthday: "",
+            genderId: "",
+            bloodTypeId: "",
+            phoneNumber: "",
+            emergencyPhoneNumber: "",
+            allergies: "",
+            medicalDisability: ""
         });
+
         const departureDate = ref(null);
         const messages = {
             en: en,
@@ -157,7 +167,19 @@ export default defineComponent({
         });
         const eventStore = useEventStore();
         const rules = {
-            firstName: { required: helpers.withMessage(t('validator.required'), required) }
+            firstName: { required: helpers.withMessage(t('validator.required'), required) },
+            middleName: { required: helpers.withMessage(t('validator.required'), required) },
+            lastName: { required: helpers.withMessage(t('validator.required'), required) },
+            secondLastName: { required: helpers.withMessage(t('validator.required'), required) },
+            documentTypeId: { required: helpers.withMessage(t('validator.required'), required) },
+            document: { required: helpers.withMessage(t('validator.required'), required) },
+            birthday: { required: helpers.withMessage(t('validator.required'), required) },
+            genderId: { required: helpers.withMessage(t('validator.required'), required) },
+            bloodTypeId: { required: helpers.withMessage(t('validator.required'), required) },
+            phoneNumber: { required: helpers.withMessage(t('validator.required'), required) },
+            emergencyPhoneNumber: { required: helpers.withMessage(t('validator.required'), required) },
+            allergies: { required: helpers.withMessage(t('validator.required'), required) },
+            medicalDisability: { required: helpers.withMessage(t('validator.required'), required) }
         };
         const userAccountStore = useUserAccountStore();
 
@@ -186,7 +208,7 @@ export default defineComponent({
                     userId: userAccountStore.state.id,
                     langId: userAccountStore.state.langId
                 },
-                url: import.meta.env.VITE_API_BASE_URL+"/users/get-persona-data"
+                url: import.meta.env.VITE_API_BASE_URL+"/users/get-user-data"
             };
 
             ajax(ajaxData)
@@ -195,16 +217,7 @@ export default defineComponent({
                 console.log(rs.data)
                 if(rs.status === 200 && rs.data.response) {
                     
-                    eventInfo.arrivalPlaceName = rs.data.response.arrival_place_name;
-                    eventInfo.banner = rs.data.response.banner_image;
-                    eventInfo.departureDate = dateFormat(rs.data.response.departure_date);
-                    eventInfo.departurePlaceName = rs.data.response.departure_place_name;
-                    eventInfo.distances = rs.data.response.event_distances;
-                    eventInfo.enrollmentEndtDate = dateFormat(rs.data.response.enrollment_end_date);
-                    eventInfo.featuredImage = rs.data.response.featured_image;
-                    eventInfo.includes = rs.data.response.event_includes;
-                    eventInfo.modes = rs.data.response.event_modes;
-                    eventInfo.title = rs.data.response.title;
+                    
 
                 };
 
@@ -224,7 +237,6 @@ export default defineComponent({
         return {
             attrs,
             data,
-            eventInfo,
             rules,
             t
         };
