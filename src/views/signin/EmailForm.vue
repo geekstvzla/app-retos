@@ -108,7 +108,7 @@ export default defineComponent({
 
                 ajax(ajaxData)
                 .then(function (response) {
-                    
+                  
                     attrs.email.disabled = false;
                     attrs.requestAccessCodeButton.disabled = false;
                     attrs.requestAccessCodeButton.html = t('getAccessCodeBtn.text');

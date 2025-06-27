@@ -1,7 +1,7 @@
 export const EmailFormEng = {
     alert: {
         error: {
-            emailNoConnction: "¡No se pudo enviar el correo con tu código de acceso, prueba nuevamente!",
+            emailNoConnction: "The email with your access code could not be sent, please try again!",
             general: "An error occurred!"
         }
     },

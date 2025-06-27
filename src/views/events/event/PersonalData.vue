@@ -214,7 +214,7 @@ export default defineComponent({
             ajax(ajaxData)
             .then(function (rs) {
 
-                console.log(rs.data)
+               
                 if(rs.status === 200 && rs.data.response) {
                     
                     
