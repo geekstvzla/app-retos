@@ -251,6 +251,32 @@ export default defineComponent({
 
             });
 
+        };
+
+        const getGenderTypes = () => {
+
+            let ajaxData = {
+                method: "get",
+                params: {
+                    langId: userAccountStore.state.langId
+                },
+                url: import.meta.env.VITE_API_BASE_URL+"/users/get-gender-types"
+            };
+
+            ajax(ajaxData)
+            .then(function (rs) {
+
+                if(rs.status === 200 && rs.data) {
+                    console.log(rs.data)
+
+                };
+
+            })
+            .catch(error => {
+
+                console.log(error);
+
+            });
 
         };
 
@@ -289,6 +315,7 @@ export default defineComponent({
 
             getBloodTypes();
             getDocumentTypes();
+            getGenderTypes();
             getPersonalData();
             
         });
