@@ -54,10 +54,10 @@
                     <div class="mb-3 col-md-4">
                         <label for="firstName" class="form-label">Número de cédula</label>
                         <input class="form-control"
-                            :disabled="attrs.firstName.disabled"
-                            id="firstName"
+                            :disabled="attrs.document.disabled"
+                            id="document"
                             type="text"
-                            v-model="data.firstName">
+                            v-model="data.document">
                     </div>
                     <div class="mb-3 col-md-4">
                         <label for="firstName" class="form-label">Fecha de nacimiento</label>
@@ -100,11 +100,7 @@
                             v-model="data.firstName">
                     </div>
                     <div class="mb-3 col-12">
-                        <label for="firstName" class="form-label">¿Es alérgico a algún medicamento, alimento, mordedura o picada de animales, o insectos?</label>
-                        <textarea class="form-control" id="firstName" rows="3"></textarea>
-                    </div>
-                    <div class="mb-3 col-12">
-                        <label for="firstName" class="form-label">¿Tiene alguna condición médica o discapacidad que debamos saber?</label>
+                        <label for="firstName" class="form-label">¿Es alérgico a algún medicamento, alimento, mordedura o picada de animales o insectos, tiene alguna condición médica o discapacidad que debamos saber?</label>
                         <textarea class="form-control" id="firstName" rows="3"></textarea>
                     </div>
                 </form>
@@ -123,8 +119,8 @@
 import { defineComponent, onBeforeMount, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ajax } from '../../../utils/AjaxRequest.js';
-import en from './langs/EventDetailEng.js';
-import es from './langs/EventDetailEsp.js';
+import en from './langs/PersonalDataEng.js';
+import es from './langs/PersonalDataEsp.js';
 import useVuelidate from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';
@@ -136,6 +132,9 @@ export default defineComponent({
     setup() {
 
         const attrs = reactive({
+            document: {
+                disabled: false
+            },
             firstName: {
                 disabled: false
             }
@@ -153,11 +152,11 @@ export default defineComponent({
             bloodTypeId: "",
             phoneNumber: "",
             emergencyPhoneNumber: "",
-            allergies: "",
-            medicalDisability: ""
+            medialCondition: ""
         });
 
         const departureDate = ref(null);
+        const documentTypes = ref([]);
         const messages = {
             en: en,
             es: es
@@ -199,7 +198,62 @@ export default defineComponent({
             return dayjs(dateString).locale(locale).format(format);
 
         };
+
+        const getBloodTypes = () => {
+
+            let ajaxData = {
+                method: "get",
+                params: {
+                    langId: userAccountStore.state.langId
+                },
+                url: import.meta.env.VITE_API_BASE_URL+"/users/get-blood-types"
+            };
+
+            ajax(ajaxData)
+            .then(function (rs) {
+
+                if(rs.status === 200 && rs.data) {
+                    console.log(rs.data)
+
+                };
+
+            })
+            .catch(error => {
+
+                console.log(error);
+
+            });
+
+        };
         
+        const getDocumentTypes = () => {
+
+            let ajaxData = {
+                method: "get",
+                params: {
+                    langId: userAccountStore.state.langId
+                },
+                url: import.meta.env.VITE_API_BASE_URL+"/users/get-document-types"
+            };
+
+            ajax(ajaxData)
+            .then(function (rs) {
+
+                if(rs.status === 200 && rs.data) {
+                    console.log(rs.data)
+
+                };
+
+            })
+            .catch(error => {
+
+                console.log(error);
+
+            });
+
+
+        };
+
         const getPersonalData = () => {
 
             let ajaxData = {
@@ -214,10 +268,11 @@ export default defineComponent({
             ajax(ajaxData)
             .then(function (rs) {
 
-               
-                if(rs.status === 200 && rs.data.response) {
-                    
-                    
+                if(rs.status === 200 && rs.data) {
+                    console.log(rs.data.userData)
+                    let userData = rs.data.userData;
+                    data.firstName = userData.first_name;
+                    data.document = userData.document_id;
 
                 };
 
@@ -231,7 +286,11 @@ export default defineComponent({
         };
 
         onBeforeMount(() => {
+
+            getBloodTypes();
+            getDocumentTypes();
             getPersonalData();
+            
         });
 
         return {
