@@ -19,89 +19,135 @@
             <div class="modal-body">
                 <p><strong class="subtitle">Tu información personal se utilizará para saber a nombre de quien está la inscripción.</strong></p>
                 <form class="row">
-                    <div class="mb-3 col-md-6">
+                    <div :class=" (v$.firstName.$errors.length > 0) ? 'field-error mb-4 col-md-6' : 'mb-4 col-md-6'">
                         <label for="firstName" class="form-label">Primer nombre</label>
                         <input class="form-control"
-                            :disabled="attrs.firstName.disabled"
-                            id="firstName"
-                            type="text"
-                            v-model="data.firstName">
+                               :disabled="attrs.firstName.disabled"
+                               id="firstName"
+                               type="text"
+                               v-model="data.firstName">
+                        <div class="error-msg" v-for="error of v$.firstName.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
+                        </div>
                     </div>
-                    <div class="mb-3 col-md-6">
-                        <label for="firstName" class="form-label">Segundo nombre</label>
+                    <div :class=" (v$.middleName.$errors.length > 0) ? 'field-error mb-4 col-md-6' : 'mb-4 col-md-6'">
+                        <label for="middleName" class="form-label">Segundo nombre</label>
                         <input class="form-control"
-                            :disabled="attrs.firstName.disabled"
-                            id="firstName"
-                            type="text"
-                            v-model="data.firstName">
+                               :disabled="attrs.middleName.disabled"
+                               id="middleName"
+                               type="text"
+                               v-model="data.middleName">
+                        <div class="error-msg" v-for="error of v$.middleName.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
+                        </div>
                     </div>
-                    <div class="mb-3 col-md-6">
-                        <label for="firstName" class="form-label">Primer apellido</label>
+                    <div :class=" (v$.lastName.$errors.length > 0) ? 'field-error mb-4 col-md-6' : 'mb-4 col-md-6'">
+                        <label for="lastName" class="form-label">Primer apellido</label>
                         <input class="form-control"
-                            :disabled="attrs.firstName.disabled"
-                            id="firstName"
-                            type="text"
-                            v-model="data.firstName">
+                               :disabled="attrs.lastName.disabled"
+                               id="lastName"
+                               type="text"
+                               v-model="data.lastName">
+                        <div class="error-msg" v-for="error of v$.lastName.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
+                        </div>
                     </div>
-                    <div class="mb-3 col-md-6">
-                        <label for="firstName" class="form-label">Segundo apellido</label>
+                    <div :class=" (v$.lastName.$errors.length > 0) ? 'field-error mb-4 col-md-6' : 'mb-4 col-md-6'">
+                        <label for="secondLastName" class="form-label">Segundo apellido</label>
                         <input class="form-control"
-                            :disabled="attrs.firstName.disabled"
-                            id="firstName"
-                            type="text"
-                            v-model="data.firstName">
+                               :disabled="attrs.secondLastName.disabled"
+                               id="secondLastName"
+                               type="text"
+                               v-model="data.secondLastName">
+                        <div class="error-msg" v-for="error of v$.secondLastName.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
+                        </div>
                     </div>
-                    <div class="mb-3 col-md-4">
-                        <label for="firstName" class="form-label">Número de cédula</label>
+                    <div :class=" (v$.documentTypeId.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
+                        <label for="documentType" class="form-label">Número de cédula</label>
+                        <div class="input-group">
+                            <select class="form-select"
+                                    :disabled="attrs.documentTypeId.disabled" 
+                                    id="documentType"
+                                    v-model="data.documentTypeId">
+                                <option selected value=""> - </option>
+                                <option :value="item.document_type_id" v-for="(item, index) in documentTypes">{{ item.document_type }}</option>
+                            </select>
+                            <input class="form-control"
+                                   :disabled="attrs.document.disabled"
+                                   id="document"
+                                   type="text"
+                                   v-model="data.document">
+                        </div>
+                        <div class="error-msg" v-for="error of v$.documentType.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
+                        </div>
+                    </div>
+                    <div :class=" (v$.birthday.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
+                        <label for="birthday" class="form-label">Fecha de nacimiento</label>
                         <input class="form-control"
-                            :disabled="attrs.document.disabled"
-                            id="document"
-                            type="text"
-                            v-model="data.document">
+                               :disabled="attrs.birthday.disabled"
+                               id="birthday"
+                               type="text"
+                               v-model="data.birthday">
+                        <div class="error-msg" v-for="error of v$.birthday.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
+                        </div>
                     </div>
-                    <div class="mb-3 col-md-4">
-                        <label for="firstName" class="form-label">Fecha de nacimiento</label>
+                    <div :class=" (v$.gender.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
+                        <label for="gender" class="form-label">Sexo</label>
+                        <select class="form-select"
+                                :disabled="attrs.gender.disabled" 
+                                id="gender"
+                                v-model="data.gender">
+                            <option selected value="">Seleccione...</option>
+                            <option :value="item.gener_type_id" v-for="(item, index) in genders">{{ item.gender }}</option>
+                        </select>
+                        <div class="error-msg" v-for="error of v$.gender.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
+                        </div>
+                    </div>
+                    <div :class=" (v$.bloodType.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
+                        <label for="bloodType" class="form-label">Tipo de sangre</label>
+                        <select class="form-select"
+                                :disabled="attrs.bloodType.disabled" 
+                                id="bloodType"
+                                v-model="data.bloodTypeId">
+                            <option selected value="">Seleccione...</option>
+                            <option :value="item.blood_type_id" v-for="(item, index) in bloodTypes">{{ item.blood_type }}</option>
+                        </select>
+                        <div class="error-msg" v-for="error of v$.bloodType.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
+                        </div>
+                    </div>
+                    <div :class=" (v$.phoneNumber.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
+                        <label for="phoneNumber" class="form-label">Teléfono móvil</label>
                         <input class="form-control"
-                            :disabled="attrs.firstName.disabled"
-                            id="firstName"
-                            type="text"
-                            v-model="data.firstName">
+                               :disabled="attrs.phoneNumber.disabled"
+                               id="phoneNumber"
+                               type="text"
+                               v-model="data.phoneNumber">
+                        <div class="error-msg" v-for="error of v$.phoneNumber.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
+                        </div>
                     </div>
-                    <div class="mb-3 col-md-4">
-                        <label for="firstName" class="form-label">Sexo</label>
+                    <div :class=" (v$.emergencyPhoneNumber.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
+                        <label for="emergencyPhoneNumber" class="form-label">Teléfono móvil de emergencia</label>
                         <input class="form-control"
-                            :disabled="attrs.firstName.disabled"
-                            id="firstName"
-                            type="text"
-                            v-model="data.firstName">
+                               :disabled="attrs.emergencyPhoneNumber.disabled"
+                               id="emergencyPhoneNumber"
+                               type="text"
+                               v-model="data.emergencyPhoneNumber">
+                        <div class="error-msg" v-for="error of v$.emergencyPhoneNumber.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
+                        </div>
                     </div>
-                    <div class="mb-3 col-md-4">
-                        <label for="firstName" class="form-label">Tipo de sangre</label>
-                        <input class="form-control"
-                            :disabled="attrs.firstName.disabled"
-                            id="firstName"
-                            type="text"
-                            v-model="data.firstName">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label for="firstName" class="form-label">Teléfono móvil</label>
-                        <input class="form-control"
-                            :disabled="attrs.firstName.disabled"
-                            id="firstName"
-                            type="text"
-                            v-model="data.firstName">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label for="firstName" class="form-label">Teléfono móvil de emergencia</label>
-                        <input class="form-control"
-                            :disabled="attrs.firstName.disabled"
-                            id="firstName"
-                            type="text"
-                            v-model="data.firstName">
-                    </div>
-                    <div class="mb-3 col-12">
-                        <label for="firstName" class="form-label">¿Es alérgico a algún medicamento, alimento, mordedura o picada de animales o insectos, tiene alguna condición médica o discapacidad que debamos saber?</label>
-                        <textarea class="form-control" id="firstName" rows="3"></textarea>
+                    <div :class=" (v$.medialCondition.$errors.length > 0) ? 'field-error mb-4 col-12' : 'mb-4 col-12'">
+                        <label for="medialCondition" class="form-label">¿Es alérgico a algún medicamento, alimento, mordedura o picada de animales o insectos, tiene alguna condición médica o discapacidad que debamos saber?</label>
+                        <textarea class="form-control" id="medialCondition" rows="3" v-model="data.medialCondition"></textarea>
+                        <div class="error-msg" v-for="error of v$.medialCondition.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -132,14 +178,44 @@ export default defineComponent({
     setup() {
 
         const attrs = reactive({
+            birthday: {
+                disabled: false
+            },
+            bloodType: {
+                disabled: false
+            },
             document: {
+                disabled: false
+            },
+            documentTypeId: {
+                disabled: false
+            },
+            emergencyPhoneNumber: {
+                disabled: false
+            },
+            gender: {
                 disabled: false
             },
             firstName: {
                 disabled: false
+            },
+            lastName: {
+                disabled: false
+            },
+            phoneNumber: {
+                disabled: false
+            },
+            medialCondition: {
+                disabled: false
+            },
+            middleName: {
+                disabled: false
+            },
+            secondLastName: {
+                disabled: false
             }
         });
-
+        const bloodTypes = ref([]);
         const data = reactive({
             firstName: "",
             middleName: "",
@@ -157,6 +233,7 @@ export default defineComponent({
 
         const departureDate = ref(null);
         const documentTypes = ref([]);
+        const genders = ref([]);
         const messages = {
             en: en,
             es: es
@@ -181,6 +258,7 @@ export default defineComponent({
             medicalDisability: { required: helpers.withMessage(t('validator.required'), required) }
         };
         const userAccountStore = useUserAccountStore();
+        const v$ = useVuelidate(rules, data, { $scope: false });
 
         const dateFormat = (dateString) => {
 
@@ -214,6 +292,7 @@ export default defineComponent({
 
                 if(rs.status === 200 && rs.data) {
                     console.log(rs.data)
+                    bloodTypes.value = rs.data.bloodTypes;
 
                 };
 
@@ -241,7 +320,7 @@ export default defineComponent({
 
                 if(rs.status === 200 && rs.data) {
                     console.log(rs.data)
-
+                    documentTypes.value = rs.data.documentTypes;
                 };
 
             })
@@ -268,6 +347,7 @@ export default defineComponent({
 
                 if(rs.status === 200 && rs.data) {
                     console.log(rs.data)
+                    genders.value = rs.data.genderTypes;
 
                 };
 
@@ -295,7 +375,8 @@ export default defineComponent({
             .then(function (rs) {
 
                 if(rs.status === 200 && rs.data) {
-                    console.log(rs.data.userData)
+                    console.log("=====================")
+                    console.log(rs.data)
                     let userData = rs.data.userData;
                     data.firstName = userData.first_name;
                     data.document = userData.document_id;
@@ -322,9 +403,13 @@ export default defineComponent({
 
         return {
             attrs,
+            bloodTypes,
             data,
+            documentTypes,
+            genders,
             rules,
-            t
+            t,
+            v$
         };
 
     }
