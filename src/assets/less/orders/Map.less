@@ -1,0 +1,70 @@
+@import "../Variables.less";
+
+.row {
+
+    &.input-wrapper {
+        border:1px solid red !important;
+
+        .error-msg {
+            padding-left: 15px;
+        }
+
+        .form-control {
+            background-color: @input-background-color;
+            //border: @input-border;
+            
+            border-radius: @input-border-radius;
+            padding-left: 15px;
+
+            &:disabled {
+                background-color: #e9ecef;
+            }
+
+            &:focus {
+                background-color: #fff;
+            }
+
+        }
+
+        &.field-error {
+
+            .wrapper-products-list {
+                border-color: #cc0000;
+            }
+
+        }
+
+    }
+
+    &.wrapper-map-help-block {
+
+        > .col {
+            margin-top: 0;
+            padding-left: 0;
+
+            .form-text {
+                margin-top: 0;
+                padding-left: 15px;
+            }
+
+        }
+
+    }
+    
+    .map-wrapper {
+        height: 250px;
+
+        #map {
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 18px;
+            height: 100%;
+            width: 100%;
+        }
+
+    }
+    
+    .alert {
+        border-radius: @alert-border-radius;
+    }
+
+}

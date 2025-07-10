@@ -1,0 +1,58 @@
+@import "../Variables.less";
+
+.container {
+    padding-bottom: 10%;
+    padding-top: 7%;
+
+    form {
+
+        .input-group {
+
+            &:nth-child(2) {
+                margin-bottom: 25px !important;
+                margin-top: 25px;
+            }
+
+        }
+
+        .input-group-text {
+            background-color: @input-background-color;
+            border: @input-border;
+            border-radius: @input-border-radius;
+
+            &:nth-child(2) {
+                border-bottom-left-radius: @input-border-radius !important;
+                border-right: 0px;
+                border-top-left-radius: @input-border-radius !important;
+            }
+
+        }
+
+        .form-label {
+            margin-bottom: 0px;
+            padding-left: 15px;
+            width: 100%;
+        }
+
+        .form-control {
+            background-color: @input-background-color;
+            border: @input-border;
+            border-left: 0px;
+            border-radius: @input-border-radius;
+
+            &#email {
+                border-bottom-right-radius: @input-border-radius !important;
+                border-top-right-radius: @input-border-radius !important;
+            }
+
+        }
+
+        #btn-get-access-code {
+            border-radius: @btn-border-radius;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+    }
+
+}

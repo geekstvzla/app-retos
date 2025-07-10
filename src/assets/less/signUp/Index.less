@@ -1,0 +1,89 @@
+@import "../variables.less";
+
+form {
+
+    .input-group {
+
+        &:nth-child(1),
+        &:nth-child(3) {
+            margin-bottom: 25px !important;
+        }
+
+        &:nth-child(2),
+        &:nth-child(4) {
+            margin-bottom: 25px !important;
+            margin-top: 25px;
+        }
+
+    }
+
+    .input-group-text {
+        background-color: @input-background-color;
+        border: @input-border;
+        border-radius: @input-border-radius;
+
+        &:nth-child(2) {
+            border-bottom-left-radius: @input-border-radius !important;
+            border-right: 0px;
+            border-top-left-radius: @input-border-radius !important;
+        }
+
+        &:nth-child(4) {
+            border-bottom-right-radius: @input-border-radius !important;
+            border-left: 0px;
+            border-top-right-radius: @input-border-radius !important;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            .bi-check-circle-fill {
+                color: #1DA110;             
+            }
+
+            .bi-x-circle-fill {
+                color: #cc0000;
+            }
+
+        }
+
+    }
+
+    .form-label {
+        margin-bottom: 0px;
+        padding-left: 15px;
+        width: 100%;
+    }
+
+    .form-control {
+        background-color: @input-background-color;
+        border: @input-border;
+        border-left: 0px;
+        border-radius: @input-border-radius;
+
+        &#email {
+            border-bottom-right-radius: @input-border-radius !important;
+            border-top-right-radius: @input-border-radius !important;
+        }
+
+        &#username  {
+            border-radius: 0px !important;
+            border-right: 0px;
+        }
+
+        &#username {
+            text-transform: lowercase;
+        }
+
+    }
+
+    .btn-group {
+        background-color: #D3E3FD;
+
+        .btn {
+            text-transform: uppercase;
+        }
+
+    }
+
+}

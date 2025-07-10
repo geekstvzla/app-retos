@@ -1,0 +1,65 @@
+@import "../Variables.less";
+
+.card {
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 30px;
+    margin-bottom: 20px;
+
+    &:hover {
+        box-shadow: 0px 6px 6px 3px rgba(211,227,253,0.63);
+    }
+
+    .card-header {
+        background-color: #E2ECFC;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+
+        .avatar {
+            background-color: white;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 20px;
+            float: left;
+            margin-right: 8px;
+            width: 25px;
+        }
+
+        .username {
+            float: left;
+            line-height: 25px;
+        }
+
+    }
+
+    .card-body {
+
+        .card-text {
+            font-size: .9rem;
+            margin-bottom: 0px;
+
+            .badge {
+                margin-right: 5px;
+            }
+
+        }
+
+        .btn {
+            background-color: @background-color-primary;
+            border: 1px solid @btn-border-color !important;
+            border-radius: @btn-border-radius;
+            margin-top: 1rem;
+
+            &:last-child {
+                margin-left: 10px;
+            }
+
+            &:hover {
+                background-color: @background-color-primary-hover;
+                color: @btn-color-hover;
+            }
+
+        }
+
+    }
+
+}

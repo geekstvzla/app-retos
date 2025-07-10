@@ -1,0 +1,216 @@
+@import "./Variables.less";
+
+[v-cloak] {
+  display: none;
+}
+
+#app {
+    background-color: @color-grey-1;
+    padding: 0px;
+
+    .btn-group {
+        border: @btn-border;
+        border-color: @btn-border-color;
+        border-radius: @btn-border-radius;
+
+        .btn {
+            background-color: #EAF3FB;
+            border: none;
+            border-radius: 0;
+            color: @btn-color;
+            font-size: @btn-font-size;
+            font-weight: @btn-font-weight;
+            padding: @btn-padding;
+
+            &:hover {
+               background-color: #D3E3FD;
+               color: @btn-color-hover;
+            }
+
+            &:nth-child(1) {
+                border-bottom-left-radius: @btn-border-radius;
+                border-top-left-radius: @btn-border-radius;
+            }
+
+            &:nth-last-child(1) {
+                border-bottom-right-radius: @btn-border-radius;
+                border-top-right-radius: @btn-border-radius;
+            }
+
+            &:not(:last-child) {
+                margin-right: 2px;
+
+                &::after {
+                    background-color: rgba(0,0,0,0.1);
+                    content: '';
+                    height: 70%;
+                    position: absolute;
+                    right: -1px;
+                    top: 7px;
+                    transition: all .3s ease;
+                    width: 1px;
+                }
+
+                &:hover {
+
+                    &::after {
+                        height: 100%;
+                        top: 0px;
+                    }
+                    
+                }
+
+            }
+
+            /* 
+               When the last element with class .btn is hovered, 
+               the previous element with class .btn changes its properties 
+            */
+            &:has(+ :last-child:hover) {
+
+                &::after {
+                    height: 100%;
+                    top: 0px;
+                }
+
+            }
+
+        }
+
+    }
+
+    .btn {
+        border: @btn-border;
+        color: @btn-color;
+        font-size: @btn-font-size;
+        font-weight: @btn-font-weight;
+        padding: @btn-padding;
+
+        &.btn-filled {
+            background-color: @background-color-primary;
+            border: 1px solid @btn-border-color;
+            border-radius: @btn-border-radius;
+            color: @btn-color;
+            font-size: @font-size;
+            font-weight: 700;
+            padding: @btn-padding;
+            text-transform: uppercase;
+
+            &:hover {
+                background-color: @background-color-primary-hover;
+                color: @btn-color-hover;
+            }
+
+        }
+
+        /* Revisar para eliminar */
+        &.btn-filled-bordered {
+            background-color: @btn-filled-background-color;
+            border-color: @btn-filled-bordered-border-color;
+            color: @btn-filled-font-color;
+
+            &:hover {
+                background-color: @btn-filled-hover-background-color;
+                border-color: @btn-filled-bordered-hover-border-color;
+                color: @btn-filled-hover-font-color;
+            }
+
+        }
+
+        /* Revisar para eliminar */
+        &.btn-outline {
+            background-color: @btn-outline-background-color;
+            border-color: @btn-outline-border-color;
+            color: @btn-outline-font-color;
+
+            &:hover {
+                background-color: @btn-outline-hover-background-color;
+                border-color: @btn-outline-hover-border-color;
+                color: @btn-outline-hover-font-color;
+            }
+
+        }
+
+        /* Revisar para eliminar */
+        &.btn-outline-bordered {
+            background-color: @btn-outline-background-color;
+            border-color: @btn-outline-bordered-border-color;
+            color: @btn-outline-font-color;
+
+            &:hover {
+                background-color: @btn-outline-hover-background-color;
+                border-color: @btn-outline-bordered-hover-border-color;
+                color: @btn-outline-hover-font-color;
+            }
+
+        }
+        
+        &.btn-link {
+            border: 0px;
+            border-radius: @btn-border-radius;
+            color: #174EA6;
+            font-weight: bold;
+
+            &:hover {
+                background-color: #E2ECFC;
+            }
+
+        }
+
+    }
+
+    form {
+
+        .input-group-text {
+            margin-left: 1px;
+        }
+
+        .field-error {
+
+            .form-control,
+            .form-select,
+            .input-group-text {
+                border-color: #cc0000;
+            }
+
+            .input-group-text {
+                margin-left: 1px;
+            }
+
+            .error-msg {
+                color: #cc0000;
+                font-size: .8rem;
+                padding-left: 15px;
+                width: 100%;
+
+                p {
+                    margin-bottom: 0px;
+                }
+
+            }
+
+        }
+
+        .form-control {
+
+            &:focus {
+                box-shadow: none;
+            }
+            
+        }
+
+        .form-text {
+            padding-left: 15px;
+        }
+
+    }
+
+    .offcanvas {
+        z-index: 10 !important;
+    }
+
+    .offcanvas-backdrop {
+        z-index: 9 !important;
+    }
+
+}// Fin #app
