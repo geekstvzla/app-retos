@@ -63,7 +63,7 @@
                             <p>{{ error.$message }}</p>
                         </div>
                     </div>
-                    <div :class=" (v$.documentTypeId.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
+                    <div :class=" (v$.documentTypeId.$errors.length > 0 || v$.document.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
                         <label for="documentType" class="form-label">Número de cédula</label>
                         <div class="input-group">
                             <select class="form-select"
@@ -80,6 +80,9 @@
                                    v-model="data.document">
                         </div>
                         <div class="error-msg" v-for="error of v$.documentTypeId.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
+                        </div>
+                        <div class="error-msg" v-for="error of v$.document.$errors" :key="error.$uid">
                             <p>{{ error.$message }}</p>
                         </div>
                     </div>
@@ -101,7 +104,7 @@
                                 id="gender"
                                 v-model="data.genderId">
                             <option selected value="">Seleccione...</option>
-                            <option :value="item.gener_type_id" v-for="(item, index) in genders">{{ item.gender }}</option>
+                            <option :value="item.gender_type_id" v-for="(item, index) in genders">{{ item.gender }}</option>
                         </select>
                         <div class="error-msg" v-for="error of v$.genderId.$errors" :key="error.$uid">
                             <p>{{ error.$message }}</p>
@@ -171,7 +174,7 @@ import { ajax } from '../../../utils/AjaxRequest.js';
 import en from './langs/PersonalDataEng.js';
 import es from './langs/PersonalDataEsp.js';
 import useVuelidate from '@vuelidate/core';
-import { helpers, required } from '@vuelidate/validators';
+import { alpha, helpers, numeric, required } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import dayjs from 'dayjs';
@@ -251,18 +254,30 @@ export default defineComponent({
         });
         const eventStore = useEventStore();
         const rules = {
-            firstName: { required: helpers.withMessage(t('validator.required'), required) },
-            middleName: { required: helpers.withMessage(t('validator.required'), required) },
-            lastName: { required: helpers.withMessage(t('validator.required'), required) },
-            secondLastName: { required: helpers.withMessage(t('validator.required'), required) },
+            firstName: { 
+                alpha: helpers.withMessage(t('validator.alpha'), alpha),
+                required: helpers.withMessage(t('validator.required'), required) 
+            },
+            middleName: { 
+                alpha: helpers.withMessage(t('validator.alpha'), alpha),
+            },
+            lastName: { 
+                alpha: helpers.withMessage(t('validator.alpha'), alpha),
+                required: helpers.withMessage(t('validator.required'), required) 
+            },
+            secondLastName: { 
+                alpha: helpers.withMessage(t('validator.alpha'), alpha)
+            },
             documentTypeId: { required: helpers.withMessage(t('validator.required'), required) },
-            document: { required: helpers.withMessage(t('validator.required'), required) },
+            document: { 
+                numeric: helpers.withMessage(t('validator.numeric'), numeric), 
+                required: helpers.withMessage(t('validator.required'), required) 
+            },
             birthday: { required: helpers.withMessage(t('validator.required'), required) },
             genderId: { required: helpers.withMessage(t('validator.required'), required) },
             bloodTypeId: { required: helpers.withMessage(t('validator.required'), required) },
             phoneNumber: { required: helpers.withMessage(t('validator.required'), required) },
             emergencyPhoneNumber: { required: helpers.withMessage(t('validator.required'), required) },
-            allergies: { required: helpers.withMessage(t('validator.required'), required) },
             medicalCondition: { required: helpers.withMessage(t('validator.required'), required) }
         };
         const userAccountStore = useUserAccountStore();
@@ -327,7 +342,6 @@ export default defineComponent({
             .then(function (rs) {
 
                 if(rs.status === 200 && rs.data) {
-                    console.log(rs.data)
                     documentTypes.value = rs.data.documentTypes;
                 };
 
@@ -354,9 +368,7 @@ export default defineComponent({
             .then(function (rs) {
 
                 if(rs.status === 200 && rs.data) {
-                    console.log(rs.data)
                     genders.value = rs.data.genderTypes;
-
                 };
 
             })
@@ -383,8 +395,7 @@ export default defineComponent({
             .then(function (rs) {
 
                 if(rs.status === 200 && rs.data) {
-                    console.log("=====================")
-                    console.log(rs.data)
+
                     let userData = rs.data.userData;
                     data.firstName = userData.first_name;
                     data.document = userData.document_id;
@@ -417,7 +428,7 @@ export default defineComponent({
                 let ajaxData = {
                     method: "post",
                     params: {
-                        userId: serAccountStore.state.id,
+                        userId: userAccountStore.state.id,
                         firstName: data.firstName,
                         middleName: data.firstName,
                         lastName: data.lastName,
@@ -434,10 +445,10 @@ export default defineComponent({
                     },
                     url: import.meta.env.VITE_API_BASE_URL+"/users/update-user-data"
                 };
-
+      
                 ajax(ajaxData)
-                .then(function (response) {
-                  
+                .then(function (rs) {
+                    console.log(rs.data)
                     /*attrs.email.disabled = false;
                     attrs.requestAccessCodeButton.disabled = false;
                     attrs.requestAccessCodeButton.html = t('getAccessCodeBtn.text');
