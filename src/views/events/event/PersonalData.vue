@@ -91,11 +91,14 @@
                         <input class="form-control"
                                :disabled="attrs.birthday.disabled"
                                id="birthday"
+                               data-maska="##/##/####"
+                               :placeholder="attrs.birthday.placeholder"
                                type="text"
                                v-model="data.birthday">
                         <div class="error-msg" v-for="error of v$.birthday.$errors" :key="error.$uid">
                             <p>{{ error.$message }}</p>
                         </div>
+                        <div class="form-text">Ejemplo: {{ attrs.birthday.example }}</div>
                     </div>
                     <div :class=" (v$.genderId.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
                         <label for="gender" class="form-label">Sexo</label>
@@ -123,15 +126,15 @@
                             <p>{{ error.$message }}</p>
                         </div>
                     </div>
-                    <div :class=" (v$.phoneNumber.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
+                    <div :class=" (v$.countryPhoneCode.$errors.length > 0 || v$.phoneNumber.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
                         <label for="phoneNumber" class="form-label">Teléfono móvil (Whatsapp)</label>
                         <div class="input-group">
                             <span class="input-group-text">
                                  <select class="form-select"
-                                         :disabled="attrs.phoneCode.disabled" 
-                                         id="phoneCode"
-                                         v-model="data.phoneCode">
-                                    <option :value="item.phone_number_code" v-for="(item, index) in phoneCodes">{{ item.phone_number_code }}</option>
+                                         :disabled="attrs.countryPhoneCode.disabled" 
+                                         id="countryPhoneCode"
+                                         v-model="data.countryPhoneCode">
+                                    <option :value="item.phone_number_code" v-for="(item, index) in countriesPhoneCodes">{{ item.phone_number_code }}</option>
                                 </select>
                             </span>
                             <input class="form-control"
@@ -140,20 +143,23 @@
                                    type="text"
                                    v-model="data.phoneNumber">
                         </div>
+                        <div class="error-msg" v-for="error of v$.countryPhoneCode.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
+                        </div>
                         <div class="error-msg" v-for="error of v$.phoneNumber.$errors" :key="error.$uid">
                             <p>{{ error.$message }}</p>
                         </div>
                         <div class="form-text">Ejemplo: 04244422598.</div>
                     </div>
-                    <div :class=" (v$.emergencyPhoneNumber.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
+                    <div :class=" (v$.countryEmergencyPhoneCode.$errors.length > 0 || v$.emergencyPhoneNumber.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
                         <label for="emergencyPhoneNumber" class="form-label">Teléfono móvil de emergencia</label>
                         <div class="input-group">
                             <span class="input-group-text">
                                 <select class="form-select"
-                                         :disabled="attrs.emergencyPhoneCode.disabled" 
-                                         id="emergencyPhoneCode"
-                                         v-model="data.phoneCode">
-                                    <option :value="item.phone_number_code" v-for="(item, index) in emergencyPhoneCodes">{{ item.phone_number_code }}</option>
+                                        :disabled="attrs.countryEmergencyPhoneCode.disabled" 
+                                        id="countryEmergencyPhoneCode"
+                                        v-model="data.countryEmergencyPhoneCode">
+                                    <option :value="item.phone_number_code" v-for="(item, index) in countriesEmergencyPhoneCodes">{{ item.phone_number_code }}</option>
                                 </select>
                             </span>
                             <input class="form-control"
@@ -161,6 +167,9 @@
                                    id="emergencyPhoneNumber"
                                    type="text"
                                    v-model="data.emergencyPhoneNumber">
+                        </div>
+                        <div class="error-msg" v-for="error of v$.countryEmergencyPhoneCode.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
                         </div>
                         <div class="error-msg" v-for="error of v$.emergencyPhoneNumber.$errors" :key="error.$uid">
                             <p>{{ error.$message }}</p>
@@ -207,7 +216,9 @@ export default defineComponent({
 
         const attrs = reactive({
             birthday: {
-                disabled: false
+                disabled: false,
+                example: "05/08/1975",
+                placeholder: "día/mes/año"
             },
             bloodType: {
                 disabled: false
@@ -218,7 +229,7 @@ export default defineComponent({
             documentTypeId: {
                 disabled: false
             },
-            emergencyPhoneCode: {
+            countryEmergencyPhoneCode: {
                 disabled: false
             },
             emergencyPhoneNumber: {
@@ -233,7 +244,7 @@ export default defineComponent({
             lastName: {
                 disabled: false
             },
-            phoneCode: {
+            countryPhoneCode: {
                 disabled: false
             },
             phoneNumber: {
@@ -254,7 +265,10 @@ export default defineComponent({
                 disabled: false
             }
         });
+        
         const bloodTypes = ref([]);
+        const countriesPhoneCodes = ref([]);
+        const countriesEmergencyPhoneCodes = ref([]);
         const data = reactive({
             firstName: "",
             middleName: "",
@@ -265,15 +279,17 @@ export default defineComponent({
             birthday: "",
             genderId: "",
             bloodTypeId: "",
-            phoneCode: "",
+            countryPhoneCode: "",
             phoneNumber: "",
-            emergencyPhoneCode: "",
+            countryEmergencyPhoneCode: "",
             emergencyPhoneNumber: "",
             medicalCondition: ""
         });
-
+        const dateBirthdayMask = reactive({
+            mask: '##/##/####',
+            eager: false
+        });
         const documentTypes = ref([]);
-        const emergencyPhoneCodes = ref([]);
         const genders = ref([]);
         const messages = {
             en: en,
@@ -282,8 +298,7 @@ export default defineComponent({
         const { t } = useI18n({
             messages
         });
-        const eventStore = useEventStore();
-        const phoneCodes = ref([]);
+        const eventStore = useEventStore();        
         const rules = {
             firstName: { 
                 alpha: helpers.withMessage(t('validator.alpha'), alpha),
@@ -307,7 +322,9 @@ export default defineComponent({
             birthday: { required: helpers.withMessage(t('validator.required'), required) },
             genderId: { required: helpers.withMessage(t('validator.required'), required) },
             bloodTypeId: { required: helpers.withMessage(t('validator.required'), required) },
+            countryPhoneCode: { required: helpers.withMessage(t('validator.countryPhoneCode'), required) },
             phoneNumber: { required: helpers.withMessage(t('validator.required'), required) },
+            countryEmergencyPhoneCode: { required: helpers.withMessage(t('validator.countryPhoneCode'), required) },
             emergencyPhoneNumber: { required: helpers.withMessage(t('validator.required'), required) },
             medicalCondition: { required: helpers.withMessage(t('validator.required'), required) }
         };
@@ -374,8 +391,8 @@ export default defineComponent({
 
                 if(rs.status === 200 && rs.data) {
    
-                    phoneCodes.value = rs.data.phoneCodes;
-                    emergencyPhoneCodes.value = rs.data.phoneCodes;
+                    countriesPhoneCodes.value = rs.data.phoneCodes;
+                    countriesEmergencyPhoneCodes.value = rs.data.phoneCodes;
 
                 };
 
@@ -464,7 +481,7 @@ export default defineComponent({
                     data.document = userData.document_id;
                     data.documentTypeId = userData.document_type_id;
                     data.emergencyPhoneNumber = userData.emergency_phone_number;
-                    data.genderId = userData.gende_id;
+                    data.genderId = userData.gender_id;
                     data.lastName = userData.last_name;
                     data.medicalCondition = userData.medical_condition;
                     data.middleName = userData.middle_name;
@@ -509,7 +526,9 @@ export default defineComponent({
                         birthday: data.birthday,
                         genderId: data.genderId,
                         bloodTypeId: data.bloodTypeId,
+                        countryPhoneCode: data.countryPhoneCode,
                         phoneNumber: data.phoneNumber,
+                        countryEmergencyPhoneCode: data.countryEmergencyPhoneCode,
                         emergencyPhoneNumber: data.emergencyPhoneNumber,
                         medicalCondition: data.medicalCondition,
                         langId: userAccountStore.state.langId
@@ -601,11 +620,12 @@ export default defineComponent({
         return {
             attrs,
             bloodTypes,
+            countriesPhoneCodes,
+            countriesEmergencyPhoneCodes,
             data,
+            dateBirthdayMask,
             documentTypes,
-            emergencyPhoneCodes,
             genders,
-            phoneCodes,
             rules,
             save,
             t,
