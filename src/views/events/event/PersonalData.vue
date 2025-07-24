@@ -124,26 +124,48 @@
                         </div>
                     </div>
                     <div :class=" (v$.phoneNumber.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
-                        <label for="phoneNumber" class="form-label">Teléfono móvil</label>
-                        <input class="form-control"
-                               :disabled="attrs.phoneNumber.disabled"
-                               id="phoneNumber"
-                               type="text"
-                               v-model="data.phoneNumber">
+                        <label for="phoneNumber" class="form-label">Teléfono móvil (Whatsapp)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                 <select class="form-select"
+                                         :disabled="attrs.phoneCode.disabled" 
+                                         id="phoneCode"
+                                         v-model="data.phoneCode">
+                                    <option :value="item.phone_number_code" v-for="(item, index) in phoneCodes">{{ item.phone_number_code }}</option>
+                                </select>
+                            </span>
+                            <input class="form-control"
+                                   :disabled="attrs.phoneNumber.disabled"
+                                   id="phoneNumber"
+                                   type="text"
+                                   v-model="data.phoneNumber">
+                        </div>
                         <div class="error-msg" v-for="error of v$.phoneNumber.$errors" :key="error.$uid">
                             <p>{{ error.$message }}</p>
                         </div>
+                        <div class="form-text">Ejemplo: 04244422598.</div>
                     </div>
                     <div :class=" (v$.emergencyPhoneNumber.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
                         <label for="emergencyPhoneNumber" class="form-label">Teléfono móvil de emergencia</label>
-                        <input class="form-control"
-                               :disabled="attrs.emergencyPhoneNumber.disabled"
-                               id="emergencyPhoneNumber"
-                               type="text"
-                               v-model="data.emergencyPhoneNumber">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <select class="form-select"
+                                         :disabled="attrs.emergencyPhoneCode.disabled" 
+                                         id="emergencyPhoneCode"
+                                         v-model="data.phoneCode">
+                                    <option :value="item.phone_number_code" v-for="(item, index) in emergencyPhoneCodes">{{ item.phone_number_code }}</option>
+                                </select>
+                            </span>
+                            <input class="form-control"
+                                   :disabled="attrs.emergencyPhoneNumber.disabled"
+                                   id="emergencyPhoneNumber"
+                                   type="text"
+                                   v-model="data.emergencyPhoneNumber">
+                        </div>
                         <div class="error-msg" v-for="error of v$.emergencyPhoneNumber.$errors" :key="error.$uid">
                             <p>{{ error.$message }}</p>
                         </div>
+                        <div class="form-text">Ejemplo: 04244422598.</div>
                     </div>
                     <div :class=" (v$.medicalCondition.$errors.length > 0) ? 'field-error mb-4 col-12' : 'mb-4 col-12'">
                         <label for="medicalCondition" class="form-label">¿Es alérgico a algún medicamento, alimento, mordedura o picada de animales o insectos, tiene alguna condición médica o discapacidad que debamos saber?</label>
@@ -196,6 +218,9 @@ export default defineComponent({
             documentTypeId: {
                 disabled: false
             },
+            emergencyPhoneCode: {
+                disabled: false
+            },
             emergencyPhoneNumber: {
                 disabled: false
             },
@@ -206,6 +231,9 @@ export default defineComponent({
                 disabled: false
             },
             lastName: {
+                disabled: false
+            },
+            phoneCode: {
                 disabled: false
             },
             phoneNumber: {
@@ -237,13 +265,15 @@ export default defineComponent({
             birthday: "",
             genderId: "",
             bloodTypeId: "",
+            phoneCode: "",
             phoneNumber: "",
+            emergencyPhoneCode: "",
             emergencyPhoneNumber: "",
             medicalCondition: ""
         });
 
-        const departureDate = ref(null);
         const documentTypes = ref([]);
+        const emergencyPhoneCodes = ref([]);
         const genders = ref([]);
         const messages = {
             en: en,
@@ -253,6 +283,7 @@ export default defineComponent({
             messages
         });
         const eventStore = useEventStore();
+        const phoneCodes = ref([]);
         const rules = {
             firstName: { 
                 alpha: helpers.withMessage(t('validator.alpha'), alpha),
@@ -316,6 +347,35 @@ export default defineComponent({
                 if(rs.status === 200 && rs.data) {
                     console.log(rs.data)
                     bloodTypes.value = rs.data.bloodTypes;
+
+                };
+
+            })
+            .catch(error => {
+
+                console.log(error);
+
+            });
+
+        };
+
+        const getCountriesPhoneCodes = () => {
+
+            let ajaxData = {
+                method: "get",
+                params: {
+                    langId: userAccountStore.state.langId
+                },
+                url: import.meta.env.VITE_API_BASE_URL+"/users/get-countries-phone-codes"
+            };
+
+            ajax(ajaxData)
+            .then(function (rs) {
+
+                if(rs.status === 200 && rs.data) {
+   
+                    phoneCodes.value = rs.data.phoneCodes;
+                    emergencyPhoneCodes.value = rs.data.phoneCodes;
 
                 };
 
@@ -531,6 +591,7 @@ export default defineComponent({
         onBeforeMount(() => {
 
             getBloodTypes();
+            getCountriesPhoneCodes();
             getDocumentTypes();
             getGenderTypes();
             getPersonalData();
@@ -542,7 +603,9 @@ export default defineComponent({
             bloodTypes,
             data,
             documentTypes,
+            emergencyPhoneCodes,
             genders,
+            phoneCodes,
             rules,
             save,
             t,
