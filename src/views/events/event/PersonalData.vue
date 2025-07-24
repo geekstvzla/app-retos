@@ -159,7 +159,7 @@
                 <button type="button" 
                         class="btn btn-filled" 
                         @click="save" 
-                        :disabled="attrs.save.disabled">{{ attrs.save.html }}</button>
+                        :disabled="attrs.save.disabled">{{ attrs.save.loadingHtml }}</button>
             </div>
             </div>
         </div>
@@ -397,8 +397,19 @@ export default defineComponent({
                 if(rs.status === 200 && rs.data) {
 
                     let userData = rs.data.userData;
+                   
+                    data.birthday = userData.birthday;
+                    data.bloodTypeId = userData.blood_type_id;
                     data.firstName = userData.first_name;
                     data.document = userData.document_id;
+                    data.documentTypeId = userData.document_type_id;
+                    data.emergencyPhoneNumber = userData.emergency_phone_number;
+                    data.genderId = userData.gende_id;
+                    data.lastName = userData.last_name;
+                    data.medicalCondition = userData.medical_condition;
+                    data.middleName = userData.middle_name;
+                    data.phoneNumber = userData.phone_number;
+                    data.secondLastName = userData.second_last_name;
 
                 };
 
@@ -430,7 +441,7 @@ export default defineComponent({
                     params: {
                         userId: userAccountStore.state.id,
                         firstName: data.firstName,
-                        middleName: data.firstName,
+                        middleName: data.middleName,
                         lastName: data.lastName,
                         secondLastName: data.secondLastName,
                         documentTypeId: data.documentTypeId,
@@ -445,7 +456,7 @@ export default defineComponent({
                     },
                     url: import.meta.env.VITE_API_BASE_URL+"/users/update-user-data"
                 };
-      
+              
                 ajax(ajaxData)
                 .then(function (rs) {
                     console.log(rs.data)
