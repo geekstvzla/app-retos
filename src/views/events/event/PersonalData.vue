@@ -88,13 +88,18 @@
                     </div>
                     <div :class=" (v$.birthday.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
                         <label for="birthday" class="form-label">Fecha de nacimiento</label>
-                        <input class="form-control"
-                               :disabled="attrs.birthday.disabled"
-                               id="birthday"
-                               data-maska="##/##/####"
-                               :placeholder="attrs.birthday.placeholder"
-                               type="text"
-                               v-model="data.birthday">
+                        <VueDatePicker cancelText="Cerrar"
+                                       :enable-time-picker="false"
+                                       :disabled="attrs.birthday.disabled"
+                                       :flow="birthdayFlow"
+                                       :format="dateFormat"
+                                       id="birthday"
+                                       input-class-name="form-control"
+                                       locale="es"
+                                       :placeholder="attrs.birthday.placeholder"
+                                       selectText="Seleccionar"
+                                       teleport-center
+                                       v-model="data.birthday" />
                         <div class="error-msg" v-for="error of v$.birthday.$errors" :key="error.$uid">
                             <p>{{ error.$message }}</p>
                         </div>
@@ -190,7 +195,8 @@
                 <button type="button" 
                         class="btn btn-filled" 
                         @click="save" 
-                        :disabled="attrs.save.disabled">{{ attrs.save.loadingHtml }}</button>
+                        :disabled="attrs.save.disabled"
+                        v-html="attrs.save.html"></button>
             </div>
             </div>
         </div>
@@ -205,13 +211,16 @@ import { ajax } from '../../../utils/AjaxRequest.js';
 import en from './langs/PersonalDataEng.js';
 import es from './langs/PersonalDataEsp.js';
 import useVuelidate from '@vuelidate/core';
-import { alpha, helpers, numeric, required } from '@vuelidate/validators';
+import { helpers, numeric, required } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
 export default defineComponent({
+    components: { VueDatePicker },
     setup() {
 
         const attrs = reactive({
@@ -266,6 +275,7 @@ export default defineComponent({
             }
         });
         
+        const birthdayFlow = ref(['month', 'year', 'calendar']);
         const bloodTypes = ref([]);
         const countriesPhoneCodes = ref([]);
         const countriesEmergencyPhoneCodes = ref([]);
@@ -289,6 +299,7 @@ export default defineComponent({
             mask: '##/##/####',
             eager: false
         });
+        const dateFormat = "dd/MM/yyyy";
         const documentTypes = ref([]);
         const genders = ref([]);
         const messages = {
@@ -298,21 +309,29 @@ export default defineComponent({
         const { t } = useI18n({
             messages
         });
-        const eventStore = useEventStore();        
+        const eventStore = useEventStore();    
+        
+        const validName = (value) => {
+
+            const regex = /^[ \p{Letter}'’]+$/u; 
+            return regex.test(value);
+
+        };
+
         const rules = {
             firstName: { 
-                alpha: helpers.withMessage(t('validator.alpha'), alpha),
+                alpha: helpers.withMessage(t('validator.alpha'), validName),
                 required: helpers.withMessage(t('validator.required'), required) 
             },
             middleName: { 
-                alpha: helpers.withMessage(t('validator.alpha'), alpha),
+                alpha: helpers.withMessage(t('validator.alpha'), validName),
             },
             lastName: { 
-                alpha: helpers.withMessage(t('validator.alpha'), alpha),
+                alpha: helpers.withMessage(t('validator.alpha'), validName),
                 required: helpers.withMessage(t('validator.required'), required) 
             },
             secondLastName: { 
-                alpha: helpers.withMessage(t('validator.alpha'), alpha)
+                alpha: helpers.withMessage(t('validator.alpha'), validName)
             },
             documentTypeId: { required: helpers.withMessage(t('validator.required'), required) },
             document: { 
@@ -330,23 +349,6 @@ export default defineComponent({
         };
         const userAccountStore = useUserAccountStore();
         const v$ = useVuelidate(rules, data, { $scope: false });
-
-        const dateFormat = (dateString) => {
-
-            var format = "";
-            var locale = "";
-
-            if(userAccountStore.state.langId === "esp") {
-                format = "DD MMMM YYYY hh:mm a";
-                locale = "es";
-            } else {
-                format = "MMMM D, YYYY";
-                locale = "en";
-            }
-
-            return dayjs(dateString).locale(locale).format(format);
-
-        };
 
         const getBloodTypes = () => {
 
@@ -474,19 +476,21 @@ export default defineComponent({
                 if(rs.status === 200 && rs.data) {
 
                     let userData = rs.data.userData;
-                   
+                
                     data.birthday = userData.birthday;
-                    data.bloodTypeId = userData.blood_type_id;
-                    data.firstName = userData.first_name;
+                    data.bloodTypeId = userData.blood_type_id;                    
+                    data.countryEmergencyPhoneCode = userData.country_emergency_phone_code;
+                    data.countryPhoneCode = userData.country_phone_code;
+                    data.firstName = userData.first_name.trim();
                     data.document = userData.document_id;
                     data.documentTypeId = userData.document_type_id;
                     data.emergencyPhoneNumber = userData.emergency_phone_number;
                     data.genderId = userData.gender_id;
-                    data.lastName = userData.last_name;
+                    data.lastName = userData.last_name.trim();
                     data.medicalCondition = userData.medical_condition;
-                    data.middleName = userData.middle_name;
+                    data.middleName = userData.middle_name.trim();
                     data.phoneNumber = userData.phone_number;
-                    data.secondLastName = userData.second_last_name;
+                    data.secondLastName = userData.second_last_name.trim();
 
                 };
 
@@ -511,6 +515,8 @@ export default defineComponent({
                     attrs[index].disabled = true;
                 });
 
+                let birthdayFormat = data.birthday.getFullYear() + "-" + data.birthday.getUTCMonth() + "-" +data.birthday.getDate();
+                console.log(birthdayFormat)
                 attrs.save.html = attrs.save.loadingHtml;
                 
                 let ajaxData = {
@@ -535,7 +541,10 @@ export default defineComponent({
                     },
                     url: import.meta.env.VITE_API_BASE_URL+"/users/update-user-data"
                 };
-              
+                
+                console.log(ajaxData);
+                return;
+
                 ajax(ajaxData)
                 .then(function (rs) {
                     console.log(rs.data)
@@ -607,6 +616,8 @@ export default defineComponent({
 
         };
 
+        
+
         onBeforeMount(() => {
 
             getBloodTypes();
@@ -619,11 +630,13 @@ export default defineComponent({
 
         return {
             attrs,
+            birthdayFlow,
             bloodTypes,
             countriesPhoneCodes,
             countriesEmergencyPhoneCodes,
             data,
             dateBirthdayMask,
+            dateFormat,
             documentTypes,
             genders,
             rules,
