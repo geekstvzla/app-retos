@@ -66,13 +66,15 @@
                     <div :class=" (v$.documentTypeId.$errors.length > 0 || v$.document.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
                         <label for="documentType" class="form-label">Número de cédula</label>
                         <div class="input-group">
-                            <select class="form-select"
-                                    :disabled="attrs.documentTypeId.disabled" 
-                                    id="documentType"
-                                    v-model="data.documentTypeId">
-                                <option selected value=""> - </option>
-                                <option :value="item.document_type_id" v-for="(item, index) in documentTypes">{{ item.document_type }}</option>
-                            </select>
+                            <span class="input-group-text">
+                                 <select class="form-select"
+                                        :disabled="attrs.documentTypeId.disabled" 
+                                        id="documentType"
+                                        v-model="data.documentTypeId">
+                                    <option selected value=""> - </option>
+                                    <option :value="item.document_type_id" v-for="(item, index) in documentTypes">{{ item.document_type }}</option>
+                                </select>
+                            </span>
                             <input class="form-control"
                                    :disabled="attrs.document.disabled"
                                    id="document"
@@ -99,7 +101,8 @@
                                        :placeholder="attrs.birthday.placeholder"
                                        selectText="Seleccionar"
                                        teleport-center
-                                       v-model="data.birthday" />
+                                       v-model="data.birthday"
+                                       model-type="yyyy-MM-dd" />
                         <div class="error-msg" v-for="error of v$.birthday.$errors" :key="error.$uid">
                             <p>{{ error.$message }}</p>
                         </div>
@@ -214,8 +217,7 @@ import useVuelidate from '@vuelidate/core';
 import { helpers, numeric, required } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
-import dayjs from 'dayjs';
-import 'dayjs/locale/es';
+import { vMaska } from "maska/vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
@@ -476,7 +478,7 @@ export default defineComponent({
                 if(rs.status === 200 && rs.data) {
 
                     let userData = rs.data.userData;
-                
+             
                     data.birthday = userData.birthday;
                     data.bloodTypeId = userData.blood_type_id;                    
                     data.countryEmergencyPhoneCode = userData.country_emergency_phone_code;
@@ -515,8 +517,6 @@ export default defineComponent({
                     attrs[index].disabled = true;
                 });
 
-                let birthdayFormat = data.birthday.getFullYear() + "-" + data.birthday.getUTCMonth() + "-" +data.birthday.getDate();
-                console.log(birthdayFormat)
                 attrs.save.html = attrs.save.loadingHtml;
                 
                 let ajaxData = {
@@ -542,15 +542,16 @@ export default defineComponent({
                     url: import.meta.env.VITE_API_BASE_URL+"/users/update-user-data"
                 };
                 
-                console.log(ajaxData);
-                return;
-
                 ajax(ajaxData)
                 .then(function (rs) {
                     console.log(rs.data)
-                    /*attrs.email.disabled = false;
-                    attrs.requestAccessCodeButton.disabled = false;
-                    attrs.requestAccessCodeButton.html = t('getAccessCodeBtn.text');
+
+                    indexs.forEach((index) => {
+                        attrs[index].disabled = false;
+                    });
+
+                    attrs.save.html = "Guardar";
+                    /*
                    
                     if(response.status === 200) {
 
