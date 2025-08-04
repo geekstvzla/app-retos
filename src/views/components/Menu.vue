@@ -83,7 +83,7 @@ export default defineComponent({
             userAccount.updateState();
             this.$router.push({ name: "home" });
 
-        }
+        };
 
         return {
             logout,

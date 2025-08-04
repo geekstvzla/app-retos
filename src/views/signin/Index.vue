@@ -175,12 +175,14 @@ export default defineComponent({
     
         const sessionData = (data) => {
 
-            localStorage.setItem("userAvatar", data.avatar)
-            localStorage.setItem("userId", data.userId)
-            localStorage.setItem("username", data.username)
+            localStorage.setItem("userAvatar", data.avatar);
+            localStorage.setItem("userEmail", forms.accessCode.email)
+            localStorage.setItem("userId", data.userId);
+            localStorage.setItem("username", data.username);
 
             userAccountStore.$patch((store) => {
                 store.state.avatar = data.avatar
+                store.state.email = forms.accessCode.email
                 store.state.id = data.userId
                 store.state.username = data.username
             })
