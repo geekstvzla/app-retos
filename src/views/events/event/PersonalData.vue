@@ -96,13 +96,13 @@
                                        :flow="birthdayFlow"
                                        :format="dateFormat"
                                        id="birthday"
-                                       input-class-name="form-control"
                                        locale="es"
                                        :placeholder="attrs.birthday.placeholder"
                                        selectText="Seleccionar"
                                        teleport-center
                                        v-model="data.birthday"
-                                       model-type="yyyy-MM-dd" />
+                                       model-type="yyyy-MM-dd"
+                                       :ui="{ input: 'form-control' }" />
                         <div class="error-msg" v-for="error of v$.birthday.$errors" :key="error.$uid">
                             <p>{{ error.$message }}</p>
                         </div>
@@ -523,6 +523,7 @@ export default defineComponent({
                     method: "post",
                     params: {
                         userId: userAccountStore.state.id,
+                        email: userAccountStore.state.email,
                         firstName: data.firstName,
                         middleName: data.middleName,
                         lastName: data.lastName,
