@@ -194,6 +194,7 @@
                 </form>
             </div>
             <div class="modal-footer">
+                <Alert :options="alertProps" />
                 <button type="button" class="btn btn-filled" data-bs-dismiss="modal">Cerrar</button>
                 <button type="button" 
                         class="btn btn-filled" 
@@ -208,23 +209,33 @@
 
 <script>
 
-import { defineComponent, onBeforeMount, reactive, ref } from 'vue';
+import { defineComponent, onBeforeMount, onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ajax } from '../../../utils/AjaxRequest.js';
 import en from './langs/PersonalDataEng.js';
 import es from './langs/PersonalDataEsp.js';
 import useVuelidate from '@vuelidate/core';
 import { helpers, numeric, required } from '@vuelidate/validators';
-import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import { vMaska } from "maska/vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import Alert from '../../../components/Alert.vue';
 
 export default defineComponent({
-    components: { VueDatePicker },
+    components: { 
+        Alert,
+        VueDatePicker 
+    },
     setup() {
 
+        const alertProps = reactive({
+            iconCloseButton: false,
+            message: "",
+            show: false,
+            timer: 0,
+            type: null
+        });
         const attrs = reactive({
             birthday: {
                 disabled: false,
@@ -310,8 +321,7 @@ export default defineComponent({
         };
         const { t } = useI18n({
             messages
-        });
-        const eventStore = useEventStore();    
+        });  
         
         const validName = (value) => {
 
@@ -545,25 +555,19 @@ export default defineComponent({
                 
                 ajax(ajaxData)
                 .then(function (rs) {
-                    console.log(rs.data)
 
                     indexs.forEach((index) => {
                         attrs[index].disabled = false;
                     });
 
                     attrs.save.html = "Guardar";
-                    /*
                    
-                    if(response.status === 200) {
+                    if(rs.status === 200) {
 
-                        var message = response.data.message;
-                        var typeMessage = response.data.status;
+                        var message = rs.data.message;
+                        var typeMessage = rs.data.status;
                        
-                        if(response.data.statusCode === 1) {
-                           
-                            attrs.requestAccessCodeButton.disabled = true;
-                          
-                        } else if(response.data.statusCode === 4) { // Error con el servidor de correo
+                        if(rs.data.statusCode === 4) { // Error con el servidor de correo
 
                             throw {
                                 message: t('alert.error.emailNoConnction'),
@@ -571,46 +575,37 @@ export default defineComponent({
                             };
 
                         };
-          
+
                         let alertData = {
                             message: message,
-                            show: (response.data.statusCode !== 0) ? true : false,
+                            show: true,
                             type: typeMessage
                         };
-
-                        let dataR = {
-                            alertData: alertData,
-                            email: data.email,
-                            statusCode: response.data.statusCode
-                        };
-                    
-                        emit("response", dataR);
+                        Object.assign(alertProps, alertData);
                      
                     } else {
 
                         throw {
-                            message: t('alert.error'),
+                            message: t('alert.error.general'),
                             type: "error"
                         };
 
-                    };*/
+                    };
 
                 })
                 .catch(error => {
 
-                    /*let alertData = {
+                    let alertData = {
                         close: (error.close) ? error.close : false,
-                        message: (error.message) ? error.message : t('getAccessCodeBtn.text'),
+                        message: (error.message) ? error.message : t('alert.error.general'),
                         show: true,
                         timer: (error.timer) ? error.timer : false,
                         timerSeconds: (error.timerSeconds) ? error.timerSeconds : 0,
                         type: (error.type) ? error.type : "error"
                     };
 
-                    let dataR = {
-                        alertData: alertData
-                    };
-                    */
+                    Object.assign(alertProps, alertData);
+                    
 
                 });
 
@@ -618,19 +613,35 @@ export default defineComponent({
 
         };
 
-        
-
         onBeforeMount(() => {
 
             getBloodTypes();
             getCountriesPhoneCodes();
             getDocumentTypes();
             getGenderTypes();
-            getPersonalData();
             
         });
 
+        onMounted(() => {
+            
+            const modal = document.getElementById('personalDataModal')
+            modal.addEventListener('hidden.bs.modal', event => {
+
+                alertProps.show = false;
+                next();
+
+            });
+
+            modal.addEventListener('shown.bs.modal', event => {
+
+                getPersonalData();
+
+            });
+
+        });
+
         return {
+            alertProps,
             attrs,
             birthdayFlow,
             bloodTypes,

@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <div :class="(showMenu) ? 'container' : 'container signinView'" id="wrapper-menu">
-            <div :class="(showMenu) ? 'row d-flex' : 'row justify-content-center'">
+            <div :class="(showMenu) ? 'row d-flex' : 'row align-items-center justify-content-between'">
                 <div :class="(showMenu) ? 'col-auto me-auto' : 'col-auto'">
                     <router-link :to="{ name: 'home' }" class="navbar-brand">
                         <img src="/images/logo-menu-letras-negras.webp" alt="Sumando Kilometros Logo" class="logo">
@@ -29,7 +29,7 @@
                         </div>
                     </nav>
                 </div>
-                <div class="col-auto" v-if="showMenu">
+                <div class="col-auto">
                     <div class="dropdown" v-if="userLogged">
                         <button aria-expanded="false"
                                 class="btn dropdown-toggle user-account"
@@ -47,7 +47,7 @@
                             <li><a @click="logout" class="dropdown-item">Salir</a></li>
                         </ul>
                     </div>
-                    <div class="btn-group" role="group">
+                    <div class="btn-group" role="group" v-if="!userLogged">
                         <router-link :to="{ name: 'sign-in' }" class="btn">Entrar</router-link>
                     </div>
                 </div>
