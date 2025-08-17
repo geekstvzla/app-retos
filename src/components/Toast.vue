@@ -39,44 +39,27 @@
     export default defineComponent({
         emits: ['accept', 'toastClosed'],
         props: {
-            actionButton: {
-                default: {
-                    show: false,
-                    text: null
-                },
-                type: Object
-            },
-            autohide: {
-                default: true,
-                type: Boolean
-            },
-            closeButton: {
-                default: () =>  ({
-                    show: false,
-                    text: "Cerrar"
-                }),
-                type: Object
-            },
-            ids: Array,
-            loading: {
-                default: true,
-                type: Boolean
-            },
-            message: {
-                default: "",
-                type: String
-            },
-            placement: {
-                default: "default",
-                type: String
-            },
-            title: {
-                default: "",
-                type: String
-            },
-            type: {
-                default: "",
-                type: String
+            options: {
+                Object,
+                default() {
+                    return {
+                        actionButton: {
+                            show: false,
+                            text: ""
+                        },
+                        autohide: true,
+                        closeButton: {
+                            show: false,
+                            text: "Cerrar"
+                        },
+                        ids: [],
+                        loading: true,
+                        message:  "",
+                        placement: "default",
+                        title: "",
+                        type: ""
+                    }
+                }
             }
         },
         setup(props, { emit }) {

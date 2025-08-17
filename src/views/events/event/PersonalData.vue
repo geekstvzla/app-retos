@@ -3,7 +3,9 @@
         <div class="col">
             <div class="personal-data">
                 <h2 class="title">¿Quieres participar?</h2>
-                <button type="button" class="btn btn-filled" data-bs-toggle="modal" data-bs-target="#personalDataModal">
+                <button class="btn btn-filled" 
+                        @click="openModal"
+                        type="button">
                     Ver tu información personal
                 </button>
             </div>
@@ -205,6 +207,9 @@
             </div>
         </div>
     </div>
+    <Toast :options="toastProps" 
+           @actionClicked="goToLogin"
+           @toastClosed="goToLogin"/>
 </template>
 
 <script>
@@ -221,10 +226,13 @@ import { vMaska } from "maska/vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import Alert from '../../../components/Alert.vue';
+import Toast from '../../../components/Toast.vue';
+import * as bootstrap from 'bootstrap';
 
 export default defineComponent({
     components: { 
         Alert,
+        Toast,
         VueDatePicker 
     },
     setup() {
@@ -319,9 +327,27 @@ export default defineComponent({
             en: en,
             es: es
         };
+        const modal = ref();
         const { t } = useI18n({
             messages
         });  
+        const toast = ref();
+        const toastProps = reactive({
+            actionButton: {
+                show: false,
+                text: ""
+            },
+            autohide: true,
+            closeButton: {
+                show: false,
+                text: "Ok"
+            },
+            ids: [],
+            loading: false,
+            message: "Debes iniciar sesión para ver tus datos",
+            placement: "middle-center",
+            type: "warning"
+        });
         
         const validName = (value) => {
 
@@ -488,7 +514,7 @@ export default defineComponent({
                 if(rs.status === 200 && rs.data) {
 
                     let userData = rs.data.userData;
-             
+                 
                     data.birthday = userData.birthday;
                     data.bloodTypeId = userData.blood_type_id;                    
                     data.countryEmergencyPhoneCode = userData.country_emergency_phone_code;
@@ -512,6 +538,35 @@ export default defineComponent({
                 console.log(error);
 
             });
+
+        };
+
+        const goToLogin = () => {
+
+        };
+
+        const openModal = () => {
+
+            if(userAccountStore.state.id === null) {
+
+                console.log("Inicia sesion")
+                let toastProps = {
+                    closeButton: {
+                        show: true,
+                        text: "Ok"
+                    },
+                    message: "Debes iniciar sesión para ver tus datos",
+                    placement: "middle-center",
+                    type: "warning"
+                };
+                toast.value.show();
+
+            } else {
+
+                modal.value.show();
+
+            }
+            
 
         };
 
@@ -624,19 +679,23 @@ export default defineComponent({
 
         onMounted(() => {
             
-            const modal = document.getElementById('personalDataModal')
-            modal.addEventListener('hidden.bs.modal', event => {
+            modal.value = new bootstrap.Modal('#personalDataModal');
+
+            modal.value._element.addEventListener('hidden.bs.modal', event => {
 
                 alertProps.show = false;
                 next();
 
             });
 
-            modal.addEventListener('shown.bs.modal', event => {
+            modal.value._element.addEventListener('shown.bs.modal', event => {
 
                 getPersonalData();
 
             });
+
+            let toastEle = document.getElementById('noUserSession');
+            toast.value = bootstrap.Toast.getOrCreateInstance(toastEle);
 
         });
 
@@ -652,9 +711,12 @@ export default defineComponent({
             dateFormat,
             documentTypes,
             genders,
+            goToLogin,
+            openModal,
             rules,
             save,
             t,
+            toastProps,
             v$
         };
 
