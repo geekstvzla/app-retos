@@ -335,18 +335,18 @@ export default defineComponent({
         const toastProps = reactive({
             actionButton: {
                 show: false,
-                text: ""
+                text: null
             },
             autohide: true,
             closeButton: {
                 show: false,
-                text: "Ok"
+                text: null
             },
-            ids: [],
+            ids: ["noUserSession"],
             loading: false,
-            message: "Debes iniciar sesión para ver tus datos",
-            placement: "middle-center",
-            type: "warning"
+            message: "",
+            placement: "default",
+            type: ""
         });
         
         const validName = (value) => {
@@ -543,6 +543,8 @@ export default defineComponent({
 
         const goToLogin = () => {
 
+            
+
         };
 
         const openModal = () => {
@@ -550,15 +552,21 @@ export default defineComponent({
             if(userAccountStore.state.id === null) {
 
                 console.log("Inicia sesion")
-                let toastProps = {
-                    closeButton: {
+
+                let toastData = {
+                    actionButton: {
                         show: true,
-                        text: "Ok"
+                        text: "Guardar"
                     },
-                    message: "Debes iniciar sesión para ver tus datos",
+                    autohide: false,
+                    closeButton: {
+                        show: true
+                    },
                     placement: "middle-center",
+                    message: "Debes iniciar sesión para ver tus datos",
                     type: "warning"
                 };
+                Object.assign(toastProps, toastData);
                 toast.value.show();
 
             } else {

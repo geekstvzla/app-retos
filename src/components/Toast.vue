@@ -3,25 +3,25 @@
         <div aria-live="assertive"
              aria-atomic="true"
              class="toast fade"
-             :data-bs-autohide="props.autohide"
+             :data-bs-autohide="props.options.autohide"
              :id="id"
              role="alert"
-             v-for="(id, index) in props.ids">
+             v-for="(id, index) in props.options.ids">
             <div :class="'toast-header '+ toast.toastClass">
-                <strong class="me-auto">{{ props.title }}</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" v-if="props.closeButton"></button>
+                <strong class="me-auto">{{ props.options.title }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" v-if="props.options.closeButton"></button>
             </div>
             <div class="toast-body">
-                <p v-html="props.message"></p>
-                <div class="mt-2 pt-2 border-top" v-if="props.actionButton.show || props.closeButton.show">
+                <p v-html="props.options.message"></p>
+                <div class="mt-2 pt-2 border-top" v-if="props.options.actionButton.show || props.options.closeButton.show">
                     <button class="btn btn-primary btn-sm"
                         type="button"
-                        v-if="props.actionButton.show && !toast.loading"
-                        @click="accept">{{ props.actionButton.text }}</button>
+                        v-if="props.options.actionButton.show && !toast.loading"
+                        @click="accept">{{ props.options.actionButton.text }}</button>
                     <button class="btn btn-secondary btn-sm"
                         data-bs-dismiss="toast"
                         type="button"
-                        v-if="props.closeButton.show && !toast.loading">{{ props.closeButton.text }}</button>
+                        v-if="props.options.closeButton.show && !toast.loading">{{ props.options.closeButton.text }}</button>
                     <div class="spinner-border" role="status" v-if="toast.loading">
                         <span class="visually-hidden">Loading...</span>
                     </div>
@@ -65,16 +65,16 @@
         setup(props, { emit }) {
 
             watch(() => [
-                props.loading,
-                props.placement,
-                props.type,
+                props.options.loading,
+                props.options.placement,
+                props.options.type,
             ], (newValue, oldValue) => {
 
                 if(newValue[1] !== oldValue[1] || newValue[2] !== oldValue[2]){
-                    toastType(newValue[2], newValue[1])
-                }
+                    toastType(newValue[2], newValue[1]);
+                };
 
-                toast.loading = newValue[0]
+                toast.loading = newValue[0];
 
             });
 
@@ -82,45 +82,47 @@
                 containerClass: "",
                 loading: false,
                 toastClass: ""
-            })
+            });
 
             onMounted(() => {
-                setToastInstance()
-                toastType(props.type, props.placement)
-            })
+
+                setToastInstance();
+                toastType(props.options.type, props.options.placement);
+
+            });
 
             const setToastInstance = () => {
-
-                props.ids.forEach((id, index) => {
+             
+                props.options.ids.forEach((id, index) => {
                     setToastEvents(id)
                 });
 
-            }
+            };
 
             const setToastEvents = (id) => {
 
-                let toastEle = document.getElementById(id)
-                let toastInstance = bootstrap.Toast.getOrCreateInstance(toastEle)
+                let toastEle = document.getElementById(id);
+                let toastInstance = bootstrap.Toast.getOrCreateInstance(toastEle);
 
                 toastEle.addEventListener('hidden.bs.toast', () => {
-                    closeToast()
-                })
+                    closeToast();
+                });
 
-            }
+            };
 
             const closeToast = () => {
                 emit('toastClosed')
                 toast.containerClass = ""
                 toast.loading = false
                 toast.toastClass = ""
-            }
+            };
 
             const toastType = (type, placement) => {
 
                 let toastPlacement = {
                     "default" : "",
                     "middle-center" : "d-flex justify-content-center align-items-center w-100"
-                }
+                };
 
                 let types = {
                     "confirm" : "bg-warning show",
@@ -128,16 +130,16 @@
                     "error" : "bg-danger",
                     "warning" : "bg-warning",
                     "success" : "bg-success"
-                }
+                };
 
-                toast.containerClass = (toastPlacement[placement]) ? toastPlacement[placement] : toastPlacement.default
-                toast.toastClass = (types[type]) ? types[type] : types.default
+                toast.containerClass = (toastPlacement[placement]) ? toastPlacement[placement] : toastPlacement.default;
+                toast.toastClass = (types[type]) ? types[type] : types.default;
 
-            }
+            };
 
             const accept = () => {
-                emit('actionClicked')
-            }
+                emit('actionClicked');
+            };
 
             return {
                 accept,
