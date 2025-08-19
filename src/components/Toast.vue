@@ -14,14 +14,16 @@
             <div class="toast-body">
                 <p v-html="props.options.message"></p>
                 <div class="mt-2 pt-2 border-top" v-if="props.options.actionButton.show || props.options.closeButton.show">
-                    <button class="btn btn-primary btn-sm"
-                        type="button"
-                        v-if="props.options.actionButton.show && !toast.loading"
-                        @click="accept">{{ props.options.actionButton.text }}</button>
-                    <button class="btn btn-secondary btn-sm"
-                        data-bs-dismiss="toast"
-                        type="button"
-                        v-if="props.options.closeButton.show && !toast.loading">{{ props.options.closeButton.text }}</button>
+                    <button class="btn btn-filled"
+                            type="button"
+                            v-if="props.options.actionButton.show && !toast.loading"
+                            @click="accept"
+                            v-html="props.options.actionButton.text"></button>
+                    <button class="btn btn-filled close"
+                            data-bs-dismiss="toast"
+                            type="button"
+                            v-if="props.options.closeButton.show && !toast.loading"
+                            v-html="props.options.closeButton.text"></button>
                     <div class="spinner-border" role="status" v-if="toast.loading">
                         <span class="visually-hidden">Loading...</span>
                     </div>

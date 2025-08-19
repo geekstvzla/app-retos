@@ -209,7 +209,7 @@
     </div>
     <Toast :options="toastProps" 
            @actionClicked="goToLogin"
-           @toastClosed="goToLogin"/>
+           @toastClosed="closeToast"/>
 </template>
 
 <script>
@@ -388,6 +388,12 @@ export default defineComponent({
         const userAccountStore = useUserAccountStore();
         const v$ = useVuelidate(rules, data, { $scope: false });
 
+        const closeToast = () => {
+
+            toast.value.hide();
+
+        };
+
         const getBloodTypes = () => {
 
             let ajaxData = {
@@ -551,19 +557,19 @@ export default defineComponent({
 
             if(userAccountStore.state.id === null) {
 
-                console.log("Inicia sesion")
-
                 let toastData = {
                     actionButton: {
                         show: true,
-                        text: "Guardar"
+                        text: "Iniciar sesión"
                     },
                     autohide: false,
                     closeButton: {
-                        show: true
+                        show: true,
+                        text: "Cerrar"
                     },
                     placement: "middle-center",
-                    message: "Debes iniciar sesión para ver tus datos",
+                    message: "Debes iniciar sesión para ver tus datos.",
+                    title: "No haz iniciado sesión",
                     type: "warning"
                 };
                 Object.assign(toastProps, toastData);
@@ -575,7 +581,6 @@ export default defineComponent({
 
             }
             
-
         };
 
         async function save() {
@@ -712,6 +717,7 @@ export default defineComponent({
             attrs,
             birthdayFlow,
             bloodTypes,
+            closeToast,
             countriesPhoneCodes,
             countriesEmergencyPhoneCodes,
             data,
