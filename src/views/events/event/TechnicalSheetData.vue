@@ -9,8 +9,6 @@
                 <p><strong class="subtitle">Lugar de llegada:</strong> {{ eventInfo.arrivalPlaceName }}</p>
                 <p><strong class="subtitle">Modalidad(es):</strong> <span class="badge rounded-pill text-bg-primary" v-for="(data, index) in eventInfo.modes">{{ data.mode }}</span></p>
                 <p><strong class="subtitle">Distancia(s):</strong> <span class="distance">{{ eventInfo.distances }}</span></p>
-                <p><strong class="subtitle">Costo:</strong></p>
-                <p><strong class="subtitle">¿Qué incluye?:</strong> <span class="distance">{{ eventInfo.includes }}</span></p>
             </div>
         </div>
     </div>
@@ -41,7 +39,6 @@ export default defineComponent({
             distances: "",
             enrollmentEndtDate: "",
             featuredImage: "",
-            includes: "",
             modes: "",
             title: ""
         });
@@ -99,7 +96,6 @@ export default defineComponent({
                     eventInfo.distances = rs.data.response.event_distances;
                     eventInfo.enrollmentEndtDate = dateFormat(rs.data.response.enrollment_end_date);
                     eventInfo.featuredImage = rs.data.response.featured_image;
-                    eventInfo.includes = rs.data.response.event_includes;
                     eventInfo.modes = rs.data.response.event_modes;
                     eventInfo.title = rs.data.response.title;
 
