@@ -3,6 +3,7 @@
         <div class="col">
             <div class="technical-sheet-data">
                 <h2 class="title">Ficha Técnica</h2>
+                <p><strong class="subtitle">Edición:</strong> {{ eventInfo.edition }}</p>
                 <p><strong class="subtitle">Fecha:</strong> {{ eventInfo.departureDate }}</p>
                 <p><strong class="subtitle">Cierre de inscripciones:</strong> {{ eventInfo.enrollmentEndtDate }}</p>
                 <p><strong class="subtitle">Lugar de salida:</strong> {{ eventInfo.departurePlaceName }}</p>
@@ -37,6 +38,7 @@ export default defineComponent({
             departureDate: "",
             departurePlaceName: "",
             distances: "",
+            edition: "",
             enrollmentEndtDate: "",
             featuredImage: "",
             modes: "",
@@ -94,6 +96,7 @@ export default defineComponent({
                     eventInfo.departureDate = dateFormat(rs.data.response.departure_date);
                     eventInfo.departurePlaceName = rs.data.response.departure_place_name;
                     eventInfo.distances = rs.data.response.event_distances;
+                    eventInfo.edition = rs.data.response.event_edition;
                     eventInfo.enrollmentEndtDate = dateFormat(rs.data.response.enrollment_end_date);
                     eventInfo.featuredImage = rs.data.response.featured_image;
                     eventInfo.modes = rs.data.response.event_modes;
