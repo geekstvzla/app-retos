@@ -7,7 +7,8 @@
                     <div class="row mb-3">
                         <div class="col-6">
                             <label for="mode" class="col-form-label">Modalidad</label>
-                            <select class="form-select"
+                            <select @change="getModalityKits"
+                                    class="form-select"
                                     :disabled="attrs.modalities.disabled" 
                                     id="mode"
                                     v-model="data.mode">
@@ -26,7 +27,7 @@
                                     id="kit"
                                     v-model="data.kit">
                                 <option selected value="">Seleccione</option>
-                                <option :value="item.document_type_id" v-for="(item, index) in kits">{{ item.document_type }}</option>
+                                <option :value="item.event_edition_mode_kit_id" v-for="(item, index) in kits">{{ item.description }}</option>
                             </select>
                             <span id="kitsHelp" class="form-text">
                                 Kit de participación.
@@ -84,7 +85,6 @@ export default defineComponent({
             en: en,
             es: es
         };
-        const modal = ref();
         const modalities = ref([]);
         const { t } = useI18n({
             messages
@@ -148,8 +148,13 @@ export default defineComponent({
                 if(rs.status === 200 && rs.data) {
                     console.log(rs.data)
                     modalities.value = rs.data;
-                    data.mode = (modalities.value.length === 1) ? modalities.value[0].type_event_mode_id : "";
-      
+                 
+                    if(modalities.value.length === 1) {
+                        
+                        data.mode = modalities.value[0].type_event_mode_id;
+                        getModalityKits();
+
+                    }
 
                 };
 
@@ -162,119 +167,24 @@ export default defineComponent({
 
         };
 
-        const getCountriesPhoneCodes = () => {
+        const getModalityKits = () => {
 
             let ajaxData = {
                 method: "get",
                 params: {
-                    langId: userAccountStore.state.langId
+                    langId: userAccountStore.state.langId,
+                    typeEventModeId: data.mode
                 },
-                url: import.meta.env.VITE_API_BASE_URL+"/users/get-countries-phone-codes"
+                url: import.meta.env.VITE_API_BASE_URL+"/events/event-modality-kits"
             };
 
             ajax(ajaxData)
             .then(function (rs) {
-
+                
                 if(rs.status === 200 && rs.data) {
    
-                    countriesPhoneCodes.value = rs.data.phoneCodes;
-                    countriesEmergencyPhoneCodes.value = rs.data.phoneCodes;
-
-                };
-
-            })
-            .catch(error => {
-
-                console.log(error);
-
-            });
-
-        };
-        
-        const getDocumentTypes = () => {
-
-            let ajaxData = {
-                method: "get",
-                params: {
-                    langId: userAccountStore.state.langId
-                },
-                url: import.meta.env.VITE_API_BASE_URL+"/users/get-document-types"
-            };
-
-            ajax(ajaxData)
-            .then(function (rs) {
-
-                if(rs.status === 200 && rs.data) {
-                    documentTypes.value = rs.data.documentTypes;
-                };
-
-            })
-            .catch(error => {
-
-                console.log(error);
-
-            });
-
-        };
-
-        const getGenderTypes = () => {
-
-            let ajaxData = {
-                method: "get",
-                params: {
-                    langId: userAccountStore.state.langId
-                },
-                url: import.meta.env.VITE_API_BASE_URL+"/users/get-gender-types"
-            };
-
-            ajax(ajaxData)
-            .then(function (rs) {
-
-                if(rs.status === 200 && rs.data) {
-                    genders.value = rs.data.genderTypes;
-                };
-
-            })
-            .catch(error => {
-
-                console.log(error);
-
-            });
-
-        };
-
-        const getPersonalData = () => {
-
-            let ajaxData = {
-                method: "get",
-                params: {
-                    userId: userAccountStore.state.id,
-                    langId: userAccountStore.state.langId
-                },
-                url: import.meta.env.VITE_API_BASE_URL+"/users/get-user-data"
-            };
-
-            ajax(ajaxData)
-            .then(function (rs) {
-
-                if(rs.status === 200 && rs.data) {
-
-                    let userData = rs.data.userData;
-                 
-                    data.birthday = userData.birthday;
-                    data.bloodTypeId = userData.blood_type_id;                    
-                    data.countryEmergencyPhoneCode = userData.country_emergency_phone_code;
-                    data.countryPhoneCode = userData.country_phone_code;
-                    data.firstName = userData.first_name.trim();
-                    data.document = userData.document_id;
-                    data.documentTypeId = userData.document_type_id;
-                    data.emergencyPhoneNumber = userData.emergency_phone_number;
-                    data.genderId = userData.gender_id;
-                    data.lastName = userData.last_name.trim();
-                    data.medicalCondition = userData.medical_condition;
-                    data.middleName = userData.middle_name.trim();
-                    data.phoneNumber = userData.phone_number;
-                    data.secondLastName = userData.second_last_name.trim();
+                    kits.value = rs.data;
+                    attrs.kits.disabled = false
 
                 };
 
@@ -388,9 +298,7 @@ export default defineComponent({
         onBeforeMount(() => {
 
             getModalities();
-            /*getCountriesPhoneCodes();
-            getDocumentTypes();
-            getGenderTypes();*/
+            //getCountriesPhoneCodes();
             
         });
 
