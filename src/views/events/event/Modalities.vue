@@ -11,10 +11,10 @@
                                     class="form-select"
                                     :disabled="attrs.modalities.disabled" 
                                     id="mode"
-                                    v-model="data.mode">
+                                    v-model="data.modality">
                                 <option value="" disabled="disabled" v-if="modalities.length > 0">Seleccione</option>
-                                <option :value="item.type_event_mode_id" 
-                                        v-for="(item, index) in modalities">{{ item.mode }}</option>
+                                <option :value="item.typeEventModeId" 
+                                        v-for="(item, index) in modalities">{{ item.modality }}</option>
                             </select>
                             <span id="modalitiesHelp" class="form-text">
                                 La modalidad en la cual se va a inscribir.
@@ -28,7 +28,7 @@
                                     id="kit"
                                     v-model="data.kit">
                                 <option disabled selected value="">Seleccione</option>
-                                <option :value="item.event_edition_mode_kit_id" v-for="(item, index) in kits">{{ item.description }}</option>
+                                <option :value="item.kitId" v-for="(item, index) in kits">{{ item.kit }}</option>
                             </select>
                             <span id="kitsHelp" class="form-text">
                                 Kit de participación.
@@ -85,7 +85,7 @@ export default defineComponent({
         
         const data = reactive({
             kit: "",
-            mode: ""
+            modality: ""
         });
         const kits = ref([]);
         const kitItemsDefault = {desc: "Seleccione el kit para mostrar lo que incluye.", class: "text-bg-warning"};
@@ -186,14 +186,14 @@ export default defineComponent({
 
             ajax(ajaxData)
             .then(function (rs) {
-                
+              
                 if(rs.status === 200 && rs.data) {
                    
                     modalities.value = rs.data;
                  
                     if(modalities.value.length === 1) {
                         
-                        data.mode = modalities.value[0].type_event_mode_id;
+                        data.modality = modalities.value[0].typeEventModeId;
                         getModalityKits();
 
                     } else {
@@ -222,7 +222,7 @@ export default defineComponent({
                 method: "get",
                 params: {
                     langId: userAccountStore.state.langId,
-                    typeEventModeId: data.mode
+                    typeEventModeId: data.modality
                 },
                 url: import.meta.env.VITE_API_BASE_URL+"/events/event-modality-kits"
             };
