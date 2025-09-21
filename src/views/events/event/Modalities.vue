@@ -5,14 +5,14 @@
                 <h2 class="title">¿Quieres participar?</h2>
                 <form>
                     <div class="row mb-3">
-                        <div class="col-6">
+                        <div class="col-6 mb-3">
                             <label for="mode" class="col-form-label">Modalidad</label>
                             <select @change="getModalityKits"
                                     class="form-select"
                                     :disabled="attrs.modalities.disabled" 
                                     id="mode"
                                     v-model="data.mode">
-                                <option value="" disabled="disabled" v-if="modalities.length === 0">Seleccione</option>
+                                <option value="" disabled="disabled" v-if="modalities.length > 0">Seleccione</option>
                                 <option :value="item.type_event_mode_id" 
                                         v-for="(item, index) in modalities">{{ item.mode }}</option>
                             </select>
@@ -20,18 +20,25 @@
                                 La modalidad en la cual se va a inscribir.
                             </span>
                         </div>
-                        <div class="col-6">
+                        <div class="col-6 mb-3">
                             <label for="kits" class="col-form-label">Kit</label>
-                            <select class="form-select"
+                            <select @change="getKitItems"
+                                    class="form-select"
                                     :disabled="attrs.kits.disabled" 
                                     id="kit"
                                     v-model="data.kit">
-                                <option selected value="">Seleccione</option>
+                                <option disabled selected value="">Seleccione</option>
                                 <option :value="item.event_edition_mode_kit_id" v-for="(item, index) in kits">{{ item.description }}</option>
                             </select>
                             <span id="kitsHelp" class="form-text">
                                 Kit de participación.
                             </span>
+                        </div>
+                        <div class="col-12">
+                            <label for="kits" class="col-form-label">¿Qué incluye?</label>
+                            <div class="wrapper-kit-includes">
+                                <span :class="'badge ' + item.class" v-for="(item, index) in kitItems">{{ item.desc }}</span>
+                            </div>
                         </div>
                     </div>
                 </form>  
@@ -81,6 +88,8 @@ export default defineComponent({
             mode: ""
         });
         const kits = ref([]);
+        const kitItemsDefault = {desc: "Seleccione el kit para mostrar lo que incluye.", class: "text-bg-warning"};
+        const kitItems = ref([kitItemsDefault]);
         const messages = {
             en: en,
             es: es
@@ -130,6 +139,39 @@ export default defineComponent({
         const userAccountStore = useUserAccountStore();
         const v$ = useVuelidate(rules, data, { $scope: false });
 
+        const getKitItems = () => {
+           
+            let ajaxData = {
+                method: "get",
+                params: {
+                    kitId: data.kit,
+                    langId: userAccountStore.state.langId
+                },
+                url: import.meta.env.VITE_API_BASE_URL+"/events/kit-items"
+            };
+
+            ajax(ajaxData)
+            .then(function (rs) {
+                
+                if(rs.status === 200 && rs.data) {
+                    
+                    kitItems.value = [];
+
+                    rs.data.forEach(function(element, index) {
+                        kitItems.value.push({"desc":element.item, "class": "text-bg-primary"});
+                    });                    
+
+                };
+
+            })
+            .catch(error => {
+
+                console.log(error);
+
+            });
+
+        }
+
         const getModalities = () => {
 
             let ajaxData = {
@@ -146,13 +188,17 @@ export default defineComponent({
             .then(function (rs) {
                 
                 if(rs.status === 200 && rs.data) {
-                    console.log(rs.data)
+                   
                     modalities.value = rs.data;
                  
                     if(modalities.value.length === 1) {
                         
                         data.mode = modalities.value[0].type_event_mode_id;
                         getModalityKits();
+
+                    } else {
+
+                        kitItems.value = [kitItemsDefault];
 
                     }
 
@@ -168,6 +214,9 @@ export default defineComponent({
         };
 
         const getModalityKits = () => {
+
+            data.kit = "";
+            kitItems.value = [kitItemsDefault];
 
             let ajaxData = {
                 method: "get",
@@ -310,7 +359,10 @@ export default defineComponent({
             alertProps,
             attrs,
             data,
+            getKitItems,
+            getModalityKits,
             kits,
+            kitItems,
             modalities,
             rules,
             t,
