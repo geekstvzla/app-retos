@@ -12,7 +12,7 @@
                 <h1 class="event-title">{{ eventInfo.title }}</h1>
                 <TechnicalSheetData @eventInfo="setEventInfo" />
                 <modalities />
-                <AdditionalAccessories />
+                <AdditionalAccessories v-if="eventInfo.hasAdditionalAccessories"/>
                 <PersonalData />
             </div>
             <div class="col-auto">
@@ -59,15 +59,15 @@ export default defineComponent({
         const eventInfo = reactive({
             banner: "",
             featuredImage: "",
+            hasAdditionalAccessories: 0,
             title: ""
         });
 
         const setEventInfo = (data) => {
-            console.log(data)
             eventInfo.banner = data.banner;
             eventInfo.featuredImage = data.featuredImage;
+            eventInfo.hasAdditionalAccessories = data.hasAccessories;
             eventInfo.title = data.title;
-
         };
         
         return {

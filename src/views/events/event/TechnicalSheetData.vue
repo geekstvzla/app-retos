@@ -8,7 +8,7 @@
                 <p><strong class="subtitle">Cierre de inscripciones:</strong> {{ eventInfo.enrollmentEndtDate }}</p>
                 <p><strong class="subtitle">Lugar de salida:</strong> {{ eventInfo.departurePlaceName }}</p>
                 <p><strong class="subtitle">Lugar de llegada:</strong> {{ eventInfo.arrivalPlaceName }}</p>
-                <p><strong class="subtitle">Modalidad(es):</strong> <span class="badge rounded-pill text-bg-primary" v-for="(data, index) in eventInfo.modes">{{ data.mode }}</span></p>
+                <p><strong class="subtitle">Modalidad(es):</strong> <span class="badge rounded-pill text-bg-primary" v-for="(item, index) in eventInfo.modes">{{ item.modality }}</span></p>
                 <p><strong class="subtitle">Distancia(s):</strong> <span class="distance">{{ eventInfo.distances }}</span></p>
             </div>
         </div>
@@ -41,6 +41,7 @@ export default defineComponent({
             edition: "",
             enrollmentEndtDate: "",
             featuredImage: "",
+            hasAccessories: false,
             modes: "",
             title: ""
         });
@@ -99,6 +100,7 @@ export default defineComponent({
                     eventInfo.edition = rs.data.response.event_edition;
                     eventInfo.enrollmentEndtDate = dateFormat(rs.data.response.enrollment_end_date);
                     eventInfo.featuredImage = rs.data.response.featured_image;
+                    eventInfo.hasAccessories = (rs.data.response.has_accessories > 0) ? true : false;
                     eventInfo.modes = rs.data.response.event_modes;
                     eventInfo.title = rs.data.response.title;
 
