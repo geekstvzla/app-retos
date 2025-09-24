@@ -2,7 +2,7 @@
     <div class="row wrapper-modalities-sheet">
         <div class="col">
             <div class="modalities-sheet-data">
-                <h2 class="title">Modalidades Disponibles</h2>
+                <h2 class="title">Accesorios Adicionales</h2>
                 <form>
                     <div class="row mb-3">
                         <div class="col-6 mb-3">
@@ -59,7 +59,6 @@ import { helpers, numeric, required } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import Alert from '../../../components/Alert.vue';
-import * as bootstrap from 'bootstrap';
 
 export default defineComponent({
     components: { 

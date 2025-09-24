@@ -12,6 +12,7 @@
                 <h1 class="event-title">{{ eventInfo.title }}</h1>
                 <TechnicalSheetData @eventInfo="setEventInfo" />
                 <modalities />
+                <AdditionalAccessories />
                 <PersonalData />
             </div>
             <div class="col-auto">
@@ -29,12 +30,14 @@ import en from './langs/EventDetailEng.js';
 import es from './langs/EventDetailEsp.js';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
+import AdditionalAccessories from './AdditionalAccessories.vue';
 import Modalities from './Modalities.vue';
 import PersonalData from './PersonalData.vue';
 import TechnicalSheetData from './TechnicalSheetData.vue';
 
 export default defineComponent({
     components: {
+        AdditionalAccessories,
         Modalities,
         PersonalData,
         TechnicalSheetData
