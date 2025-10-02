@@ -3,7 +3,38 @@
         <div class="col">
             <div class="modalities-sheet-data">
                 <h2 class="title">Accesorios Adicionales</h2>
-                
+                <div class="row">
+                    <div class="col-12 col-md-6" v-for="(data, index) in accessories">
+                        <div class="card mb-4">
+                            <div id="carouselExample" class="carousel slide">
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+                                    <img src="https://i.ytimg.com/vi/lnbvTSs_xCM/hq720.jpg" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="https://i.ytimg.com/vi/lnbvTSs_xCM/hq720.jpg" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="https://i.ytimg.com/vi/lnbvTSs_xCM/hq720.jpg" class="d-block w-100" alt="...">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ data.item }}</h5>
+                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>  
         </div>
     </div>
@@ -28,6 +59,7 @@ export default defineComponent({
     },
     setup() {
 
+        const accessories = ref([]);
         const alertProps = reactive({
             iconCloseButton: false,
             message: "",
@@ -72,6 +104,7 @@ export default defineComponent({
                     console.log("*********************************")
                     console.log(rs.data)
                     //kitItems.value = [];
+                    accessories.value = rs.data;
                     rs.data.forEach(function(element, index) {
                         //kitItems.value.push({"desc":element.item, "class": "text-bg-primary"});
                     });                    
@@ -94,6 +127,7 @@ export default defineComponent({
         });
 
         return {
+            accessories,
             alertProps,
             attrs,
             data,
