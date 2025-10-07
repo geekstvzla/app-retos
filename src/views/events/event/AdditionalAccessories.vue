@@ -6,30 +6,24 @@
                 <div class="row">
                     <div class="col-12 col-md-6" v-for="(data, index) in accessories">
                         <div class="card mb-4">
-                            <div id="carouselExample" class="carousel slide">
+                            <div :id="'accessory-'+data.item_id" class="carousel slide">
                                 <div class="carousel-inner">
-                                    <div class="carousel-item active">
-                                    <img src="https://i.ytimg.com/vi/lnbvTSs_xCM/hq720.jpg" class="d-block w-100" alt="...">
+                                    <div :class="index2 === 0 ? 'carousel-item active' : 'carousel-item'" v-for="(multimedia, index2) in data.multimedia">
+                                        <img :src="multimedia.url_media" class="d-block w-100">
+                                    </div>
                                 </div>
-                                <div class="carousel-item">
-                                    <img src="https://i.ytimg.com/vi/lnbvTSs_xCM/hq720.jpg" class="d-block w-100" alt="...">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="https://i.ytimg.com/vi/lnbvTSs_xCM/hq720.jpg" class="d-block w-100" alt="...">
-                                </div>
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
+                                <button class="carousel-control-prev" type="button" :data-bs-target="'#accessory-'+data.item_id" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" :data-bs-target="'#accessory-'+data.item_id" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">{{ data.item }}</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
+                                <p class="card-text">{{ formatCurrency(data.price, 'de-DE', data.currency_abb, data.currency_decimals) }} c/u</p>
                                 <a href="#" class="btn btn-primary">Go somewhere</a>
                             </div>
                         </div>
@@ -52,6 +46,7 @@ import { helpers, numeric, required } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import Alert from '../../../components/Alert.vue';
+import { formatCurrency } from '../../../utils/formatCurrency.js';
 
 export default defineComponent({
     components: { 
@@ -131,6 +126,7 @@ export default defineComponent({
             alertProps,
             attrs,
             data,
+            formatCurrency,
             t
         };
 
