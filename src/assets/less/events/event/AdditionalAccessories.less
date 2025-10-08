@@ -1,0 +1,61 @@
+@import "../../Variables.less";
+
+.wrapper-additional-accessories {
+    margin-top: 30px;
+
+    .additional-accessories-data {
+        background-color: #fff;
+        border-radius: 6px;
+        padding: 25px;
+
+        .title {
+            border-bottom: 1px solid #21252930;
+            font-family: "poppins-bold";
+            margin-bottom: 25px;
+            padding-bottom: 5px;
+        }
+
+        .card {
+            border-radius: @card-border-radius;
+
+            .carousel {
+
+                img {
+                    border-top-left-radius: @card-border-radius;
+                    border-top-right-radius: @card-border-radius;
+                }
+
+            }
+            
+            .card-body {
+
+                .input-group {
+
+                    .form-control {
+                        border-top-left-radius: @input-border-radius;
+                        border-bottom-left-radius: @input-border-radius;
+                    }
+
+                    .btn {
+                        background-color: @background-color-primary;
+                        border: 1px solid @btn-border-color !important;
+                        border-bottom-right-radius: @btn-border-radius;
+                        border-top-right-radius: @btn-border-radius;
+
+                        &:hover {
+                            background-color: @background-color-primary-hover;
+                            color: @btn-color-hover;
+                        }
+
+                    }
+
+                }
+
+            }
+            
+
+        }
+
+    }
+
+}

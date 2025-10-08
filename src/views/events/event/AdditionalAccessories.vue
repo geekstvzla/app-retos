@@ -1,7 +1,7 @@
 <template>
-    <div class="row wrapper-modalities-sheet">
+    <div class="row wrapper-additional-accessories">
         <div class="col">
-            <div class="modalities-sheet-data">
+            <div class="additional-accessories-data">
                 <h2 class="title">Accesorios Adicionales</h2>
                 <div class="row">
                     <div class="col-12 col-md-6" v-for="(data, index) in accessories">
@@ -23,8 +23,17 @@
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">{{ data.item }}</h5>
-                                <p class="card-text">{{ formatCurrency(data.price, 'de-DE', data.currency_abb, data.currency_decimals) }} c/u</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <p class="card-text">{{ formatCurrency(data.price, 'de-DE', data.currency_abb, data.currency_decimals) }}</p>
+                                <div class="input-group">
+                                    <input class="form-control"
+                                           inputmode="numeric"
+                                           oninput="this.value = this.value.replace(/\D+/g, '')"
+                                           step="1"
+                                           type="number">
+                                    <span class="input-group-text">{{ data.currency_symbol }}</span>
+                                    <span class="input-group-text">0.00</span>
+                                    <button class="btn" @click="checkInventory" type="button">Agregar al Carrito</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -80,6 +89,12 @@ export default defineComponent({
         const eventStore = useEventStore();
         const userAccountStore = useUserAccountStore();
 
+        const checkInventory = () => {
+
+            console.log("checkInventory");
+
+        }
+
         const getAccessories = () => {
            
             let ajaxData = {
@@ -125,6 +140,7 @@ export default defineComponent({
             accessories,
             alertProps,
             attrs,
+            checkInventory,
             data,
             formatCurrency,
             t
@@ -135,4 +151,4 @@ export default defineComponent({
 
 </script>
 
-<style lang="less" scoped src="../../../assets/less/events/event/Modalities.less"></style>
+<style lang="less" scoped src="../../../assets/less/events/event/AdditionalAccessories.less"></style>
