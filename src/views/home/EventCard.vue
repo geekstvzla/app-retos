@@ -76,7 +76,7 @@ export default defineComponent({
                 store.state.editionId = props.data.event_edition_id;
                 store.state.id = props.data.event_id;
             });
-            router.push({ name: "event-detail", params: { url : props.data.title } });
+            router.push({ name: "event-detail", params: { url : props.data.event_slug } });
 
         } 
 
