@@ -10,10 +10,10 @@
         <div class="row">
             <div class="col">
                 <h1 class="event-title">{{ eventInfo.title }}</h1>
-                <TechnicalSheetData @eventInfo="setEventInfo" />
-                <modalities />
-                <AdditionalAccessories v-if="eventInfo.hasAdditionalAccessories"/>
-                <PersonalData />
+                <TechnicalSheetData @eventInfo="setEventInfo" v-if="eventStore.state.id"/>
+                <modalities v-if="eventStore.state.id" />
+                <AdditionalAccessories v-if="eventInfo.hasAdditionalAccessories && eventStore.state.id"/>
+                <PersonalData v-if="eventStore.state.id" />
             </div>
             <div class="col-auto">
                 <img :alt="eventInfo.title" class="featured-image img-fluid" :src="eventInfo.featuredImage">
@@ -25,11 +25,13 @@
 <script>
 
 import { defineComponent, onBeforeMount, reactive } from 'vue';
+import { ajax } from '../../../utils/AjaxRequest';
 import { useI18n } from 'vue-i18n';
 import en from './langs/EventDetailEng.js';
 import es from './langs/EventDetailEsp.js';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
+import { useRoute } from 'vue-router';
 import AdditionalAccessories from './AdditionalAccessories.vue';
 import Modalities from './Modalities.vue';
 import PersonalData from './PersonalData.vue';
@@ -63,15 +65,66 @@ export default defineComponent({
             title: ""
         });
 
+        const route = useRoute();
+
+        const getEventDataStorage = () => {
+
+            let ajaxData = {
+                method: "get",
+                params: {
+                    langId: userAccountStore.state.langId,
+                    slug: route.params.url
+                },
+                url: import.meta.env.VITE_API_BASE_URL+"/events/event-data-for-storage"
+            };
+            
+            ajax(ajaxData)
+            .then(function (rs) {
+            
+                if(rs.status === 200 && rs.data.event) {
+                    
+                    localStorage.setItem("eventId", rs.data.event.event_id);
+                    localStorage.setItem("eventEditionId", rs.data.event.event_edition_id);
+
+                    eventStore.$patch((store) => {
+                        store.state.editionId = rs.data.event.event_id;
+                        store.state.id = rs.data.event.event_edition_id;
+                    });
+                   
+                };
+
+            })
+            .catch(error => {
+
+                console.log(error);
+
+            });
+
+        };
+
         const setEventInfo = (data) => {
             eventInfo.banner = data.banner;
             eventInfo.featuredImage = data.featuredImage;
             eventInfo.hasAdditionalAccessories = data.hasAccessories;
             eventInfo.title = data.title;
         };
-        
+
+        onBeforeMount(() => {
+            console.log("----------------")
+            console.log(eventStore.state.id)
+            console.log("----------------")
+            if(typeof eventStore.state.id === "undefined" || eventStore.state.id === null) {
+
+                console.log("PASOOO");
+                getEventDataStorage();
+
+            }
+            
+        });
+
         return {
             eventInfo,
+            eventStore,
             setEventInfo,
             t
         };
