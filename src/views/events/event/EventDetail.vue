@@ -13,7 +13,8 @@
                 <TechnicalSheetData @eventInfo="setEventInfo" v-if="eventStore.state.id"/>
                 <modalities v-if="eventStore.state.id" />
                 <AdditionalAccessories v-if="eventInfo.hasAdditionalAccessories && eventStore.state.id"/>
-                <PersonalData v-if="eventStore.state.id" />
+                <PersonalData v-if="userAccountStore.state.id" />
+                <Paymethods v-if="eventStore.state.id" />
             </div>
             <div class="col-auto">
                 <img :alt="eventInfo.title" class="featured-image img-fluid" :src="eventInfo.featuredImage">
@@ -34,6 +35,7 @@ import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import { useRoute } from 'vue-router';
 import AdditionalAccessories from './AdditionalAccessories.vue';
 import Modalities from './Modalities.vue';
+import Paymethods from './Paymethods.vue';
 import PersonalData from './PersonalData.vue';
 import TechnicalSheetData from './TechnicalSheetData.vue';
 
@@ -41,6 +43,7 @@ export default defineComponent({
     components: {
         AdditionalAccessories,
         Modalities,
+        Paymethods,
         PersonalData,
         TechnicalSheetData
     },
@@ -110,6 +113,7 @@ export default defineComponent({
         };
 
         onBeforeMount(() => {
+            localStorage.clear();
             console.log("----------------")
             console.log(eventStore.state.id)
             console.log("----------------")
@@ -125,6 +129,7 @@ export default defineComponent({
         return {
             eventInfo,
             eventStore,
+            userAccountStore,
             setEventInfo,
             t
         };
