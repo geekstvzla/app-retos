@@ -4,8 +4,19 @@
             <div class="additional-accessories-data">
                 <h2 class="title">Métodos de pago</h2>
                 <div class="row">
-                    <div class="col-12 col-md-6" v-for="(data, index) in paymethods">
-                        
+                    <div class="col-12 col-md-6">
+                        <div :class=" (v$.paymentMethodId.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
+                            <select class="form-select"
+                                    :disabled="attrs.paymentMethod.disabled" 
+                                    id="paymethod"
+                                    v-model="data.paymentMethodId">
+                                <option selected value="">Seleccione...</option>
+                                <option :value="item.payment_method_id" v-for="(item, index) in paymethods">{{ item.payment_method }}</option>
+                            </select>
+                            <div class="error-msg" v-for="error of v$.paymentMethodId.$errors" :key="error.$uid">
+                                <p>{{ error.$message }}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>  
@@ -41,12 +52,14 @@ export default defineComponent({
             type: null
         });
         const attrs = reactive({
-            accessories: {
+            paymentMethod: {
                 disabled: true
             }
         });
         
-        const data = reactive([]);
+        const data = reactive({
+            paymentMethodId: ""
+        });
         const messages = {
             en: en,
             es: es
@@ -56,7 +69,11 @@ export default defineComponent({
         });  
         
         const eventStore = useEventStore();
+        const rules = {
+            paymentMethodId: { required: helpers.withMessage(t('validator.required'), required) }
+        };
         const userAccountStore = useUserAccountStore();
+        const v$ = useVuelidate(rules, data, { $scope: false });
 
         const getPaymethods = () => {
            
@@ -74,13 +91,12 @@ export default defineComponent({
                 
                 if(rs.status === 200 && rs.data) {
                     
-                    console.log("*********************************")
-                    console.log(rs.data)
-                    paymethods.value = rs.data;
-                    rs.data.forEach(function(element, index) {
-                        //kitItems.value.push({"desc":element.item, "class": "text-bg-primary"});
-                    });                    
+                    paymethods.value = rs.data; 
 
+                    if(rs.data.length > 0) {
+                        attrs.paymentMethod.disabled = false;     
+                    }
+                               
                 };
 
             })
@@ -103,7 +119,8 @@ export default defineComponent({
             attrs,
             data,
             paymethods,
-            t
+            t,
+            v$
         };
 
     }
