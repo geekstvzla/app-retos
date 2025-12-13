@@ -6,7 +6,8 @@
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <div :class=" (v$.paymentMethodId.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
-                            <select class="form-select"
+                            <select @change="paymethodDetail"
+                                    class="form-select"
                                     :disabled="attrs.paymentMethod.disabled" 
                                     id="paymethod"
                                     v-model="data.paymentMethodId">
@@ -83,7 +84,7 @@ export default defineComponent({
                     eventEditionId: eventStore.state.editionId,
                     langId: userAccountStore.state.langId
                 },
-                url: import.meta.env.VITE_API_BASE_URL+"/events/event-paymethods"
+                url: import.meta.env.VITE_API_BASE_URL+"/events/event-edition-paymethods"
             };
 
             ajax(ajaxData)
@@ -108,6 +109,41 @@ export default defineComponent({
 
         }
 
+        const paymethodDetail = () => {
+
+            let ajaxData = {
+                method: "get",
+                params: {
+                    eventEditionId: eventStore.state.editionId,
+                    langId: userAccountStore.state.langId,
+                    paymentMethodId: data.paymentMethodId
+                },
+                url: import.meta.env.VITE_API_BASE_URL+"/events/event-edition-paymethod-detail/"
+            };
+
+            ajax(ajaxData)
+            .then(function (rs) {
+                
+                if(rs.status === 200 && rs.data) {
+                    
+                    console
+                    //paymethods.value = rs.data; 
+
+                    /*if(rs.data.length > 0) {
+                        attrs.paymentMethod.disabled = false;     
+                    }*/
+                               
+                };
+
+            })
+            .catch(error => {
+
+                console.log(error);
+
+            });
+
+        };
+
         onBeforeMount(() => {
 
             getPaymethods();
@@ -119,6 +155,7 @@ export default defineComponent({
             attrs,
             data,
             paymethods,
+            paymethodDetail,
             t,
             v$
         };

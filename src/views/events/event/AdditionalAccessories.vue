@@ -4,7 +4,7 @@
             <div class="additional-accessories-data">
                 <h2 class="title">Accesorios Adicionales</h2>
                 <div class="row">
-                    <div class="col-12 col-md-6" v-for="(data, index) in accessories">
+                    <div class="col-12 col-md-4" v-for="(data, index) in accessories">
                         <div class="card mb-4">
                             <div :id="'accessory-'+data.item_id" class="carousel slide">
                                 <div class="carousel-inner">

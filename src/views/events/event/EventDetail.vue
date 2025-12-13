@@ -1,23 +1,36 @@
 <template>
-    <div class="container-fluid wrapper-event-banner">
+    <!-- <div class="container-fluid wrapper-event-banner">
         <div class="row">
             <div class="col">
                 <img :alt="eventInfo.title" class="event-banner img-fluid" :src="eventInfo.banner">
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="container wrapper-event-info">
         <div class="row">
             <div class="col">
                 <h1 class="event-title">{{ eventInfo.title }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <img :alt="eventInfo.title" class="featured-image img-fluid" :src="eventInfo.featuredImage">
+            </div>
+            <div class="col-sm-12 col-md-8">
                 <TechnicalSheetData @eventInfo="setEventInfo" v-if="eventStore.state.id"/>
-                <modalities v-if="eventStore.state.id" />
-                <AdditionalAccessories v-if="eventInfo.hasAdditionalAccessories && eventStore.state.id"/>
+                
+                
                 <PersonalData v-if="userAccountStore.state.id" />
                 <Paymethods v-if="eventStore.state.id" />
             </div>
-            <div class="col-auto">
-                <img :alt="eventInfo.title" class="featured-image img-fluid" :src="eventInfo.featuredImage">
+            <div class="col-12">
+                <AdditionalAccessories v-if="eventInfo.hasAdditionalAccessories && eventStore.state.id"/>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <modalities v-if="eventStore.state.id" />
+            </div>
+            <div class="col-sm-12 col-md-6">
+
             </div>
         </div>
     </div>
