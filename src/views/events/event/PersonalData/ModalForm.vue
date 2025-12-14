@@ -1,21 +1,9 @@
 <template>
-    <div class="row wrapper-personal-data">
-        <div class="col">
-            <div class="personal-data">
-                <h2 class="title">¿Quieres participar?</h2>
-                <button class="btn btn-filled" 
-                        @click="openModal"
-                        type="button">
-                    Ver tu información personal
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="personalDataModal" tabindex="-1" aria-labelledby="personalDataModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-form" tabindex="-1" aria-labelledby="modal-form-label" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="personalDataModalLabel">Tus datos personales</h1>
+                <h1 class="modal-title fs-5" id="modal-form-label">Tus datos personales</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -207,32 +195,27 @@
             </div>
         </div>
     </div>
-    <Toast :options="toastProps" 
-           @actionClicked="goToLogin"
-           @toastClosed="closeToast"/>
 </template>
 
 <script>
 
 import { defineComponent, onBeforeMount, onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { ajax } from '../../../utils/AjaxRequest.js';
+import { ajax } from '../../../../utils/AjaxRequest.js';
 import en from './langs/PersonalDataEng.js';
 import es from './langs/PersonalDataEsp.js';
 import useVuelidate from '@vuelidate/core';
 import { helpers, numeric, required } from '@vuelidate/validators';
-import { useUserAccountStore } from '../../../stores/UserAccount.js';
+import { useUserAccountStore } from '../../../../stores/UserAccount.js';
 import { vMaska } from "maska/vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import Alert from '../../../components/Alert.vue';
-import Toast from '../../../components/Toast.vue';
+import Alert from '../../../../components/Alert.vue';
 import * as bootstrap from 'bootstrap';
 
 export default defineComponent({
     components: { 
         Alert,
-        Toast,
         VueDatePicker 
     },
     setup() {
@@ -331,23 +314,6 @@ export default defineComponent({
         const { t } = useI18n({
             messages
         });  
-        const toast = ref();
-        const toastProps = reactive({
-            actionButton: {
-                show: false,
-                text: null
-            },
-            autohide: true,
-            closeButton: {
-                show: false,
-                text: null
-            },
-            ids: ["noUserSession"],
-            loading: false,
-            message: "",
-            placement: "default",
-            type: ""
-        });
         
         const validName = (value) => {
 
@@ -388,12 +354,6 @@ export default defineComponent({
         const userAccountStore = useUserAccountStore();
         const v$ = useVuelidate(rules, data, { $scope: false });
 
-        const closeToast = () => {
-
-            toast.value.hide();
-
-        };
-
         const getBloodTypes = () => {
 
             let ajaxData = {
@@ -408,7 +368,7 @@ export default defineComponent({
             .then(function (rs) {
 
                 if(rs.status === 200 && rs.data) {
-                    console.log(rs.data)
+                
                     bloodTypes.value = rs.data.bloodTypes;
 
                 };
@@ -547,42 +507,6 @@ export default defineComponent({
 
         };
 
-        const goToLogin = () => {
-
-            
-
-        };
-
-        const openModal = () => {
-
-            if(userAccountStore.state.id === null) {
-
-                let toastData = {
-                    actionButton: {
-                        show: true,
-                        text: "Iniciar sesión"
-                    },
-                    autohide: false,
-                    closeButton: {
-                        show: true,
-                        text: "Cerrar"
-                    },
-                    placement: "middle-center",
-                    message: "Debes iniciar sesión para ver tus datos.",
-                    title: "No haz iniciado sesión",
-                    type: "warning"
-                };
-                Object.assign(toastProps, toastData);
-                toast.value.show();
-
-            } else {
-
-                modal.value.show();
-
-            }
-            
-        };
-
         async function save() {
             
             let isFormCorrect = await v$.value.$validate();
@@ -692,7 +616,7 @@ export default defineComponent({
 
         onMounted(() => {
             
-            modal.value = new bootstrap.Modal('#personalDataModal');
+            modal.value = new bootstrap.Modal('#modal-form');
 
             modal.value._element.addEventListener('hidden.bs.modal', event => {
 
@@ -707,9 +631,6 @@ export default defineComponent({
 
             });
 
-            let toastEle = document.getElementById('noUserSession');
-            toast.value = bootstrap.Toast.getOrCreateInstance(toastEle);
-
         });
 
         return {
@@ -717,7 +638,6 @@ export default defineComponent({
             attrs,
             birthdayFlow,
             bloodTypes,
-            closeToast,
             countriesPhoneCodes,
             countriesEmergencyPhoneCodes,
             data,
@@ -725,12 +645,9 @@ export default defineComponent({
             dateFormat,
             documentTypes,
             genders,
-            goToLogin,
-            openModal,
             rules,
             save,
             t,
-            toastProps,
             v$
         };
 
@@ -739,4 +656,4 @@ export default defineComponent({
 
 </script>
 
-<style lang="less" scoped src="../../../assets/less/events/event/PersonalData.less"></style>
+<style lang="less" scoped src="../../../../assets/less/events/event/PersonalData/ModalForm.less"></style>

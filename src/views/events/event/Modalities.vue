@@ -52,8 +52,8 @@
 import { defineComponent, onBeforeMount, onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ajax } from '../../../utils/AjaxRequest.js';
-import en from './langs/PersonalDataEng.js';
-import es from './langs/PersonalDataEsp.js';
+import en from './PersonalData/langs/PersonalDataEng.js';
+import es from './PersonalData/langs/PersonalDataEsp.js';
 import useVuelidate from '@vuelidate/core';
 import { helpers, numeric, required } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';

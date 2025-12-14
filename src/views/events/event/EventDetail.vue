@@ -18,20 +18,19 @@
             </div>
             <div class="col-sm-12 col-md-8">
                 <TechnicalSheetData @eventInfo="setEventInfo" v-if="eventStore.state.id"/>
-                
-                
-                <PersonalData v-if="userAccountStore.state.id" />
-                <Paymethods v-if="eventStore.state.id" />
-            </div>
-            <div class="col-12">
-                <AdditionalAccessories v-if="eventInfo.hasAdditionalAccessories && eventStore.state.id"/>
             </div>
             <div class="col-sm-12 col-md-6">
                 <modalities v-if="eventStore.state.id" />
             </div>
             <div class="col-sm-12 col-md-6">
-
+                <!-- <PersonalData v-if="userAccountStore.state.id" /> -->
+                <PersonalData />
             </div>
+            <div class="col-12">
+                <AdditionalAccessories v-if="eventInfo.hasAdditionalAccessories && eventStore.state.id"/>
+                <Paymethods v-if="eventStore.state.id" />
+            </div>
+            
         </div>
     </div>
 </template>
@@ -49,7 +48,7 @@ import { useRoute } from 'vue-router';
 import AdditionalAccessories from './AdditionalAccessories.vue';
 import Modalities from './Modalities.vue';
 import Paymethods from './Paymethods.vue';
-import PersonalData from './PersonalData.vue';
+import PersonalData from './PersonalData/Index.vue';
 import TechnicalSheetData from './TechnicalSheetData.vue';
 
 export default defineComponent({
