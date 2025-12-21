@@ -26,8 +26,8 @@
                 <!-- <PersonalData v-if="userAccountStore.state.id" /> -->
                 <PersonalData />
             </div>
-            <div class="col-12">
-                <AdditionalAccessories v-if="eventInfo.hasAdditionalAccessories && eventStore.state.id"/>
+            <div class="col-sm-12 col-md-6">
+                <!-- <AdditionalAccessories v-if="eventInfo.hasAdditionalAccessories && eventStore.state.id"/> -->
                 <Paymethods v-if="eventStore.state.id" />
             </div>
             

@@ -15,6 +15,7 @@
         </div>
     </div>
     <ModalForm />
+    <ModalNoSession />
 </template>
 
 <script>
@@ -25,11 +26,13 @@ import en from './langs/PersonalDataEng.js';
 import es from './langs/PersonalDataEsp.js';
 import { useUserAccountStore } from '../../../../stores/UserAccount.js';
 import ModalForm from './ModalForm.vue';
+import ModalNoSession from './ModalNoSession.vue';
 import * as bootstrap from 'bootstrap';
 
 export default defineComponent({
     components: { 
-        ModalForm
+        ModalForm,
+        ModalNoSession
     },
     setup() {
 

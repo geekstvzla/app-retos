@@ -1,24 +1,30 @@
 <template>
-    <div class="row wrapper-additional-accessories">
+    <div class="row wrapper-paymethods">
         <div class="col">
-            <div class="additional-accessories-data">
+            <div class="additional-paymethods-data">
                 <h2 class="title">Métodos de pago</h2>
-                <div class="row">
-                    <div class="col-12 col-md-6">
-                        <div :class=" (v$.paymentMethodId.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
-                            <select @change="paymethodDetail"
-                                    class="form-select"
-                                    :disabled="attrs.paymentMethod.disabled" 
-                                    id="paymethod"
-                                    v-model="data.paymentMethodId">
-                                <option selected value="">Seleccione...</option>
-                                <option :value="item.payment_method_id" v-for="(item, index) in paymethods">{{ item.payment_method }}</option>
-                            </select>
-                            <div class="error-msg" v-for="error of v$.paymentMethodId.$errors" :key="error.$uid">
-                                <p>{{ error.$message }}</p>
-                            </div>
-                        </div>
+                <p>Seleccione el método de pago de su preferencia para continuar con el proceso de inscripción.</p>
+                <div :class=" (v$.paymentMethodId.$errors.length > 0) ? 'field-error mb-4 col-md-4 w-100' : 'mb-4 col-md-4 w-100'">
+                    <select @change="paymethodDetail"
+                            class="form-select"
+                            :disabled="attrs.paymentMethod.disabled" 
+                            id="paymethod"
+                            v-model="data.paymentMethodId">
+                        <option selected value="">Seleccione...</option>
+                        <option :value="item.payment_method_id" v-for="(item, index) in paymethods">{{ item.payment_method }}</option>
+                    </select>
+                    <div class="error-msg" v-for="error of v$.paymentMethodId.$errors" :key="error.$uid">
+                        <p>{{ error.$message }}</p>
                     </div>
+                </div>
+                <h4 class="subheading">Detalles del método de pago</h4>
+                <div v-if="paymentMethodDetailsData.length > 0">
+                    <div v-for="(detail, index) in paymentMethodDetailsData" :key="index" class="payment-method-detail">
+                        <p><strong>{{ detail.description }}:</strong> {{ detail.value }}</p>
+                    </div>
+                </div>
+                <div v-else>
+                    <p>Por favor seleccione un método de pago para ver los detalles de pago.</p>    
                 </div>
             </div>  
         </div>
@@ -65,6 +71,7 @@ export default defineComponent({
             en: en,
             es: es
         };
+        const paymentMethodDetailsData = ref([]);
         const { t } = useI18n({
             messages
         });  
@@ -125,13 +132,11 @@ export default defineComponent({
             .then(function (rs) {
                 
                 if(rs.status === 200 && rs.data) {
-                    
-                    console
-                    //paymethods.value = rs.data; 
-
-                    /*if(rs.data.length > 0) {
-                        attrs.paymentMethod.disabled = false;     
-                    }*/
+                 
+                    if(rs.data.length > 0) {
+                        paymentMethodDetailsData.value = rs.data;
+                        console.log(paymentMethodDetailsData.value)
+                    }
                                
                 };
 
@@ -156,6 +161,7 @@ export default defineComponent({
             data,
             paymethods,
             paymethodDetail,
+            paymentMethodDetailsData,
             t,
             v$
         };
@@ -165,4 +171,4 @@ export default defineComponent({
 
 </script>
 
-<style lang="less" scoped src="../../../assets/less/events/event/AdditionalAccessories.less"></style>
+<style lang="less" scoped src="../../../assets/less/events/event/Paymethods.less"></style>
