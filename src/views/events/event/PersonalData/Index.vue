@@ -41,6 +41,7 @@ export default defineComponent({
             es: es
         };
         const modal = ref();
+        const modalNoSession = ref();
         const { t } = useI18n({
             messages
         });  
@@ -56,7 +57,7 @@ export default defineComponent({
 
             if(userAccountStore.state.id === null) {
                
-                
+                modalNoSession.value.show();
 
             } else {
 
@@ -69,6 +70,7 @@ export default defineComponent({
         onMounted(() => {
             
             modal.value = new bootstrap.Modal('#modal-form');
+            modalNoSession.value = new bootstrap.Modal('#modal-no-session');
 
         });
 
