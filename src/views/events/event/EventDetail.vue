@@ -28,10 +28,10 @@
             </div>
             <div class="col-sm-12 col-md-6">
                 <!-- <AdditionalAccessories v-if="eventInfo.hasAdditionalAccessories && eventStore.state.id"/> -->
-                <Paymethods v-if="eventStore.state.id" />
+                <Paymethods @selectedPaymentMethod="selectedPaymentMethod" v-if="eventStore.state.id" />
             </div>         
             <div class="col-sm-12 col-md-6">
-                <ReportPayment v-if="eventStore.state.id" />
+                <ReportPayment :paymentmethodId="paymentmethodId" v-if="eventStore.state.id" />
             </div>   
         </div>
     </div>
@@ -39,7 +39,7 @@
 
 <script>
 
-import { defineComponent, onBeforeMount, reactive } from 'vue';
+import { defineComponent, onBeforeMount, reactive, ref } from 'vue';
 import { ajax } from '../../../utils/AjaxRequest';
 import { useI18n } from 'vue-i18n';
 import en from './langs/EventDetailEng.js';
@@ -84,6 +84,8 @@ export default defineComponent({
             title: ""
         });
 
+        const paymentmethodId = ref(null);
+
         const route = useRoute();
 
         const getEventDataStorage = () => {
@@ -121,6 +123,10 @@ export default defineComponent({
 
         };
 
+        const selectedPaymentMethod = (id) => {
+            paymentmethodId.value = id;
+        };
+
         const setEventInfo = (data) => {
             eventInfo.banner = data.banner;
             eventInfo.featuredImage = data.featuredImage;
@@ -145,9 +151,11 @@ export default defineComponent({
         return {
             eventInfo,
             eventStore,
-            userAccountStore,
+            paymentmethodId,
+            selectedPaymentMethod,
             setEventInfo,
-            t
+            t,
+            userAccountStore
         };
 
     }

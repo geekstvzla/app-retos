@@ -10,7 +10,7 @@
                             :disabled="attrs.paymentMethod.disabled" 
                             id="paymethod"
                             v-model="data.paymentMethodId">
-                        <option selected value="">Seleccione...</option>
+                        <option selected value="" disabled>Seleccione...</option>
                         <option :value="item.payment_method_id" v-for="(item, index) in paymethods">{{ item.payment_method }}</option>
                     </select>
                     <div class="error-msg" v-for="error of v$.paymentMethodId.$errors" :key="error.$uid">
@@ -19,6 +19,7 @@
                 </div>
                 <h4 class="subheading">Detalles del método de pago</h4>
                 <div v-if="paymentMethodDetailsData.length > 0">
+                    <p>Estos son los datos que necesitas para realizar el pago.</p>
                     <div v-for="(detail, index) in paymentMethodDetailsData" :key="index" class="payment-method-detail">
                         <p><strong>{{ detail.description }}:</strong> {{ detail.value }}</p>
                     </div>
@@ -45,10 +46,11 @@ import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import Alert from '../../../components/Alert.vue';
 
 export default defineComponent({
+    emits: ["selectedPaymentMethod"],
     components: { 
         Alert
     },
-    setup() {
+    setup(props, { emit }) {
 
         const paymethods = ref([]);
         const alertProps = reactive({
@@ -134,8 +136,10 @@ export default defineComponent({
                 if(rs.status === 200 && rs.data) {
                  
                     if(rs.data.length > 0) {
+
                         paymentMethodDetailsData.value = rs.data;
-                        console.log(paymentMethodDetailsData.value)
+                        emit("selectedPaymentMethod", data.paymentMethodId);
+
                     }
                                
                 };

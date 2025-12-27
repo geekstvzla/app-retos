@@ -1,30 +1,25 @@
 <template>
-    <div class="row wrapper-paymethods">
+    <div class="row wrapper-report-payment">
         <div class="col">
-            <div class="additional-paymethods-data">
+            <div class="report-payment-data">
                 <h2 class="title">Reporta tu pago</h2>
-                <p>Seleccione el método de pago de su preferencia para continuar con el proceso de inscripción.</p>
-                <div :class=" (v$.paymentMethodId.$errors.length > 0) ? 'field-error mb-4 col-md-4 w-100' : 'mb-4 col-md-4 w-100'">
-                    <select @change="paymethodDetail"
-                            class="form-select"
-                            :disabled="attrs.paymentMethod.disabled" 
-                            id="paymethod"
-                            v-model="data.paymentMethodId">
-                        <option selected value="">Seleccione...</option>
-                        <option :value="item.payment_method_id" v-for="(item, index) in paymethods">{{ item.payment_method }}</option>
-                    </select>
-                    <div class="error-msg" v-for="error of v$.paymentMethodId.$errors" :key="error.$uid">
-                        <p>{{ error.$message }}</p>
+                <div v-if="props.paymentmethodId !== null">
+                    <p class="mb-3">Por favor, complete el formulario para reportar su pago.</p>
+                    <div class="mb-3">
+                        <label for="paymentDay" class="form-label">Fecha en que realizó el pago</label>
+                        <input type="text" class="form-control" id="paymentDay">
+                    </div>
+                    <div class="mb-3">
+                        <label for="operationNumber" class="form-label">Número de operación o referencia bancaria</label>
+                        <input type="text" class="form-control" id="operationNumber">
+                    </div>
+                    <div class="mb-3">
+                        <label for="voucherFile" class="form-label">Subir comprobante de pago</label>
+                        <input class="form-control" type="file" id="voucherFile">
                     </div>
                 </div>
-                <h4 class="subheading">Detalles del método de pago</h4>
-                <div v-if="paymentMethodDetailsData.length > 0">
-                    <div v-for="(detail, index) in paymentMethodDetailsData" :key="index" class="payment-method-detail">
-                        <p><strong>{{ detail.description }}:</strong> {{ detail.value }}</p>
-                    </div>
-                </div>
-                <div v-else>
-                    <p>Por favor seleccione un método de pago para ver los detalles de pago.</p>    
+                <div class="alert alert-warning" v-else>
+                    Debe seleccionar un método de pago para poder reportar su pago.
                 </div>
             </div>  
         </div>
@@ -33,7 +28,7 @@
 
 <script>
 
-import { defineComponent, onBeforeMount, reactive, ref } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ajax } from '../../../utils/AjaxRequest.js';
 import en from './PersonalData/langs/PersonalDataEng.js';
@@ -48,7 +43,13 @@ export default defineComponent({
     components: { 
         Alert
     },
-    setup() {
+    props: {
+        paymentmethodId: {
+            type: Number,
+            default: null
+        }
+    },
+    setup(props) {
 
         const paymethods = ref([]);
         const alertProps = reactive({
@@ -83,39 +84,6 @@ export default defineComponent({
         const userAccountStore = useUserAccountStore();
         const v$ = useVuelidate(rules, data, { $scope: false });
 
-        const getPaymethods = () => {
-           
-            let ajaxData = {
-                method: "get",
-                params: {
-                    eventEditionId: eventStore.state.editionId,
-                    langId: userAccountStore.state.langId
-                },
-                url: import.meta.env.VITE_API_BASE_URL+"/events/event-edition-paymethods"
-            };
-
-            ajax(ajaxData)
-            .then(function (rs) {
-                
-                if(rs.status === 200 && rs.data) {
-                    
-                    paymethods.value = rs.data; 
-
-                    if(rs.data.length > 0) {
-                        attrs.paymentMethod.disabled = false;     
-                    }
-                               
-                };
-
-            })
-            .catch(error => {
-
-                console.log(error);
-
-            });
-
-        }
-
         const paymethodDetail = () => {
 
             let ajaxData = {
@@ -149,12 +117,6 @@ export default defineComponent({
 
         };
 
-        onBeforeMount(() => {
-
-            getPaymethods();
-            
-        });
-
         return {
             alertProps,
             attrs,
@@ -162,6 +124,7 @@ export default defineComponent({
             paymethods,
             paymethodDetail,
             paymentMethodDetailsData,
+            props,
             t,
             v$
         };
@@ -171,4 +134,4 @@ export default defineComponent({
 
 </script>
 
-<style lang="less" scoped src="../../../assets/less/events/event/Paymethods.less"></style>
+<style lang="less" scoped src="../../../assets/less/events/event/ReportPayment.less"></style>
