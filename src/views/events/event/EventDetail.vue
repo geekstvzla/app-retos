@@ -20,7 +20,7 @@
                 <TechnicalSheetData @eventInfo="setEventInfo" v-if="eventStore.state.id"/>
             </div>
             <div class="col-sm-12 col-md-6">
-                <modalities v-if="eventStore.state.id" />
+                <modalities @getKitPrice="getKitPrice" v-if="eventStore.state.id" />
             </div>
             <div class="col-sm-12 col-md-6">
                 <!-- <PersonalData v-if="userAccountStore.state.id" /> -->
@@ -28,7 +28,9 @@
             </div>
             <div class="col-sm-12 col-md-6">
                 <!-- <AdditionalAccessories v-if="eventInfo.hasAdditionalAccessories && eventStore.state.id"/> -->
-                <Paymethods @selectedPaymentMethod="selectedPaymentMethod" v-if="eventStore.state.id" />
+                <Paymethods @selectedPaymentMethod="selectedPaymentMethod" 
+                            :price="kitPrice"
+                            v-if="eventStore.state.id" />
             </div>         
             <div class="col-sm-12 col-md-6">
                 <ReportPayment :paymentmethodId="paymentmethodId" v-if="eventStore.state.id" />
@@ -84,6 +86,7 @@ export default defineComponent({
             title: ""
         });
 
+        const kitPrice = ref(null);
         const paymentmethodId = ref(null);
 
         const route = useRoute();
@@ -123,6 +126,10 @@ export default defineComponent({
 
         };
 
+        const getKitPrice = (price) => {
+            kitPrice.value = price;
+        };
+
         const selectedPaymentMethod = (id) => {
             paymentmethodId.value = id;
         };
@@ -151,6 +158,8 @@ export default defineComponent({
         return {
             eventInfo,
             eventStore,
+            getKitPrice,
+            kitPrice,
             paymentmethodId,
             selectedPaymentMethod,
             setEventInfo,

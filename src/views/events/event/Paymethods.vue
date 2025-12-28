@@ -4,6 +4,16 @@
             <div class="additional-paymethods-data">
                 <h2 class="title">Métodos de pago</h2>
                 <p>Seleccione el método de pago de su preferencia para continuar con el proceso de inscripción.</p>
+                <p>El pago debe ser individual, es decir, no se puede pagar por grupo o realizar un solo pago por varias personas a la vez.</p>
+                <div class="price-wrapper">
+                    <span class="price-title">Monto a pagar:</span>
+                    <span class="price" v-if="props.price !== null">
+                        {{ props.price }} 
+                    </span>
+                    <span class="badge bg-danger" v-else>
+                        Debe seleccionar un kit
+                    </span>
+                </div>
                 <div :class=" (v$.paymentMethodId.$errors.length > 0) ? 'field-error mb-4 col-md-4 w-100' : 'mb-4 col-md-4 w-100'">
                     <select @change="paymethodDetail"
                             class="form-select"
@@ -49,6 +59,12 @@ export default defineComponent({
     emits: ["selectedPaymentMethod"],
     components: { 
         Alert
+    },
+    props: {
+        price: {
+            type: String,
+            default: null
+        }
     },
     setup(props, { emit }) {
 
@@ -166,6 +182,7 @@ export default defineComponent({
             paymethods,
             paymethodDetail,
             paymentMethodDetailsData,
+            props,
             t,
             v$
         };

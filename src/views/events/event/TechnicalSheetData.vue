@@ -118,7 +118,9 @@ export default defineComponent({
         };
 
         onBeforeMount(() => {
+
             getEventDetail();
+            
         });
 
         return {

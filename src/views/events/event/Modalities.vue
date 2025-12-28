@@ -35,6 +35,15 @@
                             </span>
                         </div>
                         <div class="col-12">
+                            <div class="price-wrapper">
+                                <span class="price-title">Precio:</span>
+                                <span class="price" v-if="data.kit && kits.length > 0">
+                                    {{ kits.find(kit => kit.kitId === data.kit).priceFormatted }} 
+                                </span>
+                                <span class="badge bg-danger" v-else>
+                                    Debe seleccionar un kit
+                                </span>
+                            </div>
                             <label for="kits" class="col-form-label">¿Qué incluye?</label>
                             <div class="wrapper-kit-includes">
                                 <span :class="'badge ' + item.class" v-for="(item, index) in kitItems">{{ item.desc }}</span>
@@ -49,7 +58,7 @@
 
 <script>
 
-import { defineComponent, onBeforeMount, onMounted, reactive, ref } from 'vue';
+import { defineComponent, onBeforeMount, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ajax } from '../../../utils/AjaxRequest.js';
 import en from './PersonalData/langs/PersonalDataEng.js';
@@ -62,10 +71,11 @@ import Alert from '../../../components/Alert.vue';
 import * as bootstrap from 'bootstrap';
 
 export default defineComponent({
+    emits: ["getKitPrice"],
     components: { 
         Alert
     },
-    setup() {
+    setup(props, { emit }) {
 
         const alertProps = reactive({
             iconCloseButton: false,
@@ -159,7 +169,9 @@ export default defineComponent({
 
                     rs.data.forEach(function(element, index) {
                         kitItems.value.push({"desc":element.item, "class": "text-bg-primary"});
-                    });                    
+                    });
+                    
+                    emit("getKitPrice", kits.value.find(kit => kit.kitId === data.kit).priceFormatted);
 
                 };
 
@@ -231,9 +243,9 @@ export default defineComponent({
             .then(function (rs) {
                 
                 if(rs.status === 200 && rs.data) {
-   
+                    console.log(rs.data);
                     kits.value = rs.data;
-                    attrs.kits.disabled = false
+                    attrs.kits.disabled = false;
 
                 };
 
@@ -349,10 +361,6 @@ export default defineComponent({
             getModalities();
             //getCountriesPhoneCodes();
             
-        });
-
-        onMounted(() => {
-
         });
 
         return {
