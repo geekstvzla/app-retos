@@ -43,6 +43,11 @@
                                 <span class="badge bg-danger" v-else>
                                     Debe seleccionar un kit
                                 </span>
+                                    <select v-if="data.kit && kits.length > 0" class="form-select form-select-sm d-inline-block w-auto ms-3">
+                                        <option :selected="(item.currencyId === kits.find(kit => kit.kitId === data.kit).currencyId)"
+                                                :value="item.priceFormatted"
+                                                v-for="(item, index) in currencyExchange">Precio en {{ item.currencyDesc }}</option>
+                                    </select>
                             </div>
                             <label for="kits" class="col-form-label">¿Qué incluye?</label>
                             <div class="wrapper-kit-includes">
@@ -92,7 +97,7 @@ export default defineComponent({
                 disabled: false
             }
         });
-        
+        const currencyExchange = ref([]);
         const data = reactive({
             kit: "",
             modality: ""
@@ -149,6 +154,35 @@ export default defineComponent({
         const userAccountStore = useUserAccountStore();
         const v$ = useVuelidate(rules, data, { $scope: false });
 
+        const getKitItemsExchange = () => {
+
+            let ajaxData = {
+                method: "get",
+                params: {
+                    kitId: data.kit,
+                    langId: userAccountStore.state.langId
+                },
+                url: import.meta.env.VITE_API_BASE_URL+"/events/kit-items-exchange"
+            };
+
+            ajax(ajaxData)
+            .then(function (rs) {
+                
+                if(rs.status === 200 && rs.data) {
+                    console.log(rs.data);
+                    currencyExchange.value = rs.data;
+
+                };
+
+            })
+            .catch(error => {
+
+                console.log(error);
+
+            });
+
+        };
+
         const getKitItems = () => {
            
             let ajaxData = {
@@ -171,6 +205,8 @@ export default defineComponent({
                         kitItems.value.push({"desc":element.item, "class": "text-bg-primary"});
                     });
                     
+                    getKitItemsExchange();
+
                     emit("getKitPrice", kits.value.find(kit => kit.kitId === data.kit).priceFormatted);
 
                 };
@@ -243,7 +279,7 @@ export default defineComponent({
             .then(function (rs) {
                 
                 if(rs.status === 200 && rs.data) {
-                    console.log(rs.data);
+                    
                     kits.value = rs.data;
                     attrs.kits.disabled = false;
 
@@ -366,6 +402,7 @@ export default defineComponent({
         return {
             alertProps,
             attrs,
+            currencyExchange,
             data,
             getKitItems,
             getModalityKits,
