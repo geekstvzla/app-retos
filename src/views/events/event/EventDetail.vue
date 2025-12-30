@@ -20,7 +20,7 @@
                 <TechnicalSheetData @eventInfo="setEventInfo" v-if="eventStore.state.id"/>
             </div>
             <div class="col-sm-12 col-md-6">
-                <modalities @getKitPrice="getKitPrice" v-if="eventStore.state.id" />
+                <modalities @getKitPrice="getKitPrice" @getCurrentCurrencyAmount="getCurrentCurrencyAmount" v-if="eventStore.state.id" />
             </div>
             <div class="col-sm-12 col-md-6">
                 <!-- <PersonalData v-if="userAccountStore.state.id" /> -->
@@ -126,8 +126,12 @@ export default defineComponent({
 
         };
 
-        const getKitPrice = (price) => {
-            kitPrice.value = price;
+        const getCurrentCurrencyAmount = (amount) => {
+            kitPrice.value = amount;
+        };
+
+        const getKitPrice = (amount) => {
+            kitPrice.value = amount;
         };
 
         const selectedPaymentMethod = (id) => {
@@ -158,6 +162,7 @@ export default defineComponent({
         return {
             eventInfo,
             eventStore,
+            getCurrentCurrencyAmount,
             getKitPrice,
             kitPrice,
             paymentmethodId,

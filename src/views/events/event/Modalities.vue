@@ -38,14 +38,16 @@
                             <div class="price-wrapper">
                                 <span class="price-title">Precio:</span>
                                 <span class="price" v-if="data.kit && kits.length > 0">
-                                    {{ kits.find(kit => kit.kitId === data.kit).priceFormatted }} 
+                                    {{ kitPrice }} 
                                 </span>
                                 <span class="badge bg-danger" v-else>
                                     Debe seleccionar un kit
                                 </span>
-                                    <select v-if="data.kit && kits.length > 0" class="form-select form-select-sm d-inline-block w-auto ms-3">
-                                        <option :selected="(item.currencyId === kits.find(kit => kit.kitId === data.kit).currencyId)"
-                                                :value="item.priceFormatted"
+                                    <select @change="changingCurrency"
+                                            class="form-select form-select-sm d-inline-block w-auto ms-3"
+                                            v-if="data.kit && kits.length > 0"
+                                            v-model="currentCurrency">
+                                        <option :value="item.priceFormatted"
                                                 v-for="(item, index) in currencyExchange">Precio en {{ item.currencyDesc }}</option>
                                     </select>
                             </div>
@@ -76,7 +78,7 @@ import Alert from '../../../components/Alert.vue';
 import * as bootstrap from 'bootstrap';
 
 export default defineComponent({
-    emits: ["getKitPrice"],
+    emits: ["getCurrentCurrencyAmount", "getKitPrice"],
     components: { 
         Alert
     },
@@ -98,6 +100,7 @@ export default defineComponent({
             }
         });
         const currencyExchange = ref([]);
+        const currentCurrency = ref(null);
         const data = reactive({
             kit: "",
             modality: ""
@@ -105,6 +108,7 @@ export default defineComponent({
         const kits = ref([]);
         const kitItemsDefault = {desc: "Seleccione el kit para mostrar lo que incluye.", class: "text-bg-warning"};
         const kitItems = ref([kitItemsDefault]);
+        const kitPrice = ref(null);
         const messages = {
             en: en,
             es: es
@@ -154,6 +158,13 @@ export default defineComponent({
         const userAccountStore = useUserAccountStore();
         const v$ = useVuelidate(rules, data, { $scope: false });
 
+        const changingCurrency = () => {
+ 
+            kitPrice.value = currentCurrency.value;
+            emit("getCurrentCurrencyAmount", currentCurrency.value);
+
+        };
+
         const getKitItemsExchange = () => {
 
             let ajaxData = {
@@ -169,7 +180,7 @@ export default defineComponent({
             .then(function (rs) {
                 
                 if(rs.status === 200 && rs.data) {
-                    console.log(rs.data);
+                   
                     currencyExchange.value = rs.data;
 
                 };
@@ -206,6 +217,8 @@ export default defineComponent({
                     });
                     
                     getKitItemsExchange();
+                    kitPrice.value = kits.value.find(kit => kit.kitId === data.kit).priceFormatted;
+                    currentCurrency.value = kits.value.find(kit => kit.kitId === data.kit).priceFormatted;
 
                     emit("getKitPrice", kits.value.find(kit => kit.kitId === data.kit).priceFormatted);
 
@@ -402,12 +415,15 @@ export default defineComponent({
         return {
             alertProps,
             attrs,
+            changingCurrency,
             currencyExchange,
+            currentCurrency,
             data,
             getKitItems,
             getModalityKits,
             kits,
             kitItems,
+            kitPrice,
             modalities,
             rules,
             t,
