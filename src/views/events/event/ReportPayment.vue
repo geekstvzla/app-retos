@@ -7,15 +7,28 @@
                     <p class="mb-3">Por favor, complete el formulario para reportar su pago.</p>
                     <div class="mb-3">
                         <label for="paymentDay" class="form-label">Fecha en que realizó el pago</label>
-                        <input type="text" class="form-control" id="paymentDay">
+                        <VueDatePicker cancel-text="Cerrar"
+                                       :config="{ closeOnScroll: 'true' }"
+                                       :enable-time-picker="false" 
+                                       hide-offset-dates
+                                       locale="es" 
+                                       :max-date="new Date()"
+                                       select-text="Seleccionar"
+                                       :teleport="true"
+                                       v-model="data.paymentDay"/>
                     </div>
                     <div class="mb-3">
-                        <label for="operationNumber" class="form-label">Número de operación o referencia bancaria</label>
-                        <input type="text" class="form-control" id="operationNumber">
+                        <label for="operationNumber" class="form-label">Número o referencia de la operación</label>
+                        <input @keydown.prevent="!isAlphaNumeric($event.key)"
+                               @paste.prevent 
+                               @drop.prevent
+                               class="form-control"
+                               type="text" 
+                               v-model.trim="data.operationNumber">
                     </div>
                     <div class="mb-3">
                         <label for="voucherFile" class="form-label">Subir comprobante de pago</label>
-                        <input class="form-control" type="file" id="voucherFile">
+                        <input @change="handleVoucherFile" class="form-control" type="file">
                     </div>
                 </div>
                 <div class="alert alert-warning" v-else>
@@ -30,6 +43,7 @@
 
 import { defineComponent, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import VueDatePicker from '@vuepic/vue-datepicker';
 import { ajax } from '../../../utils/AjaxRequest.js';
 import en from './PersonalData/langs/PersonalDataEng.js';
 import es from './PersonalData/langs/PersonalDataEsp.js';
@@ -38,10 +52,12 @@ import { helpers, numeric, required } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import Alert from '../../../components/Alert.vue';
+import '@vuepic/vue-datepicker/dist/main.css';
 
 export default defineComponent({
     components: { 
-        Alert
+        Alert,
+        VueDatePicker 
     },
     props: {
         paymentmethodId: {
@@ -66,7 +82,9 @@ export default defineComponent({
         });
         
         const data = reactive({
-            paymentMethodId: ""
+            operationNumber: "",
+            paymentMethodId: "",
+            paymentDay: ""
         });
         const messages = {
             en: en,
@@ -83,6 +101,25 @@ export default defineComponent({
         };
         const userAccountStore = useUserAccountStore();
         const v$ = useVuelidate(rules, data, { $scope: false });
+
+        const handleVoucherFile = (event) => {
+
+            const file = event.target.files[0];
+            data.voucherFile = file;
+            console.log(data.voucherFile);
+
+        };
+
+        const isAlphaNumeric = (value) => {
+            console.log(value);
+            const regex = /^[a-zA-Z0-9-]+$/;
+            console.log(regex.test(value));
+
+            if (regex.test(value)) {
+                data.operationNumber += value;
+            }
+
+        };
 
         const paymethodDetail = () => {
 
@@ -103,7 +140,6 @@ export default defineComponent({
                  
                     if(rs.data.length > 0) {
                         paymentMethodDetailsData.value = rs.data;
-                        console.log(paymentMethodDetailsData.value)
                     }
                                
                 };
@@ -121,6 +157,8 @@ export default defineComponent({
             alertProps,
             attrs,
             data,
+            handleVoucherFile,
+            isAlphaNumeric,
             paymethods,
             paymethodDetail,
             paymentMethodDetailsData,
