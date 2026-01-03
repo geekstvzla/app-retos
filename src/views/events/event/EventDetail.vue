@@ -34,6 +34,7 @@
             </div>         
             <div class="col-sm-12 col-md-6">
                 <ReportPayment :paymentmethodId="paymentmethodId" v-if="eventStore.state.id" />
+                <EnrollmentButton v-if="eventStore.state.id" />
             </div>   
         </div>
     </div>
@@ -50,6 +51,7 @@ import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import { useRoute } from 'vue-router';
 import AdditionalAccessories from './AdditionalAccessories.vue';
+import EnrollmentButton from './EnrollmentButton.vue';
 import Modalities from './Modalities.vue';
 import Paymethods from './Paymethods.vue';
 import PersonalData from './PersonalData/Index.vue';
@@ -59,6 +61,7 @@ import TechnicalSheetData from './TechnicalSheetData.vue';
 export default defineComponent({
     components: {
         AdditionalAccessories,
+        EnrollmentButton,
         Modalities,
         Paymethods,
         PersonalData,
