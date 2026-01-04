@@ -6,16 +6,21 @@
                 <p>Para participar debes tener lleno con tus datos personales el formulario de <b>Información Personal</b>.</p>
                 <p>Si ya posees una cuenta registrada en <b>sumandokilometros.com.ve</b> automaticamente se mostrará tus datos en dicho formulario, de lo contrario debes rellenar el formulario con tu información.</p>
                 <p>Es importante que mantengas actualizada tu información personal.</p>
-                <button class="btn btn-filled" 
-                        @click="openModal"
-                        type="button">
-                    Ver formulario de información personal
-                </button>
+                <div :class="(v$.userId.$errors.length > 0) ? 'field-error' : ''">
+                    <button class="btn btn-filled" 
+                            @click="openModal"
+                            type="button">
+                        Ver formulario de información personal
+                    </button>
+                    <div class="error-msg" v-for="error of v$.userId.$errors" :key="error.$uid">
+                        <p>{{ error.$message }}</p>
+                    </div>
+                </div>
             </div>
         </div>
+        <ModalForm />
+        <ModalNoSession />
     </div>
-    <ModalForm />
-    <ModalNoSession />
 </template>
 
 <script>
@@ -27,6 +32,8 @@ import es from './langs/PersonalDataEsp.js';
 import { useUserAccountStore } from '../../../../stores/UserAccount.js';
 import ModalForm from './ModalForm.vue';
 import ModalNoSession from './ModalNoSession.vue';
+import useVuelidate from '@vuelidate/core';
+import { helpers, required } from '@vuelidate/validators';
 import * as bootstrap from 'bootstrap';
 
 export default defineComponent({
@@ -34,7 +41,7 @@ export default defineComponent({
         ModalForm,
         ModalNoSession
     },
-    setup() {
+    setup(props) {
 
         const messages = {
             en: en,
@@ -46,6 +53,12 @@ export default defineComponent({
             messages
         });  
         const userAccountStore = useUserAccountStore();
+        const rules = {
+            userId: { required: helpers.withMessage(t('validator.required'), () => {
+                return (userAccountStore.state.id !== null);
+            })}
+        };
+        const v$ = useVuelidate(rules, { userId: userAccountStore.state.id }, { $scope: props.scope });
 
         const goToLogin = () => {
 
@@ -75,7 +88,8 @@ export default defineComponent({
         });
 
         return {
-            openModal
+            openModal,
+            v$
         };
 
     }

@@ -5,31 +5,46 @@
                 <h2 class="title">Reporta tu pago</h2>
                 <div v-if="props.paymentmethodId !== null">
                     <p class="mb-3">Por favor, complete el formulario para reportar su pago.</p>
-                    <div class="mb-3">
-                        <label for="paymentDay" class="form-label">Fecha en que realizó el pago</label>
-                        <VueDatePicker cancel-text="Cerrar"
-                                       :config="{ closeOnScroll: 'true' }"
-                                       :enable-time-picker="false" 
-                                       hide-offset-dates
-                                       locale="es" 
-                                       :max-date="new Date()"
-                                       select-text="Seleccionar"
-                                       :teleport="true"
-                                       v-model="data.paymentDay"/>
-                    </div>
-                    <div class="mb-3">
-                        <label for="operationNumber" class="form-label">Número o referencia de la operación</label>
-                        <input @keydown.prevent="!isAlphaNumeric($event.key)"
-                               @paste.prevent 
-                               @drop.prevent
-                               class="form-control"
-                               type="text" 
-                               v-model.trim="data.operationNumber">
-                    </div>
-                    <div class="mb-3">
-                        <label for="voucherFile" class="form-label">Subir comprobante de pago</label>
-                        <input @change="handleVoucherFile" class="form-control" type="file">
-                    </div>
+                    <form>
+                        <div :class=" (v$.paymentDay.$errors.length > 0) ? 'field-error mb-3' : 'mb-3'">
+                            <label for="paymentDay" class="form-label">Fecha en que realizó el pago</label>
+                            <VueDatePicker cancel-text="Cerrar"
+                                           :config="{ closeOnScroll: 'true' }"
+                                           :enable-time-picker="false" 
+                                           hide-offset-dates
+                                           locale="es" 
+                                           :max-date="new Date()"
+                                           select-text="Seleccionar"
+                                           :teleport="true"
+                                           :ui="{ input: 'form-control' }"
+                                           v-model="data.paymentDay"/>
+                            <div class="error-msg" v-for="error of v$.paymentDay.$errors" :key="error.$uid">
+                                <p>{{ error.$message }}</p>
+                            </div>
+                        </div>
+                        <div :class=" (v$.operationNumber.$errors.length > 0) ? 'field-error mb-3' : 'mb-3'">
+                            <label for="operationNumber" class="form-label">Número o referencia de la operación</label>
+                            <input @keydown.prevent="!isAlphaNumeric($event.key)"
+                                   @paste.prevent 
+                                   @drop.prevent
+                                   class="form-control"
+                                   type="text" 
+                                   v-model.trim="data.operationNumber">
+                            <span id="operationNumberHelp" class="form-text">
+                                Caracteres permitidos: letras (A-Z, a-z), números (0-9) y guiones (-)
+                            </span>
+                            <div class="error-msg" v-for="error of v$.operationNumber.$errors" :key="error.$uid">
+                                <p>{{ error.$message }}</p>
+                            </div>
+                        </div>
+                        <div :class=" (v$.voucherFile.$errors.length > 0) ? 'field-error mb-3' : 'mb-3'">
+                            <label for="voucherFile" class="form-label">Subir comprobante de pago</label>
+                            <input @change="handleVoucherFile" class="form-control" type="file">
+                            <div class="error-msg" v-for="error of v$.voucherFile.$errors" :key="error.$uid">
+                                <p>{{ error.$message }}</p>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="alert alert-warning" v-else>
                     Debe seleccionar un método de pago para poder reportar su pago.
@@ -48,7 +63,7 @@ import { ajax } from '../../../utils/AjaxRequest.js';
 import en from './PersonalData/langs/PersonalDataEng.js';
 import es from './PersonalData/langs/PersonalDataEsp.js';
 import useVuelidate from '@vuelidate/core';
-import { helpers, numeric, required } from '@vuelidate/validators';
+import { helpers, required } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import Alert from '../../../components/Alert.vue';
@@ -84,7 +99,8 @@ export default defineComponent({
         const data = reactive({
             operationNumber: "",
             paymentMethodId: "",
-            paymentDay: ""
+            paymentDay: "",
+            voucherFile: ""
         });
         const messages = {
             en: en,
@@ -97,16 +113,18 @@ export default defineComponent({
         
         const eventStore = useEventStore();
         const rules = {
-            paymentMethodId: { required: helpers.withMessage(t('validator.required'), required) }
+            operationNumber: { required: helpers.withMessage(t('validator.required'), required) },
+            paymentDay: { required: helpers.withMessage(t('validator.required'), required) },
+            voucherFile: { required: helpers.withMessage(t('validator.required'), required) }
         };
         const userAccountStore = useUserAccountStore();
-        const v$ = useVuelidate(rules, data, { $scope: false });
+        const v$ = useVuelidate(rules, data, { $scope: props.scope });
 
         const handleVoucherFile = (event) => {
 
             const file = event.target.files[0];
+            let extension = file.name.split('.').pop();
             data.voucherFile = file;
-            console.log(data.voucherFile);
 
         };
 

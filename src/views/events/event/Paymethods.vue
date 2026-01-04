@@ -14,19 +14,21 @@
                         Debe seleccionar un kit
                     </span>
                 </div>
-                <div :class=" (v$.paymentMethodId.$errors.length > 0) ? 'field-error mb-4 col-md-4 w-100' : 'mb-4 col-md-4 w-100'">
-                    <select @change="paymethodDetail"
-                            class="form-select"
-                            :disabled="attrs.paymentMethod.disabled" 
-                            id="paymethod"
-                            v-model="data.paymentMethodId">
-                        <option selected value="" disabled>Seleccione...</option>
-                        <option :value="item.payment_method_id" v-for="(item, index) in paymethods">{{ item.payment_method }}</option>
-                    </select>
-                    <div class="error-msg" v-for="error of v$.paymentMethodId.$errors" :key="error.$uid">
-                        <p>{{ error.$message }}</p>
+                <form>
+                    <div :class="(v$.paymentMethodId.$errors.length > 0) ? 'field-error mb-4 col-md-4 w-100' : 'mb-4 col-md-4 w-100'">
+                        <select @change="paymethodDetail"
+                                class="form-select"
+                                :disabled="attrs.paymentMethod.disabled" 
+                                id="paymethod"
+                                v-model="data.paymentMethodId">
+                            <option selected value="" disabled>Seleccione...</option>
+                            <option :value="item.payment_method_id" v-for="(item, index) in paymethods">{{ item.payment_method }}</option>
+                        </select>
+                        <div class="error-msg" v-for="error of v$.paymentMethodId.$errors" :key="error.$uid">
+                            <p>{{ error.$message }}</p>
+                        </div>
                     </div>
-                </div>
+                </form>
                 <h4 class="subheading">Detalles del método de pago</h4>
                 <div v-if="paymentMethodDetailsData.length > 0">
                     <p>Estos son los datos que necesitas para realizar el pago.</p>
@@ -47,10 +49,10 @@
 import { defineComponent, onBeforeMount, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ajax } from '../../../utils/AjaxRequest.js';
-import en from './PersonalData/langs/PersonalDataEng.js';
-import es from './PersonalData/langs/PersonalDataEsp.js';
+import en from './langs/PaymethodsEng.js';
+import es from './langs/PaymethodsEsp.js';
 import useVuelidate from '@vuelidate/core';
-import { helpers, numeric, required } from '@vuelidate/validators';
+import { helpers, required } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import Alert from '../../../components/Alert.vue';
@@ -99,7 +101,7 @@ export default defineComponent({
             paymentMethodId: { required: helpers.withMessage(t('validator.required'), required) }
         };
         const userAccountStore = useUserAccountStore();
-        const v$ = useVuelidate(rules, data, { $scope: false });
+        const v$ = useVuelidate(rules, data, { $scope: props.scope });
 
         const getPaymethods = () => {
            

@@ -5,7 +5,7 @@
                 <h2 class="title">Modalidades Disponibles</h2>
                 <form>
                     <div class="row mb-3">
-                        <div class="col-6 mb-3">
+                        <div :class="(v$.modality.$errors.length > 0) ? 'field-error col-6 mb-3' : 'col-6 mb-3'">
                             <label for="mode" class="col-form-label">Modalidad</label>
                             <select @change="getModalityKits"
                                     class="form-select"
@@ -19,8 +19,11 @@
                             <span id="modalitiesHelp" class="form-text">
                                 La modalidad en la cual se va a inscribir.
                             </span>
+                            <div class="error-msg" v-for="error of v$.modality.$errors" :key="error.$uid">
+                                <p>{{ error.$message }}</p>
+                            </div>
                         </div>
-                        <div class="col-6 mb-3">
+                        <div :class="(v$.kit.$errors.length > 0) ? 'field-error col-6 mb-3' : 'col-6 mb-3'">
                             <label for="kits" class="col-form-label">Kit</label>
                             <select @change="getKitItems"
                                     class="form-select"
@@ -33,6 +36,9 @@
                             <span id="kitsHelp" class="form-text">
                                 Kit de participación.
                             </span>
+                            <div class="error-msg" v-for="error of v$.kit.$errors" :key="error.$uid">
+                                <p>{{ error.$message }}</p>
+                            </div>
                         </div>
                         <div class="col-12">
                             <div class="price-wrapper">
@@ -68,10 +74,10 @@
 import { defineComponent, onBeforeMount, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ajax } from '../../../utils/AjaxRequest.js';
-import en from './PersonalData/langs/PersonalDataEng.js';
-import es from './PersonalData/langs/PersonalDataEsp.js';
+import en from './langs/ModalitiesEng.js';
+import es from './langs/ModalitiesEsp.js';
 import useVuelidate from '@vuelidate/core';
-import { helpers, numeric, required } from '@vuelidate/validators';
+import { helpers, required } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import Alert from '../../../components/Alert.vue';
@@ -117,7 +123,7 @@ export default defineComponent({
         const { t } = useI18n({
             messages
         });  
-        
+
         const validName = (value) => {
 
             const regex = /^[ \p{Letter}'’]+$/u; 
@@ -126,37 +132,12 @@ export default defineComponent({
         };
 
         const rules = {
-            firstName: { 
-                alpha: helpers.withMessage(t('validator.alpha'), validName),
-                required: helpers.withMessage(t('validator.required'), required) 
-            },
-            middleName: { 
-                alpha: helpers.withMessage(t('validator.alpha'), validName),
-            },
-            lastName: { 
-                alpha: helpers.withMessage(t('validator.alpha'), validName),
-                required: helpers.withMessage(t('validator.required'), required) 
-            },
-            secondLastName: { 
-                alpha: helpers.withMessage(t('validator.alpha'), validName)
-            },
-            documentTypeId: { required: helpers.withMessage(t('validator.required'), required) },
-            document: { 
-                numeric: helpers.withMessage(t('validator.numeric'), numeric), 
-                required: helpers.withMessage(t('validator.required'), required) 
-            },
-            birthday: { required: helpers.withMessage(t('validator.required'), required) },
-            genderId: { required: helpers.withMessage(t('validator.required'), required) },
-            bloodTypeId: { required: helpers.withMessage(t('validator.required'), required) },
-            countryPhoneCode: { required: helpers.withMessage(t('validator.countryPhoneCode'), required) },
-            phoneNumber: { required: helpers.withMessage(t('validator.required'), required) },
-            countryEmergencyPhoneCode: { required: helpers.withMessage(t('validator.countryPhoneCode'), required) },
-            emergencyPhoneNumber: { required: helpers.withMessage(t('validator.required'), required) },
-            medicalCondition: { required: helpers.withMessage(t('validator.required'), required) }
+            modality: { required: helpers.withMessage(t('validator.required'), required) },
+            kit: { required: helpers.withMessage(t('validator.required'), required) }
         };
         const eventStore = useEventStore();
         const userAccountStore = useUserAccountStore();
-        const v$ = useVuelidate(rules, data, { $scope: false });
+        const v$ = useVuelidate(rules, data, { $scope: props.scope });
 
         const changingCurrency = () => {
  
@@ -307,104 +288,6 @@ export default defineComponent({
 
         };
 
-        async function save() {
-            
-            let isFormCorrect = await v$.value.$validate();
-
-            const indexs = Object.keys(attrs);
-
-            if(isFormCorrect) {
-
-                indexs.forEach((index) => {
-                    attrs[index].disabled = true;
-                });
-
-                attrs.save.html = attrs.save.loadingHtml;
-                
-                let ajaxData = {
-                    method: "post",
-                    params: {
-                        userId: userAccountStore.state.id,
-                        email: userAccountStore.state.email,
-                        firstName: data.firstName,
-                        middleName: data.middleName,
-                        lastName: data.lastName,
-                        secondLastName: data.secondLastName,
-                        documentTypeId: data.documentTypeId,
-                        document: data.document,
-                        birthday: data.birthday,
-                        genderId: data.genderId,
-                        bloodTypeId: data.bloodTypeId,
-                        countryPhoneCode: data.countryPhoneCode,
-                        phoneNumber: data.phoneNumber,
-                        countryEmergencyPhoneCode: data.countryEmergencyPhoneCode,
-                        emergencyPhoneNumber: data.emergencyPhoneNumber,
-                        medicalCondition: data.medicalCondition,
-                        langId: userAccountStore.state.langId
-                    },
-                    url: import.meta.env.VITE_API_BASE_URL+"/users/update-user-data"
-                };
-                
-                ajax(ajaxData)
-                .then(function (rs) {
-
-                    indexs.forEach((index) => {
-                        attrs[index].disabled = false;
-                    });
-
-                    attrs.save.html = "Guardar";
-                   
-                    if(rs.status === 200) {
-
-                        var message = rs.data.message;
-                        var typeMessage = rs.data.status;
-                       
-                        if(rs.data.statusCode === 4) { // Error con el servidor de correo
-
-                            throw {
-                                message: t('alert.error.emailNoConnction'),
-                                type: "error"
-                            };
-
-                        };
-
-                        let alertData = {
-                            message: message,
-                            show: true,
-                            type: typeMessage
-                        };
-                        Object.assign(alertProps, alertData);
-                     
-                    } else {
-
-                        throw {
-                            message: t('alert.error.general'),
-                            type: "error"
-                        };
-
-                    };
-
-                })
-                .catch(error => {
-
-                    let alertData = {
-                        close: (error.close) ? error.close : false,
-                        message: (error.message) ? error.message : t('alert.error.general'),
-                        show: true,
-                        timer: (error.timer) ? error.timer : false,
-                        timerSeconds: (error.timerSeconds) ? error.timerSeconds : 0,
-                        type: (error.type) ? error.type : "error"
-                    };
-
-                    Object.assign(alertProps, alertData);
-                    
-
-                });
-
-            };
-
-        };
-
         onBeforeMount(() => {
 
             getModalities();
@@ -425,7 +308,6 @@ export default defineComponent({
             kitItems,
             kitPrice,
             modalities,
-            rules,
             t,
             v$
         };
