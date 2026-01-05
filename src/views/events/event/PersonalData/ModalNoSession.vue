@@ -8,24 +8,32 @@
          tabindex="-1" >
         <div class="modal-dialog">
             <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modal-no-session-label">Tus datos personales</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong class="subtitle">Tu información personal se utilizará para saber a nombre de quien está la inscripción.</strong></p>
-                <p>Debes iniciar sesión en tu cuenta de <b>sumandokilometros.com.ve</b> para poder ver y/o editar tu información personal.</p>
-                <p>Si no tienes una cuenta, puedes crear una de forma gratuita haciendo clic en el botón <strong>Registrar mis datos</strong>.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-filled" data-bs-dismiss="modal">Iniciar Sesión</button>
-                <button type="button" 
-                        class="btn btn-filled" 
-                        @click="save">Registrar mis datos</button>
-            </div>
+                <div class="modal-header" v-if="!showingSignin">
+                    <h1 class="modal-title fs-5" id="modal-no-session-label">Tus datos personales</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" v-if="!showingSignin">
+                    <p><strong class="subtitle">Tu información personal se utilizará para saber a nombre de quien está la inscripción.</strong></p>
+                    <p>Debes iniciar sesión en tu cuenta de <b>sumandokilometros.com.ve</b> para poder ver y/o editar tu información personal.</p>
+                    <p>Si no tienes una cuenta, puedes crear una de forma gratuita haciendo clic en el botón <strong>Registrar mis datos</strong>.</p>
+                </div>
+                <div class="modal-body" v-else>
+                    <Signin @closeModal="closeModal" :openFrom="'modal'" />
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button class="btn btn-filled"
+                            @click="showSignin(true)"
+                            type="button"
+                            v-if="!showingSignin">Iniciar Sesión / Registrar mis datos</button>
+                    <button class="btn btn-filled"
+                            @click="showSignin(false)"
+                            type="button"
+                            v-else>Atrás</button>
+                </div>
             </div>
         </div>
     </div>
+    
 </template>
 
 <script>
@@ -34,9 +42,15 @@ import { defineComponent, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import en from './langs/PersonalDataEng.js';
 import es from './langs/PersonalDataEsp.js';
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
 import { useUserAccountStore } from '../../../../stores/UserAccount.js';
+import Signin from '../../../signin/Index.vue';
+import * as bootstrap from 'bootstrap';
 
 export default defineComponent({
+    components: {
+        Signin
+    },
     setup() {
 
         const attrs = reactive({
@@ -54,98 +68,33 @@ export default defineComponent({
             es: es
         };
         const modal = ref();
+        const route = useRoute();
+        const router = useRouter();
         const { t } = useI18n({
             messages
         });  
-   
+        const showingSignin = ref(false);
         const userAccountStore = useUserAccountStore();
 
-        async function save() {
+        function closeModal() {
             
-            let isFormCorrect = await v$.value.$validate();
+            const modalElement = document.getElementById('modal-no-session');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            modalInstance.hide();
+            showSignin(false);
 
-            const indexs = Object.keys(attrs);
+        };
 
-            if(isFormCorrect) {
+        function showSignin(value) {
 
-                indexs.forEach((index) => {
-                    attrs[index].disabled = true;
-                });
-
-                attrs.save.html = attrs.save.loadingHtml;
-                
-                let ajaxData = {
-                    method: "post",
-                    params: {
-                        userId: userAccountStore.state.id,
-                        email: userAccountStore.state.email,
-                        firstName: data.firstName,
-                        middleName: data.middleName,
-                        lastName: data.lastName,
-                        secondLastName: data.secondLastName,
-                        documentTypeId: data.documentTypeId,
-                        document: data.document,
-                        birthday: data.birthday,
-                        genderId: data.genderId,
-                        bloodTypeId: data.bloodTypeId,
-                        countryPhoneCode: data.countryPhoneCode,
-                        phoneNumber: data.phoneNumber,
-                        countryEmergencyPhoneCode: data.countryEmergencyPhoneCode,
-                        emergencyPhoneNumber: data.emergencyPhoneNumber,
-                        medicalCondition: data.medicalCondition,
-                        langId: userAccountStore.state.langId
-                    },
-                    url: import.meta.env.VITE_API_BASE_URL+"/users/update-user-data"
-                };
-                
-                ajax(ajaxData)
-                .then(function (rs) {
-
-                    indexs.forEach((index) => {
-                        attrs[index].disabled = false;
-                    });
-
-                    attrs.save.html = "Guardar";
-                   
-                    if(rs.status === 200) {
-
-                        var message = rs.data.message;
-                        var typeMessage = rs.data.status;
-                       
-                        if(rs.data.statusCode === 4) { // Error con el servidor de correo
-
-                            throw {
-                                message: t('alert.error.emailNoConnction'),
-                                type: "error"
-                            };
-
-                        };
-
-                       
-                     
-                    } else {
-
-                        throw {
-                            message: t('alert.error.general'),
-                            type: "error"
-                        };
-
-                    };
-
-                })
-                .catch(error => {
-
-                   
-                    
-
-                });
-
-            };
+            showingSignin.value = value;
 
         };
 
         return {
-            save,
+            closeModal,
+            showSignin,
+            showingSignin,
             t
         };
 

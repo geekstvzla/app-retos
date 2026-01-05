@@ -1,8 +1,9 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+    <div :class="inModal()">
+        <div class="row g-0 justify-content-center">
+            <div :class="contentWidth()">
                 <h3 class="title">{{ t('title') }}</h3>
+                <p class="text-center">{{ t('paragraph') }}</p>
                 <div id="login-carousel" class="carousel slide">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
@@ -46,13 +47,20 @@ import EmailForm from './EmailForm.vue';
 import NewAccountForm from '../signup/Index.vue';
 
 export default defineComponent({
+    emits: ["closeModal"],
     components: {
         AccessCodeForm,
         Alert,
         EmailForm,
         NewAccountForm
     },
-    setup() {
+    props: {
+        openFrom: {
+            String,
+            default: "default"
+        }
+    },
+    setup(props, { emit }) {
 
         onMounted(() => {
             
@@ -111,6 +119,43 @@ export default defineComponent({
 
         });
 
+        const accessCodeFormResponse = (data) => {
+
+            if(data.statusCode === 1) {
+
+                sessionData(data.userData);
+                
+                if(props.openFrom === "modal") {
+
+                    emit("closeModal");
+
+                } else {
+
+                     setTimeout(() => {
+
+                        router.push({ name: "home" });
+
+                    }, 3000)
+
+                }
+
+            };
+
+            Object.assign(alertProps, data.alertData);
+
+        };
+
+        const contentWidth = () => {
+
+            let classString = {
+                modal: "col-12",
+                default: "col-12 col-md-8 col-lg-6 col-xl-5"
+            };
+
+            return classString[props.openFrom];
+
+        };
+
         const emailFormResponse = (data) => {
 
             if(data.statusCode === 0) {
@@ -156,36 +201,14 @@ export default defineComponent({
 
         };
 
-        const accessCodeFormResponse = (data) => {
+        const inModal = () => {
 
-            if(data.statusCode === 1) {
-
-                 setTimeout(() => {
-                                
-                    sessionData(data.userData)
-                    router.push({ name: "home" })
-
-                }, 3000)
-
+            let classString = {
+                modal: "container g-0 inModal",
+                default: "container g-0"
             };
 
-            Object.assign(alertProps, data.alertData);
-
-        };
-    
-        const sessionData = (data) => {
-
-            localStorage.setItem("userAvatar", data.avatar);
-            localStorage.setItem("userEmail", forms.accessCode.email)
-            localStorage.setItem("userId", data.userId);
-            localStorage.setItem("username", data.username);
-
-            userAccountStore.$patch((store) => {
-                store.state.avatar = data.avatar
-                store.state.email = forms.accessCode.email
-                store.state.id = data.userId
-                store.state.username = data.username
-            })
+            return classString[props.openFrom];
 
         };
 
@@ -205,14 +228,33 @@ export default defineComponent({
 
         };
 
+        const sessionData = (data) => {
+
+            localStorage.setItem("userAvatar", data.avatar);
+            localStorage.setItem("userEmail", forms.accessCode.email)
+            localStorage.setItem("userId", data.userId);
+            localStorage.setItem("username", data.username);
+
+            userAccountStore.$patch((store) => {
+                store.state.avatar = data.avatar
+                store.state.email = forms.accessCode.email
+                store.state.id = data.userId
+                store.state.username = data.username
+            });
+
+        };
+
         return {
             accessCodeFormResponse,
             alertProps,
+            contentWidth,
             emailFormResponse,
             generatedAccessCode,
             goToEmailFrom,
             forms,
+            inModal,
             newAccountFormResponse,
+            props,
             route,
             t
         }
