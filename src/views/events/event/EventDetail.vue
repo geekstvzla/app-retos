@@ -39,7 +39,7 @@
                 <ReportPayment :paymentmethodId="paymentmethodId" :scope="scope" v-if="eventStore.state.id" />
                 <div class="d-grid gap-2 wrapper-renrollment-button">
                     <button class="btn btn-primary" @click="confirmEnrollment" type="button">Inscribirme</button>
-                    <!-- <Alert @iAgree="iAgree" @noAgree="noAgree" :options="alertProps" /> -->
+                    <Alert @iAgree="iAgree" :options="alertProps" />
                 </div>
             </div>   
         </div>
@@ -112,20 +112,16 @@ export default defineComponent({
         const confirmEnrollment = async function() {
        
             alertProps.show = false;
-            console.log(this.v$)
             let isFormCorrect = await this.v$.$validate();
-
-            console.log("Form validation result:", isFormCorrect);
-            return false;
+      
             if(isFormCorrect) {
                 
-                attrs.buyButton.disabled = true;
                 let alertData = {
                     iAgreeButton: {
                         show: true,
                         text: 'Si'
                     },
-                    message: "¿Estás seguro de realizar esta acción?",
+                    message: "¿Estás seguro de que quieres inscribirte?",
                     noAgreeButton: {
                         show: true,
                         text: 'No'
@@ -184,12 +180,16 @@ export default defineComponent({
             kitPrice.value = amount;
         };
 
-        const selectedPaymentMethod = (id) => {
-            paymentmethodId.value = id;
+        const iAgree = () => {
+
+            alertProps.show = false;
+            // Aquí va la lógica para procesar la inscripción
+            console.log("Usuario aceptó inscribirse");
+            
         };
 
-        const activeSession = () => {
-            console.log(userAccountStore)
+        const selectedPaymentMethod = (id) => {
+            paymentmethodId.value = id;
         };
 
         const setEventInfo = (data) => {
@@ -220,6 +220,7 @@ export default defineComponent({
             eventStore,
             getCurrentCurrencyAmount,
             getKitPrice,
+            iAgree,
             kitPrice,
             paymentmethodId,
             selectedPaymentMethod,
