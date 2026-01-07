@@ -22,6 +22,8 @@
             <div class="col-sm-12 col-md-6">
                 <modalities @getKitPrice="getKitPrice" 
                             @getCurrentCurrencyAmount="getCurrentCurrencyAmount" 
+                            @getKitId="data.kitId = $event"
+                            @getModalityId="data.modalityId = $event"
                             :scope="scope"
                             v-if="eventStore.state.id" />
             </div>
@@ -30,13 +32,18 @@
             </div>
             <div class="col-sm-12 col-md-6">
                 <!-- <AdditionalAccessories v-if="eventInfo.hasAdditionalAccessories && eventStore.state.id"/> -->
-                <Paymethods @selectedPaymentMethod="selectedPaymentMethod" 
+                <Paymethods @selectedPaymentMethod="data.paymentMethodId = $event" 
                             :price="kitPrice"
                             :scope="scope"
                             v-if="eventStore.state.id" />
             </div>         
             <div class="col-sm-12 col-md-6">
-                <ReportPayment :paymentmethodId="paymentmethodId" :scope="scope" v-if="eventStore.state.id" />
+                <ReportPayment @getOperationNumber="data.operationNumber = $event"
+                               @getPaymentDay="data.paymentDay = $event"
+                               @getVoucherFile="data.voucherFile = $event"
+                               :paymentmethodId="data.paymentMethodId" 
+                               :scope="scope" 
+                               v-if="eventStore.state.id" />
                 <div class="d-grid gap-2 wrapper-renrollment-button">
                     <button class="btn btn-primary" @click="confirmEnrollment" type="button">Inscribirme</button>
                     <Alert @iAgree="iAgree" :options="alertProps" />
@@ -86,7 +93,12 @@ export default defineComponent({
             type: null
         });
         const data = reactive({
-            modalityId: ""
+            kitId: null,
+            modalityId: null,
+            operationNumber: null,
+            paymentDay: null,
+            paymentMethodId: null,
+            voucherFile: null
         })
         const messages = {
             en: en,
@@ -183,13 +195,24 @@ export default defineComponent({
         const iAgree = () => {
 
             alertProps.show = false;
-            // Aquí va la lógica para procesar la inscripción
-            console.log("Usuario aceptó inscribirse");
             
-        };
+            let ajaxData = {
+                method: "post",
+                params: {
+                    langId: userAccountStore.state.langId,
+                    kitId: data.kitId,
+                    modalityId: data.modalityId,
+                    operationNumber: data.operationNumber,
+                    paymentDay: data.paymentDay,
+                    paymentMethodId: data.paymentMethodId,
+                    userId: userAccountStore.state.id,
+                    voucherFile: data.voucherFile
+                },
+                url: import.meta.env.VITE_API_BASE_URL+"/events/user-enroll"
+            };
 
-        const selectedPaymentMethod = (id) => {
-            paymentmethodId.value = id;
+            console.log(ajaxData);
+            
         };
 
         const setEventInfo = (data) => {
@@ -216,6 +239,7 @@ export default defineComponent({
         return {
             alertProps,
             confirmEnrollment,
+            data,
             eventInfo,
             eventStore,
             getCurrentCurrencyAmount,
@@ -223,7 +247,6 @@ export default defineComponent({
             iAgree,
             kitPrice,
             paymentmethodId,
-            selectedPaymentMethod,
             setEventInfo,
             scope,
             t,

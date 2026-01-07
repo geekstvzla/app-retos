@@ -84,7 +84,7 @@ import Alert from '../../../components/Alert.vue';
 import * as bootstrap from 'bootstrap';
 
 export default defineComponent({
-    emits: ["getCurrentCurrencyAmount", "getKitPrice"],
+    emits: ["getCurrentCurrencyAmount", "getKitId", "getKitPrice", "getModalityId"],
     components: { 
         Alert
     },
@@ -161,8 +161,9 @@ export default defineComponent({
             .then(function (rs) {
                 
                 if(rs.status === 200 && rs.data) {
-                   
+                    
                     currencyExchange.value = rs.data;
+                    emit("getKitId", data.kit);
 
                 };
 
@@ -237,6 +238,7 @@ export default defineComponent({
                         
                         data.modality = modalities.value[0].typeEventModeId;
                         getModalityKits();
+                        emit("getModalityId", data.modality);
 
                     } else {
 
@@ -276,6 +278,7 @@ export default defineComponent({
                     
                     kits.value = rs.data;
                     attrs.kits.disabled = false;
+                    emit("getModalityId", data.modality);
 
                 };
 

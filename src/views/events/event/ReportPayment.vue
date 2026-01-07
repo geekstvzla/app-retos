@@ -8,12 +8,15 @@
                     <form>
                         <div :class=" (v$.paymentDay.$errors.length > 0) ? 'field-error mb-3' : 'mb-3'">
                             <label for="paymentDay" class="form-label">Fecha en que realizó el pago</label>
-                            <VueDatePicker cancel-text="Cerrar"
+                            <VueDatePicker auto-apply
+                                           cancel-text="Cerrar"
                                            :config="{ closeOnScroll: 'true' }"
                                            :enable-time-picker="false" 
                                            hide-offset-dates
+                                           @internal-model-change="getPaymentDay"
                                            locale="es" 
                                            :max-date="new Date()"
+                                           model-type="yyyy-MM-dd"
                                            select-text="Seleccionar"
                                            :teleport="true"
                                            :ui="{ input: 'form-control' }"
@@ -60,8 +63,8 @@ import { defineComponent, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import { ajax } from '../../../utils/AjaxRequest.js';
-import en from './PersonalData/langs/PersonalDataEng.js';
-import es from './PersonalData/langs/PersonalDataEsp.js';
+import en from './langs/ReportPaymentEng.js';
+import es from './langs/ReportPaymentEsp.js';
 import useVuelidate from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';
@@ -70,17 +73,18 @@ import Alert from '../../../components/Alert.vue';
 import '@vuepic/vue-datepicker/dist/main.css';
 
 export default defineComponent({
+    emits: ["getPaymentDay", "getVoucherFile", "getOperationNumber"],
     components: { 
         Alert,
         VueDatePicker 
     },
     props: {
         paymentmethodId: {
-            type: Number,
+            type: [Number, null],
             default: null
         }
     },
-    setup(props) {
+    setup(props, { emit }) {
 
         const paymethods = ref([]);
         const alertProps = reactive({
@@ -115,26 +119,48 @@ export default defineComponent({
         const rules = {
             operationNumber: { required: helpers.withMessage(t('validator.required'), required) },
             paymentDay: { required: helpers.withMessage(t('validator.required'), required) },
-            voucherFile: { required: helpers.withMessage(t('validator.required'), required) }
+            voucherFile: { 
+                onlyTheseExtensions: helpers.withMessage(t('validator.onlyTheseExtensions'), (value) => {
+                
+                    const isValidImage = /\.(jpg|jpeg|png|pdf)$/i.test(value.name);
+                    return isValidImage;
+
+                }),
+                required: helpers.withMessage(t('validator.required'), required) 
+            }
         };
         const userAccountStore = useUserAccountStore();
         const v$ = useVuelidate(rules, data, { $scope: props.scope });
 
+        const getPaymentDay = () => {
+
+            emit("getPaymentDay", data.paymentDay);
+
+        };
+
         const handleVoucherFile = (event) => {
 
             const file = event.target.files[0];
-            let extension = file.name.split('.').pop();
-            data.voucherFile = file;
+            const isValidImage = /\.(jpg|jpeg|png|pdf)$/i.test(file.name);
+
+            if(isValidImage) {
+
+                data.voucherFile = file;
+                emit("getVoucherFile", data.voucherFile);
+
+            }
 
         };
 
         const isAlphaNumeric = (value) => {
-            console.log(value);
+          
             const regex = /^[a-zA-Z0-9-]+$/;
-            console.log(regex.test(value));
 
             if (regex.test(value)) {
+
                 data.operationNumber += value;
+                emit("getOperationNumber", data.operationNumber);
+
             }
 
         };
@@ -175,6 +201,7 @@ export default defineComponent({
             alertProps,
             attrs,
             data,
+            getPaymentDay,
             handleVoucherFile,
             isAlphaNumeric,
             paymethods,
