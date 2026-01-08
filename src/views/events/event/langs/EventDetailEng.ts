@@ -1,4 +1,6 @@
 export const EventDetailEng = {
+    confirmEnroll: "<b>Are you sure you want to enroll?</b>",
+    enroll: "Enroll me",
     validator: {
         alphaNum: "Accepts only alphanumerics",
         email: "Incorrect email format",

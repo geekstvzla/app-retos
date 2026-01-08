@@ -12,11 +12,11 @@
         <hr v-if="buttonSeparator">
         <div class="wrapper-buttons" v-if="data.type == 'confirm'">
             <button @click="iAgree"
-                    class="btn btn-primary"
+                    class="btn btn-primary yes-btn"
                     type="button"
                     v-if="data.iAgreeButton.show">{{ data.iAgreeButton.text }}</button>
             <button @click="noAgree"
-                    class="btn btn-primary"
+                    class="btn btn-primary no-btn"
                     type="button"
                     v-if="data.noAgreeButton.show">{{ data.noAgreeButton.text }}</button>
         </div>

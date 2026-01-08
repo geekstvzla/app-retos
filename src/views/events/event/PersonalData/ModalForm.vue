@@ -621,7 +621,6 @@ export default defineComponent({
             modal.value._element.addEventListener('hidden.bs.modal', event => {
 
                 alertProps.show = false;
-                next();
 
             });
 

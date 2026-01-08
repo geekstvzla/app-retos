@@ -45,7 +45,7 @@
                                :scope="scope" 
                                v-if="eventStore.state.id" />
                 <div class="d-grid gap-2 wrapper-renrollment-button">
-                    <button class="btn btn-primary" @click="confirmEnrollment" type="button">Inscribirme</button>
+                    <button class="btn btn-primary" @click="confirmEnrollment" type="button">{{ t('enroll') }}</button>
                     <Alert @iAgree="iAgree" :options="alertProps" />
                 </div>
             </div>   
@@ -133,7 +133,7 @@ export default defineComponent({
                         show: true,
                         text: 'Si'
                     },
-                    message: "¿Estás seguro de que quieres inscribirte?",
+                    message: t('confirmEnroll'),
                     noAgreeButton: {
                         show: true,
                         text: 'No'
@@ -196,22 +196,37 @@ export default defineComponent({
 
             alertProps.show = false;
             
+            const formData = new FormData();
+            formData.append('langId', userAccountStore.state.langId);
+            formData.append('kitId', data.kitId);
+            formData.append('modalityId', data.modalityId);
+            formData.append('operationNumber', data.operationNumber);
+            formData.append('paymentDay', data.paymentDay);
+            formData.append('paymentMethodId', data.paymentMethodId);
+            formData.append('userId', userAccountStore.state.id);
+            formData.append('voucherFile', data.voucherFile);
+
             let ajaxData = {
                 method: "post",
-                params: {
-                    langId: userAccountStore.state.langId,
-                    kitId: data.kitId,
-                    modalityId: data.modalityId,
-                    operationNumber: data.operationNumber,
-                    paymentDay: data.paymentDay,
-                    paymentMethodId: data.paymentMethodId,
-                    userId: userAccountStore.state.id,
-                    voucherFile: data.voucherFile
-                },
+                formData: formData,
                 url: import.meta.env.VITE_API_BASE_URL+"/events/user-enroll"
             };
-
             console.log(ajaxData);
+            ajax(ajaxData)
+            .then(function (rs) {
+                
+                if(rs.status === 200 && rs.data) {
+                 
+                    console.log(rs.data);
+                               
+                };
+
+            })
+            .catch(error => {
+
+                console.log(error);
+
+            });
             
         };
 
