@@ -1,6 +1,9 @@
 export const EventDetailEng = {
     confirmEnroll: "<b>Hi {name}</b>, Are you sure you want to enroll?",
-    enroll: "Enroll me",
+    enrollBtn: {
+        defaultText: "Enroll me",
+        loading: 'Loading'
+    },
     formInvalid: "You are missing information in some fields of the registration form. Please check the fields with the <b>red border</b> and try again.",
     validator: {
         alphaNum: "Accepts only alphanumerics",

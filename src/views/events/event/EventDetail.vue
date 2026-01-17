@@ -45,7 +45,11 @@
                                :scope="scope" 
                                v-if="eventStore.state.id" />
                 <div class="d-grid gap-2 wrapper-renrollment-button">
-                    <button class="btn btn-primary" @click="confirmEnrollment" type="button">{{ t('enroll') }}</button>
+                    <button class="btn btn-primary" 
+                            @click="confirmEnrollment"
+                            :disabled="btnEnroll.disabled"
+                            type="button"
+                            v-html="btnEnroll.html"></button>
                     <Alert @iAgree="iAgree" :options="alertProps" />
                 </div>
             </div>   
@@ -85,6 +89,14 @@ export default defineComponent({
     },
     setup() {
 
+        const messages = {
+            en: en,
+            es: es
+        };
+        const { t } = useI18n({
+            messages
+        });
+
         const alertProps = reactive({
             iconCloseButton: false,
             message: "",
@@ -99,13 +111,11 @@ export default defineComponent({
             paymentDay: null,
             paymentMethodId: null,
             voucherFile: null
-        })
-        const messages = {
-            en: en,
-            es: es
-        };
-        const { t } = useI18n({
-            messages
+        });  
+        const btnEnroll = reactive({
+            disabled: false,
+            html: t('enrollBtn.defaultText'),
+            loadingHtml: '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only"> '+ t('enrollBtn.loading') +'</span>'
         });
         const eventStore = useEventStore();
         const userAccountStore = useUserAccountStore();
@@ -213,7 +223,10 @@ export default defineComponent({
 
         const iAgree = () => {
 
+            
             alertProps.show = false;
+            btnEnroll.disabled = true;
+            btnEnroll.html = btnEnroll.loadingHtml;
            
             const formData = new FormData();
             formData.append('editionId', eventStore.state.editionId);
@@ -237,6 +250,9 @@ export default defineComponent({
             ajax(ajaxData)
             .then(function (rs) {
                 
+                btnEnroll.disabled = false;
+                btnEnroll.html = t('enrollBtn.defaultText');
+
                 if(rs.status === 200 && rs.data) {
                     
                     if(rs.data.response.status === "success") {
@@ -268,6 +284,8 @@ export default defineComponent({
             })
             .catch(error => {
 
+                btnEnroll.disabled =  false;
+                btnEnroll.html = t('enrollBtn.defaultText');
                 console.log(error);
 
             });
@@ -296,6 +314,7 @@ export default defineComponent({
 
         return {
             alertProps,
+            btnEnroll,
             confirmEnrollment,
             data,
             eventInfo,
