@@ -73,7 +73,6 @@
                 props.options.timer/*,
                 data.show*/
             ], (newValue, oldValue) => {
-               
                 data.closeButton = alertButton(newValue[0], 'Close')
                 data.iAgreeButton = alertButton(newValue[1], 'Yes')
                 data.message = (newValue[2]) ? newValue[2] : ""
@@ -99,11 +98,9 @@
             });
 
             const buttonSeparator = computed(() => {
-                /*console.log("=====================")
-                console.log(data.iAgreeButton.show)
-                console.log(data.noAgreeButton.show)
-                console.log("=====================")*/
-                return (data.iAgreeButton.show === true || data.noAgreeButton.show === true)
+     
+                return (data.iAgreeButton.show === true || data.noAgreeButton.show === true);
+
             })
 
             const initData = () => {
@@ -141,15 +138,19 @@
             const alertButton = (btnData, defaultText) => {
              
                 if(typeof btnData === "undefined" || btnData === null) {
+
                     return {
                         show: false,
                         text: defaultText
                     }
+
                 } else {
+            
                     return {
-                        show: (btnData.show) ? btnData.show: false,
+                        show: (btnData.show) ? true : false,
                         text: (btnData.text) ? btnData.text : defaultText
                     }
+
                 }
 
             }

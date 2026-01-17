@@ -6,6 +6,7 @@ export const useUserAccountStore = defineStore('userAccount', () => {
     const state = reactive({
         avatar: (localStorage.getItem('userAvatar')) ? localStorage.getItem('userAvatar') : null,
         email: (localStorage.getItem('userEmail')) ? localStorage.getItem('userEmail') : null,
+        name: (localStorage.getItem('userFirstName')) ? localStorage.getItem('userFirstName') : null,
         id: (localStorage.getItem('userId')) ? localStorage.getItem('userId') : null,
         langId: 'esp',
         logged: (localStorage.getItem('userId')) ? true : false,

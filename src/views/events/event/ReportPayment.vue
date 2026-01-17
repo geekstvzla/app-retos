@@ -27,9 +27,7 @@
                         </div>
                         <div :class=" (v$.operationNumber.$errors.length > 0) ? 'field-error mb-3' : 'mb-3'">
                             <label for="operationNumber" class="form-label">Número o referencia de la operación</label>
-                            <input @keydown.prevent="!isAlphaNumeric($event.key)"
-                                   @paste.prevent 
-                                   @drop.prevent
+                            <input @keydown="isAlphaNumeric"
                                    class="form-control"
                                    type="text" 
                                    v-model.trim="data.operationNumber">
@@ -117,7 +115,15 @@ export default defineComponent({
         
         const eventStore = useEventStore();
         const rules = {
-            operationNumber: { required: helpers.withMessage(t('validator.required'), required) },
+            operationNumber: { 
+                onlyTheseCharacters: helpers.withMessage(t('validator.onlyTheseCharacters'), (value) => {
+                    
+                    const regex = /^[a-zA-Z0-9-]+$/;
+                    return regex.test(value);
+
+                }),
+                required: helpers.withMessage(t('validator.required'), required) 
+            },
             paymentDay: { required: helpers.withMessage(t('validator.required'), required) },
             voucherFile: { 
                 onlyTheseExtensions: helpers.withMessage(t('validator.onlyTheseExtensions'), (value) => {
@@ -154,14 +160,7 @@ export default defineComponent({
 
         const isAlphaNumeric = (value) => {
           
-            const regex = /^[a-zA-Z0-9-]+$/;
-
-            if (regex.test(value)) {
-
-                data.operationNumber += value;
-                emit("getOperationNumber", data.operationNumber);
-
-            }
+            emit("getOperationNumber", data.operationNumber);
 
         };
 

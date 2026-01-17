@@ -133,7 +133,7 @@ export default defineComponent({
                         show: true,
                         text: 'Si'
                     },
-                    message: t('confirmEnroll'),
+                    message: t('confirmEnroll', {name: userAccountStore.state.name}),
                     noAgreeButton: {
                         show: true,
                         text: 'No'
@@ -142,8 +142,27 @@ export default defineComponent({
                     timer: false,
                     timerSeconds: 0,
                     type: "confirm"
-                }
-                Object.assign(alertProps, alertData)                
+                };
+                Object.assign(alertProps, alertData);             
+
+            } else {
+
+                let alertData = {
+                    iAgreeButton: {
+                        show: false,
+                        text: ''
+                    },
+                    message: t('formInvalid'),
+                    noAgreeButton: {
+                        show: false,
+                        text: ''
+                    },
+                    show: true,
+                    timer: false,
+                    timerSeconds: 0,
+                    type: "error"
+                };
+                Object.assign(alertProps, alertData);
 
             }
 
@@ -195,15 +214,18 @@ export default defineComponent({
         const iAgree = () => {
 
             alertProps.show = false;
-            
+           
             const formData = new FormData();
+            formData.append('editionId', eventStore.state.editionId);
             formData.append('langId', userAccountStore.state.langId);
             formData.append('kitId', data.kitId);
             formData.append('modalityId', data.modalityId);
             formData.append('operationNumber', data.operationNumber);
             formData.append('paymentDay', data.paymentDay);
             formData.append('paymentMethodId', data.paymentMethodId);
+            formData.append('userEmail', userAccountStore.state.email);
             formData.append('userId', userAccountStore.state.id);
+            formData.append('userName', userAccountStore.state.name);
             formData.append('voucherFile', data.voucherFile);
 
             let ajaxData = {
@@ -216,8 +238,30 @@ export default defineComponent({
             .then(function (rs) {
                 
                 if(rs.status === 200 && rs.data) {
-                 
-                    console.log(rs.data);
+                    
+                    if(rs.data.response.status === "success") {
+
+                        console.log("redirigir a pagina de exito");
+
+                    } 
+                   
+                    let alertData = {
+                        iAgreeButton: {
+                            show: false,
+                            text: 'Yes'
+                        },
+                        iconCloseButton: false,
+                        message: rs.data.response.message,
+                        noAgreeButton: {
+                            show: false,
+                            text: 'Close'
+                        },
+                        show: true,
+                        timer: false,
+                        timerSeconds: 0,
+                        type: rs.data.response.status
+                    };
+                    Object.assign(alertProps, alertData);  
                                
                 };
 
@@ -244,7 +288,6 @@ export default defineComponent({
             console.log("----------------")
             if(typeof eventStore.state.id === "undefined" || eventStore.state.id === null) {
 
-                console.log("PASOOO");
                 getEventDataStorage();
 
             }

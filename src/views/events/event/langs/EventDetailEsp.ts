@@ -1,6 +1,7 @@
 export const EventDetailEsp = {
-    confirmEnroll: "<b>¿Estás seguro de que quieres inscribirte?</b>",
+    confirmEnroll: "<b>Hola {name}</b>, ¿Estás seguro de que quieres inscribirte?",
     enroll: "Inscribirme",
+    formInvalid: "Falta que indique los datos en algunos campos del formulario de inscripción, por favor revise los campos que tienen el <b>borde en rojo</b> y vuelva a intentarlo.",
     validator: {
         alphaNum: "Solo acepta alfanuméricos",
         email: "Formato de correo incorrecto",
