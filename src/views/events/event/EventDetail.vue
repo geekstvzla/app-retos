@@ -223,7 +223,6 @@ export default defineComponent({
 
         const iAgree = () => {
 
-            
             alertProps.show = false;
             btnEnroll.disabled = true;
             btnEnroll.html = btnEnroll.loadingHtml;
@@ -246,7 +245,7 @@ export default defineComponent({
                 formData: formData,
                 url: import.meta.env.VITE_API_BASE_URL+"/events/user-enroll"
             };
-            console.log(ajaxData);
+       
             ajax(ajaxData)
             .then(function (rs) {
                 
