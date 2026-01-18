@@ -67,10 +67,12 @@
                                      :key="indexItem"
                                      v-for="(item, indexItem) in kitItemsAttrs">
                                     <label for="kits" class="col-form-label">{{ item.attr }}</label>
-                                    <select class="form-select"
+                                    <select @change="prueba"
+                                            class="form-select"
                                             v-model="data.customizeYourKit[indexItem].val">
                                         <option disabled selected value="">Seleccione...</option>
-                                        <option v-for="(attr, index2) in item.attrValues">{{ attr.value }}</option>
+                                        <option v-for="(attr, index2) in item.attrValues" 
+                                                :value="attr">{{ attr.description }}</option>
                                     </select>
                                     <div class="error-msg" v-for="error of v$.customizeYourKit.$each.$message[indexItem]">
                                         <p>{{ error }}</p>
@@ -93,18 +95,17 @@ import { ajax } from '../../../utils/AjaxRequest.js';
 import en from './langs/ModalitiesEng.js';
 import es from './langs/ModalitiesEsp.js';
 import useVuelidate from '@vuelidate/core';
-import { helpers, required } from '@vuelidate/validators';
+import { helpers, required, requiredIf } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import Alert from '../../../components/Alert.vue';
 import * as bootstrap from 'bootstrap';
 
 export default defineComponent({
-    emits: ["getCurrentCurrencyAmount", "getKitId", "getKitPrice", "getModalityId"],
     components: { 
         Alert
     },
-    setup(props, { emit }) {
+    setup(props) {
 
         const alertProps = reactive({
             iconCloseButton: false,
@@ -152,10 +153,12 @@ export default defineComponent({
 
         };
 
-        const rules = {
+        const rules = {    
             customizeYourKit: { 
                 $each: helpers.forEach({
-                    val: {required: helpers.withMessage(t('validator.required'), required)}
+                    val: {requiredIf: helpers.withMessage(t('validator.required'), requiredIf(() => {
+                         (kitItemsAttrs.value.length > 0)
+                    ))}
                 })
             },
             modality: { required: helpers.withMessage(t('validator.required'), required) },
@@ -165,10 +168,41 @@ export default defineComponent({
         const userAccountStore = useUserAccountStore();
         const v$ = useVuelidate(rules, data, { $scope: props.scope });
         
-       const changingCurrency = () => {
+        const prueba = () => {
+
+            data.customizeYourKit.forEach(function(custom) {
+
+                if(custom.val !== "") {
+                    
+                    if(eventStore.state.userEnroll.kitAttrs.some(attr => attr.attrId === custom.val.attrId)) {
+
+                        
+                        var foundIndex = eventStore.state.userEnroll.kitAttrs.findIndex(e => e.attrId == custom.val.attrId);
+                     
+                        eventStore.$patch((store) => {
+                            store.state.userEnroll.kitAttrs[foundIndex] = custom.val;
+                        });
+
+                    } else {
+
+                        eventStore.$patch((store) => {
+                            store.state.userEnroll.kitAttrs.push(custom.val);
+                        });
+
+                    }
+
+                }
+
+            });
+
+        }
+
+        const changingCurrency = () => {
           
             kitPrice.value = currentCurrency.value;
-            emit("getCurrentCurrencyAmount", currentCurrency.value);
+            eventStore.$patch((store) => {
+                store.state.userEnroll.kitPrice = currentCurrency.value
+            });
 
         };
 
@@ -189,7 +223,9 @@ export default defineComponent({
                 if(rs.status === 200 && rs.data) {
                     
                     currencyExchange.value = rs.data;
-                    emit("getKitId", data.kit);
+                    eventStore.$patch((store) => {
+                        store.state.userEnroll.kitId = data.kit
+                    });
 
                 };
 
@@ -230,12 +266,14 @@ export default defineComponent({
                         });
 
                     });
-                    console.log(kitItemsAttrs.value)
+                
                     getKitItemsExchange();
                     kitPrice.value = kits.value.find(kit => kit.kitId === data.kit).priceFormatted;
                     currentCurrency.value = kits.value.find(kit => kit.kitId === data.kit).priceFormatted;
 
-                    emit("getKitPrice", kits.value.find(kit => kit.kitId === data.kit).priceFormatted);
+                    eventStore.$patch((store) => {
+                        store.state.userEnroll.kitPrice = kits.value.find(kit => kit.kitId === data.kit).priceFormatted
+                    });
 
                 };
 
@@ -271,7 +309,9 @@ export default defineComponent({
                         
                         data.modality = modalities.value[0].typeEventModeId;
                         getModalityKits();
-                        emit("getModalityId", data.modality);
+                        eventStore.$patch((store) => {
+                            store.state.userEnroll.modalityId = data.modality
+                        });
 
                     } else {
 
@@ -311,7 +351,9 @@ export default defineComponent({
                     
                     kits.value = rs.data;
                     attrs.kits.disabled = false;
-                    emit("getModalityId", data.modality);
+                    eventStore.$patch((store) => {
+                        store.state.userEnroll.modalityId = data.modality
+                    });
 
                 };
 
@@ -345,6 +387,7 @@ export default defineComponent({
             kitItemsAttrs,
             kitPrice,
             modalities,
+            prueba,
             t,
             v$
         };

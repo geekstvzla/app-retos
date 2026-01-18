@@ -3,7 +3,7 @@
         <div class="col">
             <div class="report-payment-data">
                 <h2 class="title">Reporta tu pago</h2>
-                <div v-if="props.paymentmethodId !== null">
+                <div v-if="eventStore.state.userEnroll.paymentMethodId !== null">
                     <p class="mb-3">Por favor, complete el formulario para reportar su pago.</p>
                     <form>
                         <div :class=" (v$.paymentDay.$errors.length > 0) ? 'field-error mb-3' : 'mb-3'">
@@ -71,18 +71,12 @@ import Alert from '../../../components/Alert.vue';
 import '@vuepic/vue-datepicker/dist/main.css';
 
 export default defineComponent({
-    emits: ["getPaymentDay", "getVoucherFile", "getOperationNumber"],
     components: { 
         Alert,
         VueDatePicker 
     },
-    props: {
-        paymentmethodId: {
-            type: [Number, null],
-            default: null
-        }
-    },
-    setup(props, { emit }) {
+    props: {},
+    setup(props) {
 
         const paymethods = ref([]);
         const alertProps = reactive({
@@ -140,7 +134,9 @@ export default defineComponent({
 
         const getPaymentDay = () => {
 
-            emit("getPaymentDay", data.paymentDay);
+            eventStore.$patch((store) => {
+                store.state.userEnroll.paymentDay = data.paymentDay
+            });
 
         };
 
@@ -152,7 +148,9 @@ export default defineComponent({
             if(isValidImage) {
 
                 data.voucherFile = file;
-                emit("getVoucherFile", data.voucherFile);
+                eventStore.$patch((store) => {
+                    store.state.userEnroll.voucherFile = data.voucherFile
+                });
 
             }
 
@@ -160,7 +158,9 @@ export default defineComponent({
 
         const isAlphaNumeric = (value) => {
           
-            emit("getOperationNumber", data.operationNumber);
+            eventStore.$patch((store) => {
+                store.state.userEnroll.operationNumber = data.operationNumber
+            });
 
         };
 
@@ -171,7 +171,7 @@ export default defineComponent({
                 params: {
                     eventEditionId: eventStore.state.editionId,
                     langId: userAccountStore.state.langId,
-                    paymentMethodId: data.paymentMethodId
+                    paymentMethodId: eventStore.state.userEnroll.paymentMethodId
                 },
                 url: import.meta.env.VITE_API_BASE_URL+"/events/event-edition-paymethod-detail/"
             };
@@ -200,6 +200,7 @@ export default defineComponent({
             alertProps,
             attrs,
             data,
+            eventStore,
             getPaymentDay,
             handleVoucherFile,
             isAlphaNumeric,

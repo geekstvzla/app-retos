@@ -7,8 +7,8 @@
                 <p>El pago debe ser individual, es decir, no se puede pagar por grupo o realizar un solo pago por varias personas a la vez.</p>
                 <div class="price-wrapper">
                     <span class="price-title">Monto a pagar:</span>
-                    <span class="price" v-if="props.price !== null">
-                        {{ props.price }} 
+                    <span class="price" v-if="eventStore.state.userEnroll.kitPrice !== null">
+                        {{ eventStore.state.userEnroll.kitPrice }} 
                     </span>
                     <span class="badge bg-danger" v-else>
                         Debe seleccionar un kit
@@ -58,17 +58,11 @@ import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import Alert from '../../../components/Alert.vue';
 
 export default defineComponent({
-    emits: ["selectedPaymentMethod"],
     components: { 
         Alert
     },
-    props: {
-        price: {
-            type: String,
-            default: null
-        }
-    },
-    setup(props, { emit }) {
+    props: {},
+    setup(props) {
 
         const paymethods = ref([]);
         const alertProps = reactive({
@@ -156,7 +150,9 @@ export default defineComponent({
                     if(rs.data.length > 0) {
 
                         paymentMethodDetailsData.value = rs.data;
-                        emit("selectedPaymentMethod", data.paymentMethodId);
+                        eventStore.$patch((store) => {
+                            store.state.userEnroll.paymentMethodId = data.paymentMethodId
+                        });
 
                     }
                                
@@ -181,10 +177,10 @@ export default defineComponent({
             alertProps,
             attrs,
             data,
+            eventStore,
             paymethods,
             paymethodDetail,
             paymentMethodDetailsData,
-            props,
             t,
             v$
         };

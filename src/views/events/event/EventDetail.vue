@@ -20,30 +20,17 @@
                 <TechnicalSheetData @eventInfo="setEventInfo" v-if="eventStore.state.id"/>
             </div>
             <div class="col-sm-12 col-md-6">
-                <modalities @getKitPrice="getKitPrice" 
-                            @getCurrentCurrencyAmount="getCurrentCurrencyAmount" 
-                            @getKitId="data.kitId = $event"
-                            @getModalityId="data.modalityId = $event"
-                            :scope="scope"
-                            v-if="eventStore.state.id" />
+                <modalities :scope="scope" v-if="eventStore.state.id" />
             </div>
             <div class="col-sm-12 col-md-6">
                 <PersonalData :scope="scope" />
             </div>
             <div class="col-sm-12 col-md-6">
                 <!-- <AdditionalAccessories v-if="eventInfo.hasAdditionalAccessories && eventStore.state.id"/> -->
-                <Paymethods @selectedPaymentMethod="data.paymentMethodId = $event" 
-                            :price="kitPrice"
-                            :scope="scope"
-                            v-if="eventStore.state.id" />
+                <Paymethods :scope="scope" v-if="eventStore.state.id" />
             </div>         
             <div class="col-sm-12 col-md-6">
-                <ReportPayment @getOperationNumber="data.operationNumber = $event"
-                               @getPaymentDay="data.paymentDay = $event"
-                               @getVoucherFile="data.voucherFile = $event"
-                               :paymentmethodId="data.paymentMethodId" 
-                               :scope="scope" 
-                               v-if="eventStore.state.id" />
+                <ReportPayment :scope="scope" v-if="eventStore.state.id" />
                 <div class="d-grid gap-2 wrapper-renrollment-button">
                     <button class="btn btn-primary" 
                             @click="confirmEnrollment"
@@ -104,14 +91,6 @@ export default defineComponent({
             timer: 0,
             type: null
         });
-        const data = reactive({
-            kitId: null,
-            modalityId: null,
-            operationNumber: null,
-            paymentDay: null,
-            paymentMethodId: null,
-            voucherFile: null
-        });  
         const btnEnroll = reactive({
             disabled: false,
             html: t('enrollBtn.defaultText'),
@@ -125,8 +104,6 @@ export default defineComponent({
             hasAdditionalAccessories: 0,
             title: ""
         });
-        const kitPrice = ref(null);
-        const paymentmethodId = ref(null);
         const route = useRoute();
         const scope = 'eventEnrollment';
         const v$ = useVuelidate({}, {}, { $scope: true });
@@ -213,32 +190,24 @@ export default defineComponent({
 
         };
 
-        const getCurrentCurrencyAmount = (amount) => {
-            kitPrice.value = amount;
-        };
-
-        const getKitPrice = (amount) => {
-            kitPrice.value = amount;
-        };
-
         const iAgree = () => {
 
             alertProps.show = false;
             btnEnroll.disabled = true;
             btnEnroll.html = btnEnroll.loadingHtml;
-           
+      
             const formData = new FormData();
             formData.append('editionId', eventStore.state.editionId);
             formData.append('langId', userAccountStore.state.langId);
-            formData.append('kitId', data.kitId);
-            formData.append('modalityId', data.modalityId);
-            formData.append('operationNumber', data.operationNumber);
-            formData.append('paymentDay', data.paymentDay);
-            formData.append('paymentMethodId', data.paymentMethodId);
+            formData.append('kitId', eventStore.state.userEnroll.kitId);
+            formData.append('modalityId', eventStore.state.userEnroll.modalityId);
+            formData.append('operationNumber', eventStore.state.userEnroll.operationNumber);
+            formData.append('paymentDay', eventStore.state.userEnroll.paymentDay);
+            formData.append('paymentMethodId', eventStore.state.userEnroll.paymentMethodId);
             formData.append('userEmail', userAccountStore.state.email);
             formData.append('userId', userAccountStore.state.id);
             formData.append('userName', userAccountStore.state.name);
-            formData.append('voucherFile', data.voucherFile);
+            formData.append('voucherFile', eventStore.state.userEnroll.voucherFile);
 
             let ajaxData = {
                 method: "post",
@@ -248,7 +217,7 @@ export default defineComponent({
        
             ajax(ajaxData)
             .then(function (rs) {
-                
+                 console.log(rs.data)
                 btnEnroll.disabled = false;
                 btnEnroll.html = t('enrollBtn.defaultText');
 
@@ -299,10 +268,7 @@ export default defineComponent({
         };
 
         onBeforeMount(() => {
-            localStorage.clear();
-            console.log("----------------")
-            console.log(eventStore.state.id)
-            console.log("----------------")
+  
             if(typeof eventStore.state.id === "undefined" || eventStore.state.id === null) {
 
                 getEventDataStorage();
@@ -315,14 +281,9 @@ export default defineComponent({
             alertProps,
             btnEnroll,
             confirmEnrollment,
-            data,
             eventInfo,
             eventStore,
-            getCurrentCurrencyAmount,
-            getKitPrice,
             iAgree,
-            kitPrice,
-            paymentmethodId,
             setEventInfo,
             scope,
             t,
