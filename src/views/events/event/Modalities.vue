@@ -157,8 +157,9 @@ export default defineComponent({
             customizeYourKit: { 
                 $each: helpers.forEach({
                     val: {requiredIf: helpers.withMessage(t('validator.required'), requiredIf(() => {
-                         (kitItemsAttrs.value.length > 0)
-                    ))}
+                        console.log((kitItemsAttrs.value.length > 0))
+                        return (kitItemsAttrs.value.length > 0);
+                    }))}
                 })
             },
             modality: { required: helpers.withMessage(t('validator.required'), required) },
