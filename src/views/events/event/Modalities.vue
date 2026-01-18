@@ -63,16 +63,17 @@
                             </div>
                             <div class="row mb-3 wrapper-customize-your-kit-title" v-if="kitItemsAttrs.length > 0">
                                 <h2 class="title">Personaliza tu kit</h2>
-                                <div :class="(v$.customizeYourKit.$errors.length > 0) ? 'field-error col-12 col-sm-6 mb-3' : 'col-12 col-sm-6 mb-3'"
-                                     v-for="(item, index) in kitItemsAttrs">
+                                <div :class="(v$.customizeYourKit.$each.$message[indexItem].length > 0) ? 'field-error col-12 col-sm-6 mb-3' : 'col-12 col-sm-6 mb-3'"
+                                     :key="indexItem"
+                                     v-for="(item, indexItem) in kitItemsAttrs">
                                     <label for="kits" class="col-form-label">{{ item.attr }}</label>
                                     <select class="form-select"
-                                            v-model="data.customizeYourKit[index].value">
+                                            v-model="data.customizeYourKit[indexItem].val">
                                         <option disabled selected value="">Seleccione...</option>
-                                        <option v-for="(attr, index) in item.attrValues">{{ attr.value }}</option>
+                                        <option v-for="(attr, index2) in item.attrValues">{{ attr.value }}</option>
                                     </select>
-                                    <div class="error-msg" v-for="error of v$.customizeYourKit.$errors[index]" :key="error.$uid">
-                                        <p>{{ error.$message }}</p>
+                                    <div class="error-msg" v-for="error of v$.customizeYourKit.$each.$message[indexItem]">
+                                        <p>{{ error }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -124,8 +125,8 @@ export default defineComponent({
         const currentCurrency = ref(null);
         const data = reactive({
             customizeYourKit: [
-                {"value": ""},
-                {"value": ""}
+                {"val": ""},
+                {"val": ""}
             ],
             kit: "",
             modality: ""
@@ -154,7 +155,7 @@ export default defineComponent({
         const rules = {
             customizeYourKit: { 
                 $each: helpers.forEach({
-                    value: {required: helpers.withMessage(t('validator.required'), required)}
+                    val: {required: helpers.withMessage(t('validator.required'), required)}
                 })
             },
             modality: { required: helpers.withMessage(t('validator.required'), required) },
@@ -164,14 +165,7 @@ export default defineComponent({
         const userAccountStore = useUserAccountStore();
         const v$ = useVuelidate(rules, data, { $scope: props.scope });
         
-       // const changingCurrency = () => {
-       const changingCurrency = async function(){
-           
-            console.log(this.v$.customizeYourKit.$errors)
-            console.log("-------------------------")
-            console.log(this.v$.customizeYourKit.$errors[0])
-            console.log("-------------------------")
-            console.log(this.v$.customizeYourKit[0])
+       const changingCurrency = () => {
           
             kitPrice.value = currentCurrency.value;
             emit("getCurrentCurrencyAmount", currentCurrency.value);
@@ -209,7 +203,7 @@ export default defineComponent({
         };
 
         const getKitItems = () => {
-           
+   
             let ajaxData = {
                 method: "get",
                 params: {
@@ -221,7 +215,7 @@ export default defineComponent({
 
             ajax(ajaxData)
             .then(function (rs) {
-                console.log(rs.data)
+
                 if(rs.status === 200 && rs.data) {
                     
                     kitItems.value = [];
