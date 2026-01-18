@@ -25,7 +25,7 @@
                         </div>
                         <div :class="(v$.kit.$errors.length > 0) ? 'field-error col-6 mb-3' : 'col-6 mb-3'">
                             <label for="kits" class="col-form-label">Kit</label>
-                            <select @change="getKitItems"
+                            <select @change="getKitItems(); getKitIteamsAttrs();"
                                     class="form-select"
                                     :disabled="attrs.kits.disabled" 
                                     id="kit"
@@ -189,6 +189,45 @@ export default defineComponent({
 
             ajax(ajaxData)
             .then(function (rs) {
+                console.log(rs.data)
+                if(rs.status === 200 && rs.data) {
+                    
+                    kitItems.value = [];
+
+                    rs.data.forEach(function(element, index) {
+                        kitItems.value.push({"desc":element.item, "class": "text-bg-primary"});
+                    });
+                    
+                    getKitItemsExchange();
+                    kitPrice.value = kits.value.find(kit => kit.kitId === data.kit).priceFormatted;
+                    currentCurrency.value = kits.value.find(kit => kit.kitId === data.kit).priceFormatted;
+
+                    emit("getKitPrice", kits.value.find(kit => kit.kitId === data.kit).priceFormatted);
+
+                };
+
+            })
+            .catch(error => {
+
+                console.log(error);
+
+            });
+
+        }
+
+        const getKitIteamsAttrs = () => {
+            return
+            let ajaxData = {
+                method: "get",
+                params: {
+                    kitId: data.kit,
+                    langId: userAccountStore.state.langId
+                },
+                url: import.meta.env.VITE_API_BASE_URL+"/events/kit-items-attrs"
+            };
+
+            ajax(ajaxData)
+            .then(function (rs) {
                 
                 if(rs.status === 200 && rs.data) {
                     
@@ -306,6 +345,7 @@ export default defineComponent({
             currentCurrency,
             data,
             getKitItems,
+            getKitIteamsAttrs,
             getModalityKits,
             kits,
             kitItems,
