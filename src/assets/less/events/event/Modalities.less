@@ -64,6 +64,32 @@
 
             }
 
+            .wrapper-customize-your-kit-title {
+                margin-top: 15px;
+                padding: 15px;
+
+                > [class^="col-"] {
+
+                    &:nth-child(2) {
+                        padding-left: 0px;
+                    }
+
+                    &:nth-child(3) {
+                        padding-right: 0px;
+                    }
+
+                    @media (max-width: 575px) {
+                        padding: 0px;
+                    }
+
+                }
+
+                .title {
+                    font-size: 20px;
+                }
+
+            }
+
         }
 
     }
