@@ -46,7 +46,7 @@
 
 <script>
 
-import { defineComponent, onBeforeMount, reactive, ref } from 'vue';
+import { defineComponent, onBeforeMount, reactive, toRaw, watch } from 'vue';
 import { ajax } from '../../../utils/AjaxRequest';
 import { useI18n } from 'vue-i18n';
 import en from './langs/EventDetailEng.js';
@@ -195,10 +195,12 @@ export default defineComponent({
             alertProps.show = false;
             btnEnroll.disabled = true;
             btnEnroll.html = btnEnroll.loadingHtml;
-      
+            let attrs = JSON.stringify(toRaw(eventStore.state.userEnroll.kitAttrs));
+            
             const formData = new FormData();
             formData.append('editionId', eventStore.state.editionId);
             formData.append('langId', userAccountStore.state.langId);
+            formData.append('kitAttrs', attrs);
             formData.append('kitId', eventStore.state.userEnroll.kitId);
             formData.append('modalityId', eventStore.state.userEnroll.modalityId);
             formData.append('operationNumber', eventStore.state.userEnroll.operationNumber);
@@ -276,6 +278,16 @@ export default defineComponent({
             }
             
         });
+
+        watch(
+            () => eventStore.$state,
+            (newState, oldState) => {
+                //Ocultamos el alert de inscripción porque se detecto que
+                //algún dato del store ha cambiado y se necesita re-evaluar
+                alertProps.show = false;
+            },
+            { deep: true } // Use deep watch for nested changes
+        );
 
         return {
             alertProps,
