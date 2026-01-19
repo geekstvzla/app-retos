@@ -9,11 +9,11 @@
                 <p class="card-text"><b>Modalidad(es):</b> <span class="badge rounded-pill text-bg-primary" v-for="(data, index) in props.data.event_modes">{{ data.mode }}</span></p>
                 <button class="btn"
                         @click="goToEventInfo">Ver información</button>
-                <button class="btn" 
+                <!--<button class="btn" 
                         @click="setEventDeparturePlace"
                         data-bs-target="#modal-event-departure-place" 
                         data-bs-toggle="modal" 
-                        type="button">Ver ubicación</button>
+                        type="button">Ver ubicación</button>-->
             </div>
         </div>
     </div>

@@ -14,7 +14,7 @@
                                 data-bs-target="#headerMenu">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="collapse navbar-collapse" id="headerMenu">
+                        <!-- <div class="collapse navbar-collapse" id="headerMenu">
                             <ul class="navbar-nav">
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -26,7 +26,7 @@
                                     </ul>
                                 </li>
                             </ul>
-                        </div>
+                        </div> -->
                     </nav>
                 </div>
                 <div class="col-auto">
