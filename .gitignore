@@ -1,6 +1,7 @@
 .env
 node_modules
 .vscode
+dist/
 dist/dist.zip
 .env.local
 .env.production
