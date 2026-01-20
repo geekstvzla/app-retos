@@ -308,10 +308,15 @@ export default defineComponent({
                     if(modalities.value.length === 1) {
                         
                         data.modality = modalities.value[0].typeEventModeId;
+                       
                         getModalityKits();
+
                         eventStore.$patch((store) => {
                             store.state.userEnroll.modalityId = data.modality
+                            store.state.userEnroll.modalityTitle = modalities.value[0].modality;
                         });
+
+                        console.log(eventStore.state.userEnroll.modalityTitle)
 
                     } else {
 

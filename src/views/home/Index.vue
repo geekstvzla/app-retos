@@ -46,9 +46,9 @@ export default defineComponent({
             if(events.value.length === 0) {
                 
                 let alertData = {
-                    message: "No hay eventos disponibles en este momento",
+                    message: "Buscando los eventos disponibles",
                     show: true,
-                    type: "warning"
+                    type: "info"
                 }
                 Object.assign(alertProps, alertData);
 
@@ -88,7 +88,23 @@ export default defineComponent({
             .then(function (rs) {
 
                 if(rs.status === 200 && rs.data.events) {
-                    events.value = rs.data.events;
+
+                    if(rs.data.events.length > 0) {
+
+                        events.value = rs.data.events;
+
+                    } else {
+
+                        let alertData = {
+                            message: "No hay eventos disponibles",
+                            show: true,
+                            type: "warning"
+                        }
+                        Object.assign(alertProps, alertData);
+
+
+                    }
+                    
                 };
 
             })

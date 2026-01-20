@@ -219,36 +219,38 @@ export default defineComponent({
        
             ajax(ajaxData)
             .then(function (rs) {
-                 console.log(rs.data)
-                btnEnroll.disabled = false;
-                btnEnroll.html = t('enrollBtn.defaultText');
-
+                 console.log(rs.data);
                 if(rs.status === 200 && rs.data) {
                     
                     if(rs.data.response.status === "success") {
 
-                        console.log("redirigir a pagina de exito");
+                        //router.push({ name: "home" });
 
-                    } 
-                   
-                    let alertData = {
-                        iAgreeButton: {
-                            show: false,
-                            text: 'Yes'
-                        },
-                        iconCloseButton: false,
-                        message: rs.data.response.message,
-                        noAgreeButton: {
-                            show: false,
-                            text: 'Close'
-                        },
-                        show: true,
-                        timer: false,
-                        timerSeconds: 0,
-                        type: rs.data.response.status
-                    };
-                    Object.assign(alertProps, alertData);  
-                               
+                    } else {
+
+                        btnEnroll.disabled = false;
+                        btnEnroll.html = t('enrollBtn.defaultText');
+
+                        let alertData = {
+                            iAgreeButton: {
+                                show: false,
+                                text: 'Yes'
+                            },
+                            iconCloseButton: false,
+                            message: rs.data.response.message,
+                            noAgreeButton: {
+                                show: false,
+                                text: 'Close'
+                            },
+                            show: true,
+                            timer: false,
+                            timerSeconds: 0,
+                            type: rs.data.response.status
+                        };
+                        Object.assign(alertProps, alertData);  
+
+                    }
+                       
                 };
 
             })
