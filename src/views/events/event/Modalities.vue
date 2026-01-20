@@ -5,7 +5,7 @@
                 <h2 class="title">Modalidades Disponibles</h2>
                 <form>
                     <div class="row mb-3">
-                        <div :class="(v$.modality.$errors.length > 0) ? 'field-error col-12 col-sm-6 mb-3' : 'col-12 col-sm-6 mb-3'">
+                        <div :class="(v$.modality.$errors.length > 0) ? 'field-error col-12 col-xl-6 mb-3' : 'col-12 col-xl-6 mb-3'">
                             <label for="mode" class="col-form-label">Modalidad</label>
                             <select @change="getModalityKits"
                                     class="form-select"
@@ -23,7 +23,7 @@
                                 <p>{{ error.$message }}</p>
                             </div>
                         </div>
-                        <div :class="(v$.kit.$errors.length > 0) ? 'field-error col-12 col-sm-6 mb-3' : 'col-12 col-sm-6 mb-3'">
+                        <div :class="(v$.kit.$errors.length > 0) ? 'field-error col-12 col-xl-6 mb-3' : 'col-12 col-xl-6 mb-3'">
                             <label for="kits" class="col-form-label">Kit</label>
                             <select @change="getKitItems"
                                     class="form-select"

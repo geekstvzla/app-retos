@@ -1,13 +1,15 @@
 <template>
-    <div class="col-12 col-sm-2 col-md-4">
+    <div class="col-12 col-sm-12 col-md-6 col-lg-4">
         <div class="card">
             <img :src="props.data.featured_image" class="card-img-top" alt="...">
             <div class="card-body">
-                <h5 class="card-title">{{ props.data.title }}</h5>
-                <p class="card-text"><b>Fecha:</b> {{ departureDate }}</p>
-                <p class="card-text"><b>Lugar:</b> {{ props.data.departure_place_name }}</p>
-                <p class="card-text"><b>Modalidad(es):</b> <span class="badge rounded-pill text-bg-primary" v-for="(data, index) in props.data.event_modes">{{ data.mode }}</span></p>
-                <button class="btn"
+                <div class="wrapper-content">
+                    <h5 class="card-title">{{ props.data.title }}</h5>
+                    <p class="card-text"><b>Fecha:</b> {{ departureDate }}</p>
+                    <p class="card-text"><b>Lugar:</b> {{ props.data.departure_place_name }}</p>
+                    <p class="card-text"><b>Modalidad(es):</b> <span class="badge rounded-pill text-bg-primary" v-for="(data, index) in props.data.event_modes">{{ data.mode }}</span></p>
+                </div>
+                <button class="btn w-100"
                         @click="goToEventInfo">Ver información</button>
                 <!--<button class="btn" 
                         @click="setEventDeparturePlace"

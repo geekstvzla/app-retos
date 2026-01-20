@@ -13,8 +13,13 @@
                     id="email"
                     type="text"
                     v-model.trim="v$.email.$model">
-            <div class="error-msg" v-for="error of v$.email.$errors" :key="error.$uid">
-                <p>{{ error.$message }}</p>
+            <div class="wrapper-email-text">
+                <div class="form-text">
+                {{ t('inputs.email.help') }}
+                </div>
+                <div class="error-msg" v-for="error of v$.email.$errors" :key="error.$uid">
+                    <p>{{ error.$message }}</p>
+                </div>
             </div>
         </div>
         <div :class=" (v$.username.$errors.length > 0) ? 'field-error input-group mb-2' : 'input-group mb-2'">
@@ -34,6 +39,9 @@
                 </div>
                 <i :class="'bi '+attrs.username.iconClass" v-else></i>
             </span>
+            <div class="form-text">
+                {{ t('inputs.username.help') }}
+            </div>
             <div class="error-msg" v-for="error of v$.username.$errors" :key="error.$uid">
                 <p>{{ error.$message }}</p>
             </div>

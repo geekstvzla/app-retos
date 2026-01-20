@@ -270,9 +270,9 @@ export default defineComponent({
         };
 
         onBeforeMount(() => {
-  
+            console.log("HAY DATA?");
             if(typeof eventStore.state.id === "undefined" || eventStore.state.id === null) {
-
+                console.log("BUSCAR DATA");
                 getEventDataStorage();
 
             }

@@ -1,12 +1,12 @@
 <template>
-    <div class="container">
+    <div class="container-fluid container-md">
         <div class="row">
             <div class="col">
                 <h1 class="title">{{ t('title') }}</h1>
             </div>
         </div>
         <div class="row wrapper-events">
-            <div class="col" v-if="events.length === 0">
+            <div class="col-12" v-if="events.length === 0">
                 <Alert :options="alertProps"/>
             </div>
             <EventCard @openEventDeparturePlace="setEventDeparturePlace" :data="event" v-for="(event, index) in events" />

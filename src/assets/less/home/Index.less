@@ -1,9 +1,13 @@
 @import "../Variables.less";
 
-.container {
+.container-fluid {
     min-height: calc(100vh - 70px);
     padding-bottom: 50px;
     padding-top: 50px;
+
+    @media (max-width: 992px) {
+        height: 40px;
+    }
 
     .title {
         margin-bottom: 10px;
