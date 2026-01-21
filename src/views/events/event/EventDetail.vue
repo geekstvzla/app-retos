@@ -197,6 +197,8 @@ export default defineComponent({
             btnEnroll.html = btnEnroll.loadingHtml;
             let attrs = JSON.stringify(toRaw(eventStore.state.userEnroll.kitAttrs));
             
+            let userName = (userAccountStore.state.name === null) ? userAccountStore.state.username : userAccountStore.state.name;
+            
             const formData = new FormData();
             formData.append('editionId', eventStore.state.editionId);
             formData.append('langId', userAccountStore.state.langId);
@@ -208,10 +210,9 @@ export default defineComponent({
             formData.append('paymentMethodId', eventStore.state.userEnroll.paymentMethodId);
             formData.append('userEmail', userAccountStore.state.email);
             formData.append('userId', userAccountStore.state.id);
-            formData.append('userName', userAccountStore.state.name);
+            formData.append('userName', userName);
             formData.append('voucherFile', eventStore.state.userEnroll.voucherFile);
-            console.log(formData)
-            return
+          
             let ajaxData = {
                 method: "post",
                 formData: formData,
@@ -223,34 +224,41 @@ export default defineComponent({
                  console.log(rs.data);
                 if(rs.status === 200 && rs.data) {
                     
+                    let alertData = {
+                        iAgreeButton: {
+                            show: false,
+                            text: 'Yes'
+                        },
+                        iconCloseButton: false,
+                        message: rs.data.response.message,
+                        noAgreeButton: {
+                            show: false,
+                            text: 'Close'
+                        },
+                        show: true,
+                        timer: false,
+                        timerSeconds: 0,
+                        type: rs.data.response.status
+                    };
+
                     if(rs.data.response.status === "success") {
 
                         //router.push({ name: "home" });
 
+
                     } else {
 
-                        btnEnroll.disabled = false;
-                        btnEnroll.html = t('enrollBtn.defaultText');
+                       /* btnEnroll.disabled = false;
+                        btnEnroll.html = t('enrollBtn.defaultText');*/
 
-                        let alertData = {
-                            iAgreeButton: {
-                                show: false,
-                                text: 'Yes'
-                            },
-                            iconCloseButton: false,
-                            message: rs.data.response.message,
-                            noAgreeButton: {
-                                show: false,
-                                text: 'Close'
-                            },
-                            show: true,
-                            timer: false,
-                            timerSeconds: 0,
-                            type: rs.data.response.status
-                        };
-                        Object.assign(alertProps, alertData);  
-
+                        
+                        
                     }
+
+                     btnEnroll.disabled = false;
+                     btnEnroll.html = t('enrollBtn.defaultText');
+
+                    Object.assign(alertProps, alertData);  
                        
                 };
 
