@@ -196,7 +196,8 @@ export default defineComponent({
             btnEnroll.disabled = true;
             btnEnroll.html = btnEnroll.loadingHtml;
             let attrs = JSON.stringify(toRaw(eventStore.state.userEnroll.kitAttrs));
-            
+            console,log(eventStore.state.userEnroll)
+            return 
             const formData = new FormData();
             formData.append('editionId', eventStore.state.editionId);
             formData.append('langId', userAccountStore.state.langId);
@@ -272,9 +273,9 @@ export default defineComponent({
         };
 
         onBeforeMount(() => {
-            console.log("HAY DATA?");
+            
             if(typeof eventStore.state.id === "undefined" || eventStore.state.id === null) {
-                console.log("BUSCAR DATA");
+      
                 getEventDataStorage();
 
             }
