@@ -271,6 +271,7 @@ export default defineComponent({
                             attrs.signUpBtn.disabled = false;
                             attrs.signUpBtn.html = t('signUpBtn.text');
                             attrs.username.disabled = false;
+                            v$.value.$reset();
                             
                         } else {
 

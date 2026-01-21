@@ -217,6 +217,7 @@ export default defineComponent({
 
         const newAccountFormResponse = (data) => {
 
+            carousel.value.to(0);
             Object.assign(alertProps, data.alertData);
 
         };
