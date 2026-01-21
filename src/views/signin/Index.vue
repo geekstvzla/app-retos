@@ -3,8 +3,10 @@
         <div class="row g-0 justify-content-center">
             <div :class="contentWidth()">
                 <h3 class="title">{{ t('title') }}</h3>
-                <p class="text-center">{{ t('paragraph') }}</p>
-                <div id="login-carousel" class="carousel slide">
+                <div class="alert alert-warning leyend" role="alert" v-if="forms.email.visible">
+                    {{ t('paragraph') }}
+                </div>
+                <div id="login-carousel" class="carousel slide" data-bs-touch="false">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <EmailForm @response="emailFormResponse" 
@@ -86,7 +88,7 @@ export default defineComponent({
                 visible: false
             },
             email: {
-                visible: false
+                visible: true
             },
             newAccount: {
                 email: "",
@@ -194,7 +196,8 @@ export default defineComponent({
         };
 
         const goToNewAccountForm = (data) => {
-       
+            
+            forms.email.visible = false;
             forms.newAccount.email = data.email;
             forms.newAccount.visible = true;
             carousel.value.to(2);
@@ -213,16 +216,6 @@ export default defineComponent({
         };
 
         const newAccountFormResponse = (data) => {
-
-            if(data.statusCode === 1) {
-
-                 setTimeout(() => {
-                                
-                    goToEmailFrom();
-
-                }, 3000)
-
-            };
 
             Object.assign(alertProps, data.alertData);
 

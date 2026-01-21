@@ -1,5 +1,5 @@
 export const indexEsp = {
-    paragraph: "Indica el correo el cual usas para entrar o usaras para registrate, el mismo campo sirve para ambos casos.",
+    paragraph: "No importa si nunca te haz registrado, solicita el código igual.",
     title: "Accede a tu cuenta"
 }
 

@@ -5,14 +5,14 @@ export const IndexEsp = {
         warning: "El correo ya se encuentra resgistrado!"
     },
     backBtn: "Atrás",
-    help: "Si estas viendo este formulario es porque este correo no está registrado en el sistema. Por favor indica el nombre de usuario que usaras dentro del sistema.",
+    help: "Este correo no estás registrado, por favor registrate.",
     inputs: {
         email: {
             help: "Con este correo podrás entrar al sistema.",
             label: "Correo electrónico"
         },
         username: {
-            help: "Indica el usuario que tendras asociado a tu cuenta por ejemplo: rdiaz2011",
+            help: "Ejemplo: rdiaz2011, pepe2025, tdiaz",
             label: "Nombre de usuario",
             notAvailable: "Usuario no disponible"
         }

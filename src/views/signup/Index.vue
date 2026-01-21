@@ -1,6 +1,6 @@
 <template>
     <form>
-        <div class="d-grid">
+        <div class="d-grid leyend">
             {{ t('help') }}
         </div>
         <div :class=" (v$.email.$errors.length > 0) ? 'field-error input-group mb-2' : 'input-group mb-2'">
@@ -256,23 +256,29 @@ export default defineComponent({
                 ajax(ajaxData)
                 .then(function (response) {
 
-                    attrs.email.disabled = false;
-                    attrs.goBackBtn.disabled = false;
-                    attrs.signUpBtn.disabled = false;
-                    attrs.signUpBtn.html = t('signUpBtn.text');
-                    attrs.username.disabled = false;
-
                     if(response.status === 200) {
 
                         var message = response.data.message;
+                        var timer = 0;
                         var typeMessage = response.data.status;
 
                         if(response.data.statusCode === 1) {
-
+                                
                             data.email = "";
                             data.username = "";
+                            attrs.email.disabled = false;
+                            attrs.goBackBtn.disabled = false;
+                            attrs.signUpBtn.disabled = false;
+                            attrs.signUpBtn.html = t('signUpBtn.text');
+                            attrs.username.disabled = false;
+                            
+                        } else {
 
-                            v$.value.$reset();
+                            attrs.email.disabled = false;
+                            attrs.goBackBtn.disabled = false;
+                            attrs.signUpBtn.disabled = false;
+                            attrs.signUpBtn.html = t('signUpBtn.text');
+                            attrs.username.disabled = false;
 
                         }
 
@@ -281,10 +287,11 @@ export default defineComponent({
                             show: true,
                             type: typeMessage
                         };
-                        console.log(alertData)
+                        
                         let dataR = {
                             alertData: alertData,
-                            statusCode: response.data.statusCode
+                            statusCode: response.data.statusCode,
+                            timer: timer
                         };
                     
                         emit("response", dataR);

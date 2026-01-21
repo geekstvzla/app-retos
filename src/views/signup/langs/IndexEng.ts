@@ -5,16 +5,16 @@ export const IndexEng = {
         warning: "The email is already registered!"
     },
     backBtn: "Back",
-    help: "If you are seeing this form, it's because this email address is not registered in the system. Please provide the username you will use within the system.",
+    help: "This email address is not registered, please register.",
     inputs: {
         email: {
             help: "With this email address you will be able to access the system.",
             label: "Email"
         },
         username: {
-            help: "Indicate the username that will be associated with your account, for example:: pwhite2158",
+            help: "For example: pwhite2158, 12pop45, rwhite",
             label: "Username",
-            notAvailable: "Usuario no disponible"
+            notAvailable: "User unavailable"
         }
     },
     signUpBtn: {

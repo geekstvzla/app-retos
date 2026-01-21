@@ -1,5 +1,5 @@
 export const indexEng = {
-    paragraph: "Enter the email you use to sign in or will use to register, the same field works for both cases.",
+    paragraph: "It doesn't matter if you've never registered, request the code anyway.",
     title: "Access your account"
 }
 
