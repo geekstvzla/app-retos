@@ -196,8 +196,7 @@ export default defineComponent({
             btnEnroll.disabled = true;
             btnEnroll.html = btnEnroll.loadingHtml;
             let attrs = JSON.stringify(toRaw(eventStore.state.userEnroll.kitAttrs));
-            console,log(eventStore.state.userEnroll)
-            return 
+            
             const formData = new FormData();
             formData.append('editionId', eventStore.state.editionId);
             formData.append('langId', userAccountStore.state.langId);
@@ -211,7 +210,8 @@ export default defineComponent({
             formData.append('userId', userAccountStore.state.id);
             formData.append('userName', userAccountStore.state.name);
             formData.append('voucherFile', eventStore.state.userEnroll.voucherFile);
-
+            console.log(formData)
+            return
             let ajaxData = {
                 method: "post",
                 formData: formData,

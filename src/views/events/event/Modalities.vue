@@ -67,7 +67,7 @@
                                      :key="indexItem"
                                      v-for="(item, indexItem) in kitItemsAttrs">
                                     <label for="kits" class="col-form-label">{{ item.attr }}</label>
-                                    <select @change="prueba"
+                                    <select @change="kitAttrs"
                                             class="form-select"
                                             v-model="data.customizeYourKit[indexItem].val">
                                         <option disabled selected value="">Seleccione...</option>
@@ -167,35 +167,6 @@ export default defineComponent({
         const eventStore = useEventStore();
         const userAccountStore = useUserAccountStore();
         const v$ = useVuelidate(rules, data, { $scope: props.scope });
-        
-        const prueba = () => {
-
-            data.customizeYourKit.forEach(function(custom) {
-
-                if(custom.val !== "") {
-                    
-                    if(eventStore.state.userEnroll.kitAttrs.some(attr => attr.attrId === custom.val.attrId)) {
-
-                        
-                        var foundIndex = eventStore.state.userEnroll.kitAttrs.findIndex(e => e.attrId == custom.val.attrId);
-                     
-                        eventStore.$patch((store) => {
-                            store.state.userEnroll.kitAttrs[foundIndex] = custom.val;
-                        });
-
-                    } else {
-
-                        eventStore.$patch((store) => {
-                            store.state.userEnroll.kitAttrs.push(custom.val);
-                        });
-
-                    }
-
-                }
-
-            });
-
-        }
 
         const changingCurrency = () => {
           
@@ -316,11 +287,9 @@ export default defineComponent({
                             store.state.userEnroll.modalityTitle = modalities.value[0].modality;
                         });
 
-                        console.log(eventStore.state.userEnroll.modalityTitle)
-
                     } else {
 
-                        kitItems.value = [kitItemsDefault];
+                        // kitItems.value = [kitItemsDefault];
 
                     }
 
@@ -371,6 +340,34 @@ export default defineComponent({
 
         };
 
+        const kitAttrs = () => {
+
+            data.customizeYourKit.forEach(function(custom) {
+
+                if(custom.val !== "") {
+                    
+                    if(eventStore.state.userEnroll.kitAttrs.some(attr => attr.attrId === custom.val.attrId)) {
+
+                        var foundIndex = eventStore.state.userEnroll.kitAttrs.findIndex(e => e.attrId == custom.val.attrId);
+                     
+                        eventStore.$patch((store) => {
+                            store.state.userEnroll.kitAttrs[foundIndex] = custom.val;
+                        });
+
+                    } else {
+
+                        eventStore.$patch((store) => {
+                            store.state.userEnroll.kitAttrs.push(custom.val);
+                        });
+
+                    }
+
+                }
+
+            });
+
+        }
+
         onBeforeMount(() => {
 
             getModalities();
@@ -388,11 +385,11 @@ export default defineComponent({
             getKitItems,
             getModalityKits,
             kits,
+            kitAttrs,
             kitItems,
             kitItemsAttrs,
             kitPrice,
             modalities,
-            prueba,
             t,
             v$
         };
