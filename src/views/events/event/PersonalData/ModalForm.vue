@@ -205,7 +205,7 @@ import { ajax } from '../../../../utils/AjaxRequest.js';
 import en from './langs/PersonalDataEng.js';
 import es from './langs/PersonalDataEsp.js';
 import useVuelidate from '@vuelidate/core';
-import { helpers, numeric, required } from '@vuelidate/validators';
+import { helpers, numeric, required, requiredIf } from '@vuelidate/validators';
 import { useUserAccountStore } from '../../../../stores/UserAccount.js';
 import { vMaska } from "maska/vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
@@ -316,26 +316,54 @@ export default defineComponent({
         });  
         
         const validName = (value) => {
-
-            const regex = /^[ \p{Letter}'’]+$/u; 
-            return regex.test(value);
+          
+            const regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(?: [a-zA-ZÀ-ÿ\u00f1\u00d1]+)*$/;
+            return (regex.test(value)) ? false : true;
 
         };
 
         const rules = {
             firstName: { 
-                alpha: helpers.withMessage(t('validator.alpha'), validName),
+                alpha: helpers.withMessage(t('validator.alphaWithSingleSpace'), validName),
                 required: helpers.withMessage(t('validator.required'), required) 
             },
             middleName: { 
-                alpha: helpers.withMessage(t('validator.alpha'), validName),
+                alpha: {requiredIf: helpers.withMessage(t('validator.alphaWithSingleSpace'), requiredIf(() => {
+
+                    if(data.middleName !== null) {
+
+                        if(data.middleName.trim() !== '') {
+
+                            return validName(data.middleName);
+
+                        }
+
+                    }
+
+                    return false;
+
+                }))}
             },
             lastName: { 
-                alpha: helpers.withMessage(t('validator.alpha'), validName),
+                alpha: helpers.withMessage(t('validator.alphaWithSingleSpace'), validName),
                 required: helpers.withMessage(t('validator.required'), required) 
             },
             secondLastName: { 
-                alpha: helpers.withMessage(t('validator.alpha'), validName)
+                alpha: {requiredIf: helpers.withMessage(t('validator.alphaWithSingleSpace'), requiredIf(() => {
+
+                        if(data.secondLastName !== null) {
+
+                           if(data.secondLastName.trim() !== '') {
+
+                               return validName(data.secondLastName);
+
+                           }
+
+                        }
+
+                        return false;
+
+                    }))}
             },
             documentTypeId: { required: helpers.withMessage(t('validator.required'), required) },
             document: { 
@@ -485,16 +513,16 @@ export default defineComponent({
                     data.bloodTypeId = userData.blood_type_id;                    
                     data.countryEmergencyPhoneCode = userData.country_emergency_phone_code;
                     data.countryPhoneCode = userData.country_phone_code;
-                    data.firstName = userData.first_name.trim();
+                    data.firstName = (userData.first_name !== null) ? userData.first_name.trim() : '';
                     data.document = userData.document_id;
                     data.documentTypeId = userData.document_type_id;
                     data.emergencyPhoneNumber = userData.emergency_phone_number;
                     data.genderId = userData.gender_id;
-                    data.lastName = userData.last_name.trim();
+                    data.lastName = (userData.last_name !== null) ? userData.last_name.trim() : '';
                     data.medicalCondition = userData.medical_condition;
-                    data.middleName = userData.middle_name.trim();
+                    data.middleName = (userData.middle_name !== null) ? userData.middle_name.trim() : '';
                     data.phoneNumber = userData.phone_number;
-                    data.secondLastName = userData.second_last_name.trim();
+                    data.secondLastName = (userData.second_last_name !== null) ? userData.second_last_name.trim() : '';
 
                 };
 
@@ -506,6 +534,10 @@ export default defineComponent({
             });
 
         };
+
+        const nameFormat = () => {
+            
+        }
 
         async function save() {
             
@@ -526,10 +558,10 @@ export default defineComponent({
                     params: {
                         userId: userAccountStore.state.id,
                         email: userAccountStore.state.email,
-                        firstName: data.firstName,
-                        middleName: data.middleName,
-                        lastName: data.lastName,
-                        secondLastName: data.secondLastName,
+                        firstName: validatingName(data.firstName),
+                        middleName: validatingName(data.middleName),
+                        lastName: validatingName(data.lastName),
+                        secondLastName: validatingName(data.secondLastName),
                         documentTypeId: data.documentTypeId,
                         document: data.document,
                         birthday: data.birthday,
@@ -605,6 +637,12 @@ export default defineComponent({
 
         };
 
+        const validatingName = (nameString) => {
+
+            return nameString.trim().split(/\s+/).join(" ");
+
+        }
+
         onBeforeMount(() => {
 
             getBloodTypes();
@@ -647,7 +685,8 @@ export default defineComponent({
             rules,
             save,
             t,
-            v$
+            v$,
+            validatingName
         };
 
     }

@@ -146,13 +146,6 @@ export default defineComponent({
             messages
         });  
 
-        const validName = (value) => {
-
-            const regex = /^[ \p{Letter}'’]+$/u; 
-            return regex.test(value);
-
-        };
-
         const rules = {    
             customizeYourKit: { 
                 $each: helpers.forEach({
