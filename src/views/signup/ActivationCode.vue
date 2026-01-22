@@ -22,12 +22,11 @@
         <div class="d-grid">
             <div class="btn-group" role="group">
                 <button :disabled="attrs.goBackBtn.disabled"
-                        @click="goBack"
                         class="btn"
                         id="btn-sign-in"
                         type="button">{{ t('backBtn') }}</button>
                 <button :disabled="attrs.activationBtn.disabled"
-                        @click="signup"
+                        @click="activate"
                         class="btn"
                         id="btn-sign-in"
                         type="button"
@@ -70,15 +69,15 @@ export default defineComponent({
 
         const attrs = reactive({
             goBackBtn: {
-                disabled: false
+                disabled: true
             },
             activationBtn: {
-                disabled: (userAccountStore.state.langId !== null) ? true : false,
+                disabled: true,
                 html: t('activationBtn.text'),
                 loadingHtml: '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only"> '+ t('activationBtn.loadingText') +'</span>'
             },
             code: {
-                disabled: (userAccountStore.state.langId !== null) ? true : false
+                disabled: true
             }
         });
 
@@ -93,26 +92,25 @@ export default defineComponent({
             emit('goBack');
         };
 
-        async function signup() {
+        async function activate() {
 
             const isFormCorrect = await this.v$.$validate()
       
             if(isFormCorrect){
                 
-                attrs.email.disabled = true;
+                attrs.code.disabled = true;
                 attrs.goBackBtn.disabled = true;
                 attrs.activationBtn.disabled = true;
                 attrs.activationBtn.html =  attrs.activationBtn.loadingHtml;
-                attrs.username.disabled = true;
                 
                 let ajaxData = {
                     method: "post",
                     params: {
-                        email: data.email,
+                        code: data.code,
                         langId: userAccountStore.state.langId,
-                        username: data.username
+                        userId: userAccountStore.state.id
                     },
-                    url: import.meta.env.VITE_API_BASE_URL+"/users/sign-up"
+                    url: import.meta.env.VITE_API_BASE_URL+"/users/activate-user-account"
                 }
                 
                 ajax(ajaxData)
@@ -124,25 +122,14 @@ export default defineComponent({
                         var timer = 0;
                         var typeMessage = response.data.status;
 
-                        if(response.data.statusCode === 1) {
+                        attrs.goBackBtn.disabled = false;
+                        attrs.activationBtn.html = t('activationBtn.text');
+
+                        if(response.data.statusCode !== 1) {
                                 
-                            data.email = "";
-                            data.username = "";
-                            attrs.email.disabled = false;
-                            attrs.goBackBtn.disabled = false;
+                            attrs.code.disabled = false;
                             attrs.activationBtn.disabled = false;
-                            attrs.activationBtn.html = t('activationBtn.text');
-                            attrs.username.disabled = false;
-                            v$.value.$reset();
                             
-                        } else {
-
-                            attrs.email.disabled = false;
-                            attrs.goBackBtn.disabled = false;
-                            attrs.activationBtn.disabled = false;
-                            attrs.activationBtn.html = t('activationBtn.text');
-                            attrs.username.disabled = false;
-
                         }
 
                         let alertData = {
@@ -211,22 +198,19 @@ export default defineComponent({
 
         }
 
-        /*watch(() => [
-            userAccountStore.state.langId
-        ], (newValue, oldValue) => {
-            console.log(oldValue)
-            console.log("----------")
-            console.log(newValue)
-            attrs.code.disabled = (newValue[1] !== null) ? false : true;
-            attrs.signUpBtn.disabled = (newValue[1] !== null) ? false : true;
-
-        });*/
+        watch(() => userAccountStore.state.id, (newVal, oldVal) => {
+   
+            attrs.code.disabled = (newVal !== null && newVal !== '') ? false : true;
+            attrs.goBackBtn.disabled = (newVal !== null && newVal !== '') ? false : true;
+            attrs.activationBtn.disabled = (newVal !== null && newVal !== '') ? false : true;
+            
+        });
 
         return {
             attrs,
             data,
             goBack,
-            signup,
+            activate,
             t,
             userAccountStore,
             v$
