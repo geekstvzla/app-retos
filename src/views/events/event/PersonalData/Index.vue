@@ -43,6 +43,7 @@ export default defineComponent({
     },
     setup(props) {
 
+        const hasPersonalData = ref(false);
         const messages = {
             en: en,
             es: es
@@ -54,17 +55,15 @@ export default defineComponent({
         });  
         const userAccountStore = useUserAccountStore();
         const rules = {
-            userId: { required: helpers.withMessage(t('validator.required'), () => {
-                return (userAccountStore.state.id !== null);
-            })}
+            userId: { required: helpers.withMessage(t('validator.noSession'), () => {
+                    return (userAccountStore.state.id !== null);
+                }),
+                noPersonalData: helpers.withMessage(t('validator.personalDataRequired'), () => {
+                    return (userAccountStore.state.name !== null && userAccountStore.state.lastname !== null);
+                })
+            }
         };
         const v$ = useVuelidate(rules, { userId: userAccountStore.state.id }, { $scope: props.scope });
-
-        const goToLogin = () => {
-
-            
-
-        };
 
         const openModal = () => {
 

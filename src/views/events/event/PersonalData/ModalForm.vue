@@ -524,6 +524,8 @@ export default defineComponent({
                     data.phoneNumber = userData.phone_number;
                     data.secondLastName = (userData.second_last_name !== null) ? userData.second_last_name.trim() : '';
 
+                    //checkRequiredFieldForEnroll();
+
                 };
 
             })
@@ -534,10 +536,6 @@ export default defineComponent({
             });
 
         };
-
-        const nameFormat = () => {
-            
-        }
 
         async function save() {
             
@@ -598,6 +596,16 @@ export default defineComponent({
                                 type: "error"
                             };
 
+                        } else if(rs.data.statusCode === 1) {
+
+                            localStorage.setItem("userFirstName", data.firstName);
+                            localStorage.setItem("userLastName", data.lastName);
+
+                            userAccountStore.$patch((store) => {
+                                store.state.lastname = data.lastName
+                                store.state.name = data.firstName
+                            });
+
                         };
 
                         let alertData = {
@@ -653,7 +661,7 @@ export default defineComponent({
         });
 
         onMounted(() => {
-            
+           
             modal.value = new bootstrap.Modal('#modal-form');
 
             modal.value._element.addEventListener('hidden.bs.modal', event => {
@@ -662,11 +670,12 @@ export default defineComponent({
 
             });
 
-            modal.value._element.addEventListener('shown.bs.modal', event => {
+            if(userAccountStore.state.id !== null) {
 
+                console.log("BUSCAR")
                 getPersonalData();
 
-            });
+            }
 
         });
 

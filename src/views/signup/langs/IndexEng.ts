@@ -1,7 +1,7 @@
 export const IndexEng = {
     alert: {
         error: "An error occurred.",
-        success: "You have successfully registered!. An email has been sent to you to verify your account. ",
+        success: "You have successfully registered! An email has been sent to you with a code to activate your account. ",
         warning: "The email is already registered!"
     },
     backBtn: "Back",

@@ -9,6 +9,7 @@ export const useUserAccountStore = defineStore('userAccount', () => {
         name: (localStorage.getItem('userFirstName')) ? localStorage.getItem('userFirstName') : null,
         id: (localStorage.getItem('userId')) ? localStorage.getItem('userId') : null,
         langId: 'esp',
+        lastname: (localStorage.getItem('userLastName')) ? localStorage.getItem('userLastName') : null,
         logged: (localStorage.getItem('userId')) ? true : false,
         username: (localStorage.getItem('username')) ? localStorage.getItem('username') : null
     })

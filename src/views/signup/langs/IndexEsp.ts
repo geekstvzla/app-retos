@@ -1,7 +1,7 @@
 export const IndexEsp = {
     alert: {
         error: "Ocurrió un error.",
-        success: "Te haz registrado con éxito!. Se te ha enviado un correo para verificar tu cuenta.",
+        success: "Te haz registrado con éxito!. Se te ha enviado un correo con un código para que puedas activar tu cuenta.",
         warning: "El correo ya se encuentra resgistrado!"
     },
     backBtn: "Atrás",

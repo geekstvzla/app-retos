@@ -13,16 +13,21 @@
                                        :is-visible="forms.email.visible"/>
                         </div>
                         <div class="carousel-item">
-                            <AccessCodeForm @goBack="goToEmailFrom" 
+                            <AccessCodeForm @goBack="goToEmailForm" 
                                             @response="accessCodeFormResponse"
                                             :email="forms.accessCode.email" 
                                             :is-visible="forms.accessCode.visible" />
                         </div>
                         <div class="carousel-item">
-                            <NewAccountForm @goBack="goToEmailFrom" 
+                            <NewAccountForm @goBack="goToEmailForm" 
                                             @response="newAccountFormResponse"
                                             :email="forms.newAccount.email" 
                                             :is-visible="forms.newAccount.visible" />
+                        </div>
+                        <div class="carousel-item">
+                            <ActivationCode @goBack="goToEmailForm"
+                                            @goForward="goToEmailForm"
+                                            :is-visible="forms.activationCode.visible" />
                         </div>
                     </div>
                 </div>
@@ -45,6 +50,7 @@ import Alert from '../../components/Alert.vue';
 import { useUserAccountStore } from '../../stores/UserAccount.js';
 import * as bootstrap from 'bootstrap';
 import AccessCodeForm from './AccessCodeForm.vue';
+import ActivationCode from '../signup/ActivationCode.vue';
 import EmailForm from './EmailForm.vue';
 import NewAccountForm from '../signup/Index.vue';
 
@@ -52,6 +58,7 @@ export default defineComponent({
     emits: ["closeModal"],
     components: {
         AccessCodeForm,
+        ActivationCode,
         Alert,
         EmailForm,
         NewAccountForm
@@ -85,6 +92,9 @@ export default defineComponent({
         const forms = reactive({
             accessCode: {
                 email: "",
+                visible: false
+            },
+            activationCode: {
                 visible: false
             },
             email: {
@@ -187,7 +197,7 @@ export default defineComponent({
 
         };
 
-        const goToEmailFrom = () => {
+        const goToEmailForm = () => {
            
             forms.email.visible = true;
             carousel.value.to(0);
@@ -216,8 +226,16 @@ export default defineComponent({
         };
 
         const newAccountFormResponse = (data) => {
+            
+            if(data.statusCode === 1) {
 
-            carousel.value.to(0);
+                forms.activationCode.visible = true;
+                forms.email.visible = false;
+                forms.newAccount.visible = false;
+                carousel.value.to(3);
+
+            }
+            
             Object.assign(alertProps, data.alertData);
 
         };
@@ -246,7 +264,7 @@ export default defineComponent({
             contentWidth,
             emailFormResponse,
             generatedAccessCode,
-            goToEmailFrom,
+            goToEmailForm,
             forms,
             inModal,
             newAccountFormResponse,

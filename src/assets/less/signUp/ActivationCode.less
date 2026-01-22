@@ -1,0 +1,66 @@
+@import "../variables.less";
+
+form {
+
+    .leyend {
+        color: #cc0000;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .input-group {
+
+        &:nth-child(2),
+        &:nth-child(4) {
+            margin-bottom: 25px !important;
+            margin-top: 25px;
+        }
+
+        .wrapper-code-text {
+            width: 100%;
+        }
+
+    }
+
+    .input-group-text {
+        background-color: @input-background-color;
+        border: @input-border;
+        border-radius: @input-border-radius;
+
+        &:nth-child(2) {
+            border-bottom-left-radius: @input-border-radius !important;
+            border-right: 0px;
+            border-top-left-radius: @input-border-radius !important;
+        }
+
+    }
+
+    .form-label {
+        margin-bottom: 0px;
+        padding-left: 15px;
+        width: 100%;
+    }
+
+    .form-control {
+        background-color: @input-background-color;
+        border: @input-border;
+        border-left: 0px;
+        border-radius: @input-border-radius;
+
+        &#code {
+            border-bottom-right-radius: @input-border-radius !important;
+            border-top-right-radius: @input-border-radius !important;
+        }
+
+    }
+
+    .btn-group {
+        background-color: #D3E3FD;
+
+        .btn {
+            text-transform: uppercase;
+        }
+
+    }
+
+}

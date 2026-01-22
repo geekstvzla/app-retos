@@ -76,7 +76,7 @@ import { ajax } from '../../utils/AjaxRequest.js';
 import { useUserAccountStore } from '../../stores/UserAccount.js';
 
 export default defineComponent({
-    emits: ['goBack', 'response'],
+    emits: ['goBack', 'goForward', 'response'],
     props: {
         email: String,
         isVisible: Boolean
@@ -264,14 +264,16 @@ export default defineComponent({
 
                         if(response.data.statusCode === 1) {
                                 
-                            data.email = "";
-                            data.username = "";
-                            attrs.email.disabled = false;
-                            attrs.goBackBtn.disabled = false;
-                            attrs.signUpBtn.disabled = false;
                             attrs.signUpBtn.html = t('signUpBtn.text');
-                            attrs.username.disabled = false;
-                            v$.value.$reset();
+
+                            localStorage.setItem("userAvatar", response.data.userAvatar);
+                            localStorage.setItem("userId", response.data.userId);
+                            localStorage.setItem("username", data.username);
+
+                            userAccountStore.$patch((store) => {
+                                store.state.avatar = data.avatar,
+                                store.state.id = response.data.userId
+                            });
                             
                         } else {
 
