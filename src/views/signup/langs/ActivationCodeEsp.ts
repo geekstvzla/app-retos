@@ -5,7 +5,7 @@ export const IndexEsp = {
         warning: "The code has expired!"
     },
     backBtn: "Atrás",
-    help: "Coloca en el siguiente campo el código que se envío a tu correo.",
+    help: "Coloca en el siguiente campo el CÓDIGO que se envío a tu correo.",
     inputs: {
         code: {
             help: "El código se te envío al correo con el cual te registraste.",

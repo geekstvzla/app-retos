@@ -272,7 +272,8 @@ export default defineComponent({
 
                             userAccountStore.$patch((store) => {
                                 store.state.avatar = data.avatar,
-                                store.state.id = response.data.userId
+                                store.state.id = response.data.userId,
+                                store.state.name = data.username
                             });
                             
                         } else {

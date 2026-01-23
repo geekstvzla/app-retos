@@ -141,7 +141,8 @@ export default defineComponent({
                         let dataR = {
                             alertData: alertData,
                             statusCode: response.data.statusCode,
-                            timer: timer
+                            timer: timer,
+                            userData: response.data.userData
                         };
                     
                         emit("response", dataR);
@@ -158,15 +159,14 @@ export default defineComponent({
                 })
                 .catch(error => {
 
-                    attrs.email.disabled = false;
+                    attrs.code.disabled = false;
                     attrs.goBackBtn.disabled = false;
                     attrs.activationBtn.disabled = false;
                     attrs.activationBtn.html = t('activationBtn.text');
-                    attrs.username.disabled = false;
 
                     let alertData = {
                         close: (error.close) ? error.close : false,
-                        message: (error.message) ? error.message : t('loginBtn.text'),
+                        message: (error.message) ? error.message : t('activationBtn.text'),
                         show: true,
                         timer: (error.timer) ? error.timer : false,
                         timerSeconds: (error.timerSeconds) ? error.timerSeconds : 0,

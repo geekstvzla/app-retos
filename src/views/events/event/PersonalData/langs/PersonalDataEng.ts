@@ -6,8 +6,13 @@ export const EventDetailEng = {
         }
     },
     validator: {
+        alpha: "Only letters",
+        alphaWithSingleSpace: "Just letters with a single space between letters.",
+        countryPhoneCode: "The country code is required",
         noSession: "You must log in.",
-        personalDataRequired: "Please provide your personal details."
+        numeric: "Only numbers",
+        personalDataRequired: "Please provide your personal details.",
+        required: "Is required"
     }
 }
 

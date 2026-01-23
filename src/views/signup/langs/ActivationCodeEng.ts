@@ -5,7 +5,7 @@ export const IndexEng = {
         warning: "The email is already registered!"
     },
     backBtn: "Back",
-    help: "Enter the code that was sent to your email address in the field below.",
+    help: "Enter the CODE that was sent to your email address in the field below.",
     inputs: {
         code: {
             help: "The code has been sent to the email address you used to register.",

@@ -6,8 +6,13 @@ export const EventDetailEsp = {
         }
     },
     validator: {
+        alpha: "Solo letras",
+        alphaWithSingleSpace: "Solo letras con un espacio simple entre letras.",
+        countryPhoneCode: "El código del país es requerido",
         noSession: "Debes iniciar sesión.",
-        personalDataRequired: "Por favor indica tus datos personales."
+        numeric: "Solo números",
+        personalDataRequired: "Por favor indica tus datos personales.",
+        required: "Este campo es requerido"
     }
 }
 

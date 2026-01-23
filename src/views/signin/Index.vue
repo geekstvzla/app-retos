@@ -27,7 +27,8 @@
                         <div class="carousel-item">
                             <ActivationCode @goBack="goToEmailForm"
                                             @goForward="goToEmailForm"
-                                            :is-visible="forms.activationCode.visible" />
+                                            :is-visible="forms.activationCode.visible"
+                                            @response="ActivationCodeResponse" />
                         </div>
                     </div>
                 </div>
@@ -157,6 +158,32 @@ export default defineComponent({
 
         };
 
+        const ActivationCodeResponse = (data) => {
+
+            if(data.statusCode === 1) {
+
+                sessionData(data.userData);
+                
+                if(props.openFrom === "modal") {
+
+                    emit("closeModal");
+
+                } else {
+
+                     setTimeout(() => {
+
+                        router.push({ name: "home" });
+
+                    }, 3000)
+
+                }
+
+            };
+
+            Object.assign(alertProps, data.alertData);
+
+        }
+
         const contentWidth = () => {
 
             let classString = {
@@ -243,14 +270,14 @@ export default defineComponent({
         const sessionData = (data) => {
 
             localStorage.setItem("userAvatar", data.avatar);
-            localStorage.setItem("userEmail", forms.accessCode.email);
+            localStorage.setItem("userEmail", data.email);
             localStorage.setItem("userFirstName", data.name);
             localStorage.setItem("userId", data.id);
             localStorage.setItem("username", data.username);
 
             userAccountStore.$patch((store) => {
                 store.state.avatar = data.avatar
-                store.state.email = forms.accessCode.email
+                store.state.email = data.email
                 store.state.id = data.id
                 store.state.name = data.name
                 store.state.username = data.username
@@ -260,6 +287,7 @@ export default defineComponent({
 
         return {
             accessCodeFormResponse,
+            ActivationCodeResponse,
             alertProps,
             contentWidth,
             emailFormResponse,

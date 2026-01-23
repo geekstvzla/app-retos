@@ -207,7 +207,6 @@ import es from './langs/PersonalDataEsp.js';
 import useVuelidate from '@vuelidate/core';
 import { helpers, numeric, required, requiredIf } from '@vuelidate/validators';
 import { useUserAccountStore } from '../../../../stores/UserAccount.js';
-import { vMaska } from "maska/vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import Alert from '../../../../components/Alert.vue';
