@@ -315,9 +315,9 @@ export default defineComponent({
         });  
         
         const validName = (value) => {
-          
+           
             const regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(?: [a-zA-ZÀ-ÿ\u00f1\u00d1]+)*$/;
-            return (regex.test(value)) ? false : true;
+            return regex.test(value);
 
         };
 
@@ -331,9 +331,11 @@ export default defineComponent({
 
                     if(data.middleName !== null) {
 
-                        if(data.middleName.trim() !== '') {
+                        if(data.middleName !== '') {
 
-                            return validName(data.middleName);
+                            const regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(?: [a-zA-ZÀ-ÿ\u00f1\u00d1]+)*$/;
+                            return (regex.test(data.middleName)) ? false : true;
+                            //return validName(data.middleName);
 
                         }
 
@@ -352,9 +354,10 @@ export default defineComponent({
 
                         if(data.secondLastName !== null) {
 
-                           if(data.secondLastName.trim() !== '') {
+                           if(data.secondLastName !== '') {
 
-                               return validName(data.secondLastName);
+                               const regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(?: [a-zA-ZÀ-ÿ\u00f1\u00d1]+)*$/;
+                               return (regex.test(data.secondLastName)) ? false : true;
 
                            }
 
@@ -507,8 +510,8 @@ export default defineComponent({
                 if(rs.status === 200 && rs.data) {
 
                     let userData = rs.data.userData;
-                 
-                    data.birthday = userData.birthday;
+                 console.log(userData)
+                    data.birthday = (userData.birthday !== null) ? userData.birthday : '';
                     data.bloodTypeId = userData.blood_type_id;                    
                     data.countryEmergencyPhoneCode = userData.country_emergency_phone_code;
                     data.countryPhoneCode = userData.country_phone_code;

@@ -139,8 +139,12 @@ export default defineComponent({
                 sessionData(data.userData);
                 
                 if(props.openFrom === "modal") {
+                    
+                    setTimeout(() => {
 
-                    emit("closeModal");
+                        emit("closeModal");
+
+                    }, 3000);
 
                 } else {
 
@@ -148,7 +152,7 @@ export default defineComponent({
 
                         router.push({ name: "home" });
 
-                    }, 3000)
+                    }, 3000);
 
                 }
 
@@ -166,7 +170,11 @@ export default defineComponent({
                 
                 if(props.openFrom === "modal") {
 
-                    emit("closeModal");
+                    setTimeout(() => {
+
+                        emit("closeModal");
+                        
+                    }, 3000);
 
                 } else {
 
