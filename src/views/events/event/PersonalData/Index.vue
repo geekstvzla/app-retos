@@ -19,7 +19,7 @@
             </div>
         </div>
         <ModalForm />
-        <ModalNoSession />
+        <ModalNoSession @showFormPersonalData="showFormPersonalData" />
     </div>
 </template>
 
@@ -79,15 +79,22 @@ export default defineComponent({
             
         };
 
+        const showFormPersonalData = () => {
+
+            modal.value.show();
+
+        }
+
         onMounted(() => {
             
-            modal.value = new bootstrap.Modal('#modal-form');
+            modal.value = new bootstrap.Modal('#modal-form-personal-data');
             modalNoSession.value = new bootstrap.Modal('#modal-no-session');
 
         });
 
         return {
             openModal,
+            showFormPersonalData,
             v$
         };
 

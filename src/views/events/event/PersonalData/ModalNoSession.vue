@@ -48,10 +48,11 @@ import Signin from '../../../signin/Index.vue';
 import * as bootstrap from 'bootstrap';
 
 export default defineComponent({
+    emits: ["showFormPersonalData"],
     components: {
         Signin
     },
-    setup() {
+    setup(props, { emit }) {
 
         const attrs = reactive({
             save: {
@@ -76,12 +77,18 @@ export default defineComponent({
         const showingSignin = ref(false);
         const userAccountStore = useUserAccountStore();
 
-        function closeModal() {
+        function closeModal(showFormPersonalData) {
             
             const modalElement = document.getElementById('modal-no-session');
             const modalInstance = bootstrap.Modal.getInstance(modalElement);
             modalInstance.hide();
             showSignin(false);
+
+            if(showFormPersonalData) {
+
+                emit("showFormPersonalData");
+                
+            }
 
         };
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" id="modal-form" tabindex="-1" aria-labelledby="modal-form-label" aria-hidden="true">
+    <div class="modal fade" id="modal-form-personal-data" tabindex="-1" aria-labelledby="modal-form-label" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
             <div class="modal-header">
@@ -384,6 +384,14 @@ export default defineComponent({
         const userAccountStore = useUserAccountStore();
         const v$ = useVuelidate(rules, data, { $scope: false });
 
+        function closeModal() {
+            
+            const modalElement = document.getElementById('modal-form-personal-data"');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            modalInstance.hide();
+
+        };
+
         const getBloodTypes = () => {
 
             let ajaxData = {
@@ -510,7 +518,7 @@ export default defineComponent({
                 if(rs.status === 200 && rs.data) {
 
                     let userData = rs.data.userData;
-                 console.log(userData)
+              
                     data.birthday = (userData.birthday !== null) ? userData.birthday : '';
                     data.bloodTypeId = userData.blood_type_id;                    
                     data.countryEmergencyPhoneCode = userData.country_emergency_phone_code;
@@ -526,7 +534,7 @@ export default defineComponent({
                     data.phoneNumber = userData.phone_number;
                     data.secondLastName = (userData.second_last_name !== null) ? userData.second_last_name.trim() : '';
 
-                    //checkRequiredFieldForEnroll();
+                    closeModal();
 
                 };
 
@@ -664,7 +672,7 @@ export default defineComponent({
 
         onMounted(() => {
            
-            modal.value = new bootstrap.Modal('#modal-form');
+            modal.value = new bootstrap.Modal('#modal-form-personal-data');
 
             modal.value._element.addEventListener('hidden.bs.modal', event => {
 
@@ -674,7 +682,6 @@ export default defineComponent({
 
             if(userAccountStore.state.id !== null) {
 
-                console.log("BUSCAR")
                 getPersonalData();
 
             }
@@ -686,6 +693,7 @@ export default defineComponent({
             attrs,
             birthdayFlow,
             bloodTypes,
+            closeModal,
             countriesPhoneCodes,
             countriesEmergencyPhoneCodes,
             data,

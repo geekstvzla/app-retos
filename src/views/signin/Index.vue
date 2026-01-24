@@ -27,8 +27,8 @@
                         <div class="carousel-item">
                             <ActivationCode @goBack="goToEmailForm"
                                             @goForward="goToEmailForm"
-                                            :is-visible="forms.activationCode.visible"
-                                            @response="ActivationCodeResponse" />
+                                            @response="ActivationCodeResponse"
+                                            :is-visible="forms.activationCode.visible"/>
                         </div>
                     </div>
                 </div>
@@ -142,7 +142,7 @@ export default defineComponent({
                     
                     setTimeout(() => {
 
-                        emit("closeModal");
+                        emit("closeModal", false);
 
                     }, 3000);
 
@@ -172,9 +172,9 @@ export default defineComponent({
 
                     setTimeout(() => {
 
-                        emit("closeModal");
+                        emit("closeModal", true);
                         
-                    }, 3000);
+                    }, 2000);
 
                 } else {
 

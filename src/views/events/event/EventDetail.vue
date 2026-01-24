@@ -62,7 +62,6 @@ import PersonalData from './PersonalData/Index.vue';
 import ReportPayment from './ReportPayment.vue';
 import TechnicalSheetData from './TechnicalSheetData.vue';
 import useVuelidate from '@vuelidate/core';
-import { helpers, required } from '@vuelidate/validators';
 
 export default defineComponent({
     components: {
@@ -112,6 +111,7 @@ export default defineComponent({
        
             alertProps.show = false;
             let isFormCorrect = await this.v$.$validate();
+            this.$v.$touch();
      
             if(isFormCorrect) {
                 
