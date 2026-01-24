@@ -38,9 +38,12 @@
                                 <p>{{ error.$message }}</p>
                             </div>
                         </div>
-                        <div :class=" (v$.voucherFile.$errors.length > 0) ? 'field-error mb-3' : 'mb-3'">
+                        <div :class="(v$.voucherFile.$errors.length > 0) ? 'field-error mb-3' : attrs.voucherFile.class">
                             <label for="voucherFile" class="form-label">Subir comprobante de pago</label>
-                            <input @change="handleVoucherFile" class="form-control" type="file">
+                            <input @change="handleVoucherFile" class="form-control" id="voucher-file" type="file">
+                            <span id="voucherFileHelp" class="form-text">
+                                {{ attrs.voucherFile.help }}
+                            </span>
                             <div class="error-msg" v-for="error of v$.voucherFile.$errors" :key="error.$uid">
                                 <p>{{ error.$message }}</p>
                             </div>
@@ -57,7 +60,7 @@
 
 <script>
 
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import { ajax } from '../../../utils/AjaxRequest.js';
@@ -85,10 +88,14 @@ export default defineComponent({
             show: false,
             timer: 0,
             type: null
-        });
+        }); 
         const attrs = reactive({
             paymentMethod: {
                 disabled: true
+            },
+            voucherFile: {
+                class: "mb-3",
+                help: ""
             }
         });
         
@@ -151,6 +158,14 @@ export default defineComponent({
                 eventStore.$patch((store) => {
                     store.state.userEnroll.voucherFile = data.voucherFile
                 });
+
+                attrs.voucherFile.class = "mb-3 input-success";
+                attrs.voucherFile.help = t('vaucherFile.help.success');
+
+            } else {
+
+                attrs.voucherFile.class = "mb-3";
+                attrs.voucherFile.help = t('vaucherFile.help.allowedExtensions');
 
             }
 
