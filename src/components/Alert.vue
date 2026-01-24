@@ -53,16 +53,16 @@
                         type: 'light'
                     }
                 }
+            },
+            refName: {
+                String,
+                default: 'alert'
             }
         },
         setup(props, { emit }) {
 
-            const data = reactive({})
-            const time = ref(null)
-
-            onMounted(() => {
-                Object.assign(data, initData())
-            })
+            const data = reactive({});
+            const time = ref(null);
 
             watch(() => [
                 props.options.closeButton,
@@ -70,9 +70,9 @@
                 props.options.message,
                 props.options.noAgreeButton,
                 props.options.show,
-                props.options.timer/*,
-                data.show*/
+                props.options.timer
             ], (newValue, oldValue) => {
+
                 data.closeButton = alertButton(newValue[0], 'Close')
                 data.iAgreeButton = alertButton(newValue[1], 'Yes')
                 data.message = (newValue[2]) ? newValue[2] : ""
@@ -80,6 +80,9 @@
                 data.show = (newValue[4]) ? newValue[4] : false
                 data.timer = timerData
                 data.type = typeData
+
+                console.log("ALERT PROPS")
+                console.log(newValue[6]);
 
                 /*if(newValue[6] !== oldValue[6] && typeof oldValue[6] !== 'undefined') {
                     console.log("PASOOOOOOOOOO")
@@ -220,6 +223,10 @@
                 data.progressClass = (types[type]) ? "bg-" + types[type].class : ""
 
             }
+
+            onMounted(() => {
+                Object.assign(data, initData())
+            })
 
             return {
                 buttonSeparator,

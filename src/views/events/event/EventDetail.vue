@@ -37,7 +37,7 @@
                             :disabled="btnEnroll.disabled"
                             type="button"
                             v-html="btnEnroll.html"></button>
-                    <Alert @iAgree="iAgree" :options="alertProps" />
+                    <Alert @iAgree="iAgree" :options="alertProps" ref="enrollAlert" />
                 </div>
             </div>   
         </div>
@@ -46,7 +46,8 @@
 
 <script>
 
-import { defineComponent, onBeforeMount, reactive, toRaw, watch } from 'vue';
+import { defineComponent, nextTick, onBeforeMount, onMounted, reactive, ref, toRaw, watch } from 'vue';
+import { useScroll, useWindowScroll } from '@vueuse/core';
 import { ajax } from '../../../utils/AjaxRequest';
 import { useI18n } from 'vue-i18n';
 import en from './langs/EventDetailEng.js';
@@ -82,7 +83,6 @@ export default defineComponent({
         const { t } = useI18n({
             messages
         });
-
         const alertProps = reactive({
             iconCloseButton: false,
             message: "",
@@ -97,21 +97,23 @@ export default defineComponent({
         });
         const eventStore = useEventStore();
         const userAccountStore = useUserAccountStore();
+        const enrollAlert = ref(null);
         const eventInfo = reactive({
             banner: "",
             featuredImage: "",
             hasAdditionalAccessories: 0,
             title: ""
         });
+        const moveToEle = ref(null); 
         const route = useRoute();
         const scope = 'eventEnrollment';
         const v$ = useVuelidate({}, {}, { $scope: true });
+        const { x, y } = useWindowScroll(moveToEle);
 
         const confirmEnrollment = async function() {
        
             alertProps.show = false;
             let isFormCorrect = await this.v$.$validate();
-            this.$v.$touch();
      
             if(isFormCorrect) {
                 
@@ -152,6 +154,10 @@ export default defineComponent({
                 Object.assign(alertProps, alertData);
 
             }
+
+            await nextTick();
+            moveToEle.value = enrollAlert.value.$el;
+            scrollToTarget();
 
         }
 
@@ -273,6 +279,22 @@ export default defineComponent({
             
         };
 
+        const scrollToTarget = async () => {
+
+            await nextTick();
+
+            if (moveToEle.value) {
+                console.log("PASO")
+                console.log("---------------------")
+                console.log(moveToEle.value)
+                console.log("---------------------")
+                x.value = moveToEle.value.offsetLeft;
+                y.value = moveToEle.value.offsetTop;
+
+            }
+
+        };
+
         const setEventInfo = (data) => {
             eventInfo.banner = data.banner;
             eventInfo.featuredImage = data.featuredImage;
@@ -290,6 +312,10 @@ export default defineComponent({
             
         });
 
+        onMounted(() => {
+
+        });
+
         watch(
             () => eventStore.$state,
             (newState, oldState) => {
@@ -304,6 +330,7 @@ export default defineComponent({
             alertProps,
             btnEnroll,
             confirmEnrollment,
+            enrollAlert,
             eventInfo,
             eventStore,
             iAgree,
