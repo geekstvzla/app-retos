@@ -57,7 +57,6 @@
             <div class="donation-event-data" v-else-if="(eventStore.state.typeId === 3)">
                  <h2 class="title">Evento pro fondos</h2>
                  <p class="mb-3">La actividad es gratuita sin embargo tiene un fin que es ayudar a otra persona; todo lo que pueda donar va directamente a la persona que lo necesita sin pasar por intermediarios.</p>
-                 <p>Donar tampoco es obligatorio, su buena vibra cuenta y mucho.</p>
             </div>
             <div class="free-event-data" v-else>
                  CAMINATA GRATIS

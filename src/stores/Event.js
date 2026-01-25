@@ -18,7 +18,7 @@ export const useEventStore = defineStore('event', () => {
             paymentDay: null,
             paymentMethodId: null,
             voucherFile: null
-        },
+        }
     });
 
     return { state }

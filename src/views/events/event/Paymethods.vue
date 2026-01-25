@@ -7,6 +7,10 @@
                     <p>Seleccione el método de pago de su preferencia para continuar con el proceso de inscripción.</p>
                     <p>El pago debe ser individual, es decir, no se puede pagar por grupo o realizar un solo pago por varias personas a la vez.</p>
                 </div>
+                <div v-if="(eventStore.state.typeId === 3)">
+                    <p>Si realizar una donación debes pasar el capture al número al cual hiciste el aporte.</p>
+                    <p>Donar tampoco es obligatorio, su buena vibra cuenta y mucho.</p>
+                </div>
                 <div class="price-wrapper" v-if="(eventStore.state.typeId === 1)">
                     <span class="price-title">Monto a pagar:</span>
                     <span class="price" v-if="eventStore.state.userEnroll.kitPrice !== null">

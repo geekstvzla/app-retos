@@ -47,7 +47,8 @@
 <script>
 
 import { defineComponent, nextTick, onBeforeMount, onMounted, reactive, ref, toRaw, watch } from 'vue';
-import { useScroll, useWindowScroll } from '@vueuse/core';
+import { useWindowScroll } from '@vueuse/core';
+import { onBeforeRouteLeave } from 'vue-router';
 import { ajax } from '../../../utils/AjaxRequest';
 import { useI18n } from 'vue-i18n';
 import en from './langs/EventDetailEng.js';
@@ -114,8 +115,7 @@ export default defineComponent({
        
             alertProps.show = false;
             let isFormCorrect = await this.v$.$validate();
-            console.log(this.v$)
-            return
+
             if(isFormCorrect) {
                 
                 let alertData = {
@@ -335,6 +335,30 @@ export default defineComponent({
             },
             { deep: true } // Use deep watch for nested changes
         );
+
+        onBeforeRouteLeave((to, from) => {
+        
+            localStorage.removeItem('eventEditionId');
+            localStorage.removeItem('eventId');
+            localStorage.removeItem('eventEditionTypeId');
+
+            eventStore.$patch((store) => {
+                store.state.editionId = null;
+                store.state.id = null;
+                store.state.typeId = null;
+                store.state.userEnroll.kitAttrs = [];
+                store.state.userEnroll.kitId = null;
+                store.state.userEnroll.kitPrice = null;
+                store.state.userEnroll.kitTitle = null;
+                store.state.userEnroll.modalityId = null;
+                store.state.userEnroll.modalityTitle = null;
+                store.state.userEnroll.operationNumber = null;
+                store.state.userEnroll.paymentDay = null;
+                store.state.userEnroll.paymentMethodId = null;
+                store.state.userEnroll.voucherFile = null;
+            });
+
+        });
 
         return {
             alertProps,
