@@ -53,10 +53,6 @@
                         type: 'light'
                     }
                 }
-            },
-            refName: {
-                String,
-                default: 'alert'
             }
         },
         setup(props, { emit }) {
@@ -80,9 +76,6 @@
                 data.show = (newValue[4]) ? newValue[4] : false
                 data.timer = timerData
                 data.type = typeData
-
-                console.log("ALERT PROPS")
-                console.log(newValue[6]);
 
                 /*if(newValue[6] !== oldValue[6] && typeof oldValue[6] !== 'undefined') {
                     console.log("PASOOOOOOOOOO")

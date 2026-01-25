@@ -132,9 +132,19 @@ export default defineComponent({
                     timerSeconds: 0,
                     type: "confirm"
                 };
-                Object.assign(alertProps, alertData);             
+                Object.assign(alertProps, alertData);  
+                
+                /*await nextTick();
+                moveToEle.value = enrollAlert.value.$el;
+                scrollToTarget();*/
 
             } else {
+
+                //console.log(this.v$.$errors)
+                /*for(var i = 0; i < this.v$.$errors.length; i++) {
+                    console.log(this.v$.$errors[i])
+                }*/
+                
 
                 let alertData = {
                     iAgreeButton: {
