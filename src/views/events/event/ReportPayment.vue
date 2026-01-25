@@ -124,29 +124,29 @@ export default defineComponent({
         const eventStore = useEventStore();
         const rules = {
             operationNumber: { 
-                onlyTheseCharacters: helpers.withMessage(t('validator.onlyTheseCharacters'), (value) => {
+                onlyTheseCharacters: helpers.withMessage(t('validator.onlyTheseCharacters'), requiredIf((value) => {
                     
                     const regex = /^[a-zA-Z0-9-]+$/;
                     return regex.test(value);
 
-                }),
-                requiredIf: helpers.withMessage(t('validator.required'), requiredIf(() => {
+                })),
+                required: helpers.withMessage(t('validator.required'), requiredIf(() => {
                     return (eventStore.state.typeId === 1);
                 })) 
             },
             paymentDay: { 
-                requiredIf: helpers.withMessage(t('validator.required'), requiredIf(() => {
+                required: helpers.withMessage(t('validator.required'), requiredIf(() => {
                     return (eventStore.state.typeId === 1);
                 }))
             },
             voucherFile: { 
-                onlyTheseExtensions: helpers.withMessage(t('validator.onlyTheseExtensions'), (value) => {
+                onlyTheseExtensions: helpers.withMessage(t('validator.onlyTheseExtensions'), requiredIf((value) => {
                 
                     const isValidImage = /\.(jpg|jpeg|png|pdf)$/i.test(value.name);
                     return isValidImage;
 
-                }),
-                requiredIf: helpers.withMessage(t('validator.required'), requiredIf(() => {
+                })),
+                required: helpers.withMessage(t('validator.required'), requiredIf(() => {
                     return (eventStore.state.typeId === 1);
                 })) 
             }
