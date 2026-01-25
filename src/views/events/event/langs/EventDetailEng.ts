@@ -12,7 +12,8 @@ export const EventDetailEng = {
         required: "Is required",
         sameAs: ((field) => { return `It must be equal to ${field}` }),
         noSpecialChars: "Only lowercase letters, hyphen, period and numbers are accepted, without spaces"
-    }
+    },
+    whatsappGroup: "Join the WhatsApp group"
 }
 
 export default EventDetailEng;

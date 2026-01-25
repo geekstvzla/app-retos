@@ -13,7 +13,8 @@ export const EventDetailEsp = {
         noSpecialChars: "Solo se aceptan letras minúsculas, guión, punto y números, sin espacios",
         required: "Este campo es requerido",
         sameAs: ((field) => { return `Debe ser igual a ${field}` })
-    }
+    },
+    whatsappGroup: "Únete al grupo de Whatsapp"
 }
 
 export default EventDetailEsp;

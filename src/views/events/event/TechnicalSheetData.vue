@@ -8,8 +8,18 @@
                 <p><strong class="subtitle">Cierre de inscripciones:</strong> {{ eventInfo.enrollmentEndtDate }}</p>
                 <p><strong class="subtitle">Lugar de salida:</strong> {{ eventInfo.departurePlaceName }}</p>
                 <p><strong class="subtitle">Lugar de llegada:</strong> {{ eventInfo.arrivalPlaceName }}</p>
-                <p><strong class="subtitle">Modalidad(es):</strong> <span class="badge rounded-pill text-bg-primary" v-for="(item, index) in eventInfo.modes">{{ item.modality }}</span></p>
+                <p>
+                    <strong class="subtitle">Modalidad(es):</strong>
+                    <span class="badge rounded-pill text-bg-primary" v-for="(item, index) in eventInfo.modes">{{ item.modality }}</span></p>
+                <p>
+                    <strong class="subtitle">Tipo de evento:</strong> 
+                    <span :class="eventTypeClass(eventInfo.eventTypeId)">{{ eventInfo.eventType }}</span>
+                </p>
                 <p><strong class="subtitle">Distancia(s):</strong> <span class="distance">{{ eventInfo.distances }}</span></p>
+                <p v-if="eventInfo.whatsappGroup">
+                    <strong class="subtitle">Grupo de Whatsapp: </strong>
+                    <a class="btn btn-whatsapp-group" :href="eventInfo.whatsappGroup" target="_blank">{{ t('whatsappGroup') }}</a>
+                </p>
             </div>
         </div>
     </div>
@@ -40,10 +50,13 @@ export default defineComponent({
             distances: "",
             edition: "",
             enrollmentEndtDate: "",
+            eventType: "",
+            eventTypeId: "",
             featuredImage: "",
             hasAccessories: false,
             modes: "",
-            title: ""
+            title: "",
+            whatsappGroup: null
         });
 
          const messages = {
@@ -75,6 +88,20 @@ export default defineComponent({
 
         };
 
+        const eventTypeClass = (eventTypeId) => {
+
+            let baseClase = "badge rounded-pill";
+            var className = {
+                0: baseClase+" text-bg-light",
+                1: baseClase+" text-bg-primary",
+                2: baseClase+" text-bg-success",
+                3: baseClase+" text-bg-warning",
+            };
+
+            return (className[eventTypeId]) ? className[eventTypeId] : className[0];
+
+        }
+
         const getEventDetail = () => {
 
             let ajaxData = {
@@ -99,10 +126,13 @@ export default defineComponent({
                     eventInfo.distances = rs.data.response.event_distances;
                     eventInfo.edition = rs.data.response.event_edition;
                     eventInfo.enrollmentEndtDate = dateFormat(rs.data.response.enrollment_end_date);
+                    eventInfo.eventType = rs.data.response.event_type;
+                    eventInfo.eventTypeId = rs.data.response.event_type_id;
                     eventInfo.featuredImage = rs.data.response.featured_image;
                     eventInfo.hasAccessories = (rs.data.response.has_accessories > 0) ? true : false;
                     eventInfo.modes = rs.data.response.event_modes;
                     eventInfo.title = rs.data.response.title;
+                    eventInfo.whatsappGroup = rs.data.response.whatsapp_group;
 
                     emit("eventInfo", eventInfo);
 
@@ -124,7 +154,9 @@ export default defineComponent({
         });
 
         return {
-            eventInfo
+            eventInfo,
+            eventTypeClass,
+            t
         };
 
     }
