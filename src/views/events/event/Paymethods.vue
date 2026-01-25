@@ -2,10 +2,12 @@
     <div class="row wrapper-paymethods">
         <div class="col">
             <div class="additional-paymethods-data">
-                <h2 class="title">Métodos de pago</h2>
-                <p>Seleccione el método de pago de su preferencia para continuar con el proceso de inscripción.</p>
-                <p>El pago debe ser individual, es decir, no se puede pagar por grupo o realizar un solo pago por varias personas a la vez.</p>
-                <div class="price-wrapper">
+                <h2 class="title">{{ paymethodsTitle }}</h2>
+                <div v-if="(eventStore.state.typeId === 1)">
+                    <p>Seleccione el método de pago de su preferencia para continuar con el proceso de inscripción.</p>
+                    <p>El pago debe ser individual, es decir, no se puede pagar por grupo o realizar un solo pago por varias personas a la vez.</p>
+                </div>
+                <div class="price-wrapper" v-if="(eventStore.state.typeId === 1)">
                     <span class="price-title">Monto a pagar:</span>
                     <span class="price" v-if="eventStore.state.userEnroll.kitPrice !== null">
                         {{ eventStore.state.userEnroll.kitPrice }} 
@@ -29,9 +31,9 @@
                         </div>
                     </div>
                 </form>
-                <h4 class="subheading">Detalles del método de pago</h4>
+                <h4 class="subheading">{{ paymethodsDetailsTitle }}</h4>
                 <div v-if="paymentMethodDetailsData.length > 0">
-                    <p>Estos son los datos que necesitas para realizar el pago.</p>
+                    <p v-if="(eventStore.state.typeId === 1)">Estos son los datos que necesitas para realizar el pago.</p>
                     <div v-for="(detail, index) in paymentMethodDetailsData" :key="index" class="payment-method-detail">
                         <p><strong>{{ detail.description }}:</strong> {{ detail.value }}</p>
                     </div>
@@ -86,6 +88,8 @@ export default defineComponent({
             es: es
         };
         const paymentMethodDetailsData = ref([]);
+        const paymethodsTitle = ref("");
+        const paymethodsDetailsTitle = ref("");
         const { t } = useI18n({
             messages
         });  
@@ -96,6 +100,28 @@ export default defineComponent({
         };
         const userAccountStore = useUserAccountStore();
         const v$ = useVuelidate(rules, data, { $scope: props.scope });
+
+        const getPaymethodsTitle = () => {
+
+            let typeId = eventStore.state.typeId;
+            let title = {
+                1: t('title.pay'),
+                3: t('title.donation')
+            }
+            paymethodsTitle.value = title[typeId];
+
+        }
+
+        const getPaymethodsDetailsTitle = () => {
+
+            let typeId = eventStore.state.typeId;
+            let title = {
+                1: t('detailsTitle.pay'),
+                3: t('detailsTitle.donation')
+            }
+            paymethodsDetailsTitle.value = title[typeId];
+
+        }
 
         const getPaymethods = () => {
            
@@ -114,9 +140,16 @@ export default defineComponent({
                 if(rs.status === 200 && rs.data) {
                     
                     paymethods.value = rs.data; 
+                
+                    if(rs.data.length > 1) {
 
-                    if(rs.data.length > 0) {
-                        attrs.paymentMethod.disabled = false;     
+                        attrs.paymentMethod.disabled = false;  
+
+                    }else if(rs.data.length === 1) {
+
+                        data.paymentMethodId = rs.data[0].payment_method_id;
+                        paymethodDetail();
+
                     }
                                
                 };
@@ -170,7 +203,9 @@ export default defineComponent({
         onBeforeMount(() => {
 
             getPaymethods();
-            
+            getPaymethodsTitle();
+            getPaymethodsDetailsTitle();
+     
         });
 
         return {
@@ -181,6 +216,8 @@ export default defineComponent({
             paymethods,
             paymethodDetail,
             paymentMethodDetailsData,
+            paymethodsDetailsTitle,
+            paymethodsTitle,
             t,
             v$
         };

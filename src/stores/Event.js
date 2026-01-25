@@ -4,8 +4,9 @@ import { defineStore } from 'pinia';
 export const useEventStore = defineStore('event', () => {
 
     const state = reactive({
-        editionId: (localStorage.getItem('eventEditionId')) ? localStorage.getItem('eventEditionId') : null,
-        id: (localStorage.getItem('eventId')) ? localStorage.getItem('eventId') : null,
+        editionId: (localStorage.getItem('eventEditionId')) ? parseInt(localStorage.getItem('eventEditionId')) : null,
+        id: (localStorage.getItem('eventId')) ? parseInt(localStorage.getItem('eventId')) : null,
+        typeId: (localStorage.getItem('eventEditionTypeId')) ? parseInt(localStorage.getItem('eventEditionTypeId')) : null,
         userEnroll: {
             kitAttrs: [],
             kitId: null,

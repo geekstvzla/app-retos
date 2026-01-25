@@ -114,7 +114,8 @@ export default defineComponent({
        
             alertProps.show = false;
             let isFormCorrect = await this.v$.$validate();
-     
+            console.log(this.v$)
+            return
             if(isFormCorrect) {
                 
                 let alertData = {
@@ -189,10 +190,12 @@ export default defineComponent({
                     
                     localStorage.setItem("eventId", rs.data.event.event_id);
                     localStorage.setItem("eventEditionId", rs.data.event.event_edition_id);
-
+                    localStorage.setItem("eventTypeId", rs.data.event.event_type_id);
+                
                     eventStore.$patch((store) => {
                         store.state.editionId = rs.data.event.event_id;
                         store.state.id = rs.data.event.event_edition_id;
+                        store.state.typeId = rs.data.event.event_type_id;
                     });
                    
                 };
@@ -228,7 +231,7 @@ export default defineComponent({
             formData.append('userId', userAccountStore.state.id);
             formData.append('userName', userName);
             formData.append('voucherFile', eventStore.state.userEnroll.voucherFile);
-          
+ 
             let ajaxData = {
                 method: "post",
                 formData: formData,
@@ -294,10 +297,7 @@ export default defineComponent({
             await nextTick();
 
             if (moveToEle.value) {
-                console.log("PASO")
-                console.log("---------------------")
-                console.log(moveToEle.value)
-                console.log("---------------------")
+
                 x.value = moveToEle.value.offsetLeft;
                 y.value = moveToEle.value.offsetTop;
 

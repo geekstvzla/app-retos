@@ -388,7 +388,12 @@ export default defineComponent({
             
             const modalElement = document.getElementById('modal-form-personal-data"');
             const modalInstance = bootstrap.Modal.getInstance(modalElement);
-            modalInstance.hide();
+            
+            if(modalInstance !== null) {
+
+                modalInstance.hide();
+
+            }
 
         };
 

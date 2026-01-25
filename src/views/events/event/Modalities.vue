@@ -57,8 +57,8 @@
                                                 v-for="(item, index) in currencyExchange">Precio en {{ item.currencyDesc }}</option>
                                     </select>
                             </div>
-                            <label for="kits" class="col-form-label">¿Qué incluye?</label>
-                            <div class="wrapper-kit-includes">
+                            <label for="kits" class="col-form-label" v-if="kitItems.length > 0">¿Qué incluye?</label>
+                            <div class="wrapper-kit-includes" v-if="kitItems.length > 0">
                                 <span :class="'badge ' + item.class" v-for="(item, index) in kitItems">{{ item.desc }}</span>
                             </div>
                             <div class="row mb-3 wrapper-customize-your-kit-title" v-if="kitItemsAttrs.length > 0">
@@ -89,7 +89,7 @@
 
 <script>
 
-import { defineComponent, onBeforeMount, reactive, ref } from 'vue';
+import { defineComponent, nextTick, onBeforeMount, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ajax } from '../../../utils/AjaxRequest.js';
 import en from './langs/ModalitiesEng.js';
@@ -220,7 +220,7 @@ export default defineComponent({
                     
                     kitItems.value = [];
                     kitItemsAttrs.value = [];
-
+                   
                     rs.data.forEach(function(element, index) {
 
                         kitItems.value.push({"desc":element.item, "class": "text-bg-primary"});
@@ -301,10 +301,11 @@ export default defineComponent({
 
             data.kit = "";
             kitItems.value = [kitItemsDefault];
-
+          
             let ajaxData = {
                 method: "get",
                 params: {
+                    eventEditionId: eventStore.state.editionId,
                     langId: userAccountStore.state.langId,
                     typeEventModeId: data.modality
                 },
@@ -312,7 +313,7 @@ export default defineComponent({
             };
 
             ajax(ajaxData)
-            .then(function (rs) {
+            .then(async function (rs) {
                 
                 if(rs.status === 200 && rs.data) {
                     
@@ -321,6 +322,15 @@ export default defineComponent({
                     eventStore.$patch((store) => {
                         store.state.userEnroll.modalityId = data.modality
                     });
+
+                    await nextTick();
+
+                    if(rs.data.length === 1) {
+                       
+                        data.kit = rs.data[0].kitId;
+                        getKitItems();
+
+                    }
 
                 };
 

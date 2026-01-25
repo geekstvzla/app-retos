@@ -1,7 +1,7 @@
 <template>
     <div class="row wrapper-report-payment">
         <div class="col">
-            <div class="report-payment-data">
+            <div class="report-payment-data" v-if="(eventStore.state.typeId === 1)">
                 <h2 class="title">Reporta tu pago</h2>
                 <div v-if="eventStore.state.userEnroll.paymentMethodId !== null">
                     <p class="mb-3">Por favor, complete el formulario para reportar su pago.</p>
@@ -53,21 +53,29 @@
                 <div class="alert alert-warning" v-else>
                     Debe seleccionar un método de pago para poder reportar su pago.
                 </div>
-            </div>  
+            </div> 
+            <div class="donation-event-data" v-else-if="(eventStore.state.typeId === 3)">
+                 <h2 class="title">Evento pro fondos</h2>
+                 <p class="mb-3">La actividad es gratuita sin embargo tiene un fin que es ayudar a otra persona; todo lo que pueda donar va directamente a la persona que lo necesita sin pasar por intermediarios.</p>
+                 <p>Donar tampoco es obligatorio, su buena vibra cuenta y mucho.</p>
+            </div>
+            <div class="free-event-data" v-else>
+                 CAMINATA GRATIS
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 
-import { defineComponent, reactive, ref, watch } from 'vue';
+import { defineComponent, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import { ajax } from '../../../utils/AjaxRequest.js';
 import en from './langs/ReportPaymentEng.js';
 import es from './langs/ReportPaymentEsp.js';
 import useVuelidate from '@vuelidate/core';
-import { helpers, required } from '@vuelidate/validators';
+import { helpers, required, requiredIf } from '@vuelidate/validators';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
 import Alert from '../../../components/Alert.vue';
@@ -123,9 +131,15 @@ export default defineComponent({
                     return regex.test(value);
 
                 }),
-                required: helpers.withMessage(t('validator.required'), required) 
+                requiredIf: helpers.withMessage(t('validator.required'), requiredIf(() => {
+                    return (eventStore.state.typeId === 1);
+                })) 
             },
-            paymentDay: { required: helpers.withMessage(t('validator.required'), required) },
+            paymentDay: { 
+                requiredIf: helpers.withMessage(t('validator.required'), requiredIf(() => {
+                    return (eventStore.state.typeId === 1);
+                }))
+            },
             voucherFile: { 
                 onlyTheseExtensions: helpers.withMessage(t('validator.onlyTheseExtensions'), (value) => {
                 
@@ -133,7 +147,9 @@ export default defineComponent({
                     return isValidImage;
 
                 }),
-                required: helpers.withMessage(t('validator.required'), required) 
+                requiredIf: helpers.withMessage(t('validator.required'), requiredIf(() => {
+                    return (eventStore.state.typeId === 1);
+                })) 
             }
         };
         const userAccountStore = useUserAccountStore();
@@ -210,6 +226,8 @@ export default defineComponent({
             });
 
         };
+
+        onMounted(() => {});
 
         return {
             alertProps,

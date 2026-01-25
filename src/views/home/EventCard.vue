@@ -4,9 +4,9 @@
             <img :src="props.data.featured_image" class="card-img-top" :alt="props.data.title">
             <div class="card-body">
                 <div class="wrapper-content">
-                    <p class="card-text">
+                    <div class="card-text">
                         <div :class="eventTypeClass(props.data.event_type_id)">{{ props.data.event_type }}</div>
-                    </p>
+                    </div>
                     <h5 class="card-title">{{ props.data.title }}</h5>
                     <p class="card-text"><b>Fecha:</b> {{ departureDate }}</p>
                     <p class="card-text"><b>Lugar:</b> {{ props.data.departure_place_name }}</p>
@@ -87,13 +87,15 @@ export default defineComponent({
         };
 
         const goToEventInfo = () => {
-
+            
             localStorage.setItem("eventId", props.data.event_id);
             localStorage.setItem("eventEditionId", props.data.event_edition_id);
+            localStorage.setItem("eventEditionTypeId", props.data.event_type_id);
             
             eventStore.$patch((store) => {
                 store.state.editionId = props.data.event_edition_id;
                 store.state.id = props.data.event_id;
+                store.state.typeId = props.data.event_type_id;
             });
             router.push({ name: "event-detail", params: { url : props.data.event_slug } });
 
