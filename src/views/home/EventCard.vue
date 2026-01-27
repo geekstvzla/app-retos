@@ -34,7 +34,9 @@ import es from './langs/IndexEsp.js';
 import { useEventStore } from '../../stores/Event.js';
 import { useUserAccountStore } from '../../stores/UserAccount.js';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import 'dayjs/locale/es';
+dayjs.extend(utc);
 
 export default defineComponent({
     emits: ["openEventDeparturePlace"],
@@ -82,6 +84,7 @@ export default defineComponent({
                 locale = "en";
             }
 
+            console.log(props.data.departure_date)
             departureDate.value = dayjs(props.data.departure_date).locale(locale).format(format);
 
         };

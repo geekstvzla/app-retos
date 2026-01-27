@@ -73,6 +73,7 @@ import es from './langs/IndexEsp';
 import useVuelidate from '@vuelidate/core';
 import { email, helpers, minLength, required } from '@vuelidate/validators';
 import { ajax } from '../../utils/AjaxRequest.js';
+import { useSignupStore } from '../../stores/SignUp.js';
 import { useUserAccountStore } from '../../stores/UserAccount.js';
 
 export default defineComponent({
@@ -94,6 +95,7 @@ export default defineComponent({
 
         });
 
+        const signupStore = useSignupStore();
         const userAccountStore = useUserAccountStore();
         const messages = {
             en: en,
