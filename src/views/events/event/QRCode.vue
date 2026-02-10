@@ -9,7 +9,7 @@
                 </div>
                 <div class="wrapper-qr-code" ref="wrapperQrcode" v-if="data.qr.code">
                     <h5 class="card-title mb-4">Código QR para el evento</h5>
-                    <qrcode-vue :value="data.qr.code" :size="data.qr.size" level="H"  /> 
+                    <qrcode-vue class="qr-code" :value="data.qr.code" :size="data.qr.size" level="L"  /> 
                     <div class="d-grid gap-2">
                         <button class="btn btn-primary search" @click="downloadQrCode">Descargar</button>
                     </div>
