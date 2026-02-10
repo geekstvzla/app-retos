@@ -15,6 +15,11 @@ const router = createRouter({
       component: () => import('../views/events/event/EventDetail.vue')
     },
     {
+      path: "/qr-code/",
+      name: "qr-code",
+      component: () => import('../views/events/event/QRCode.vue')
+    },
+    {
       path: '/sign-in',
       name: 'sign-in',
       component: () => import('../views/signin/Index.vue')

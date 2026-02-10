@@ -245,7 +245,7 @@ export default defineComponent({
         };
 
     }
-})
+});
 
 </script>
 
