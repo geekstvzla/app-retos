@@ -267,15 +267,15 @@ export default defineComponent({
                         if(response.data.statusCode === 1) {
                                 
                             attrs.signUpBtn.html = t('signUpBtn.text');
-
-                            localStorage.setItem("userAvatar", response.data.userAvatar);
+                        
+                            localStorage.setItem("userAvatar", response.data.avatar);
                             localStorage.setItem("userId", response.data.userId);
-                            localStorage.setItem("username", data.username);
+                            localStorage.setItem("username", response.data.username);
 
                             userAccountStore.$patch((store) => {
-                                store.state.avatar = data.avatar,
+                                store.state.avatar = response.data.avatar,
                                 store.state.id = response.data.userId,
-                                store.state.name = data.username
+                                store.state.username = response.data.username
                             });
                             
                         } else {
