@@ -684,12 +684,16 @@ export default defineComponent({
                 alertProps.show = false;
 
             });
+            
+            modal.value._element.addEventListener('show.bs.modal', event => {
+               
+                if(userAccountStore.state.id !== null) {
+                    
+                    getPersonalData();
 
-            if(userAccountStore.state.id !== null) {
+                }
 
-                getPersonalData();
-
-            }
+            });
 
         });
 
