@@ -141,8 +141,7 @@ export default defineComponent({
                         let dataR = {
                             alertData: alertData,
                             statusCode: response.data.statusCode,
-                            timer: timer,
-                            userData: response.data.userData
+                            timer: timer
                         };
                     
                         emit("response", dataR);

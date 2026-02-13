@@ -165,8 +165,6 @@ export default defineComponent({
         const ActivationCodeResponse = (data) => {
 
             if(data.statusCode === 1) {
-
-                sessionData(data.userData);
                 
                 if(props.openFrom === "modal") {
 
