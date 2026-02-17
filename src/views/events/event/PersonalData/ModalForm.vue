@@ -199,7 +199,7 @@
 
 <script>
 
-import { defineComponent, onBeforeMount, onMounted, reactive, ref } from 'vue';
+import { defineComponent, onBeforeMount, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ajax } from '../../../../utils/AjaxRequest.js';
 import en from './langs/PersonalDataEng.js';
@@ -685,15 +685,21 @@ export default defineComponent({
 
             });
             
-            modal.value._element.addEventListener('show.bs.modal', event => {
-               
-                if(userAccountStore.state.id !== null) {
-                    
-                    getPersonalData();
+            if(userAccountStore.state.id !== null) {
 
-                }
+                getPersonalData();
 
-            });
+            };
+
+        });
+
+        watch(() => userAccountStore.state.id, (newValue, oldValue) => {
+
+            if(newValue !== null) {
+
+                getPersonalData();
+
+            }
 
         });
 

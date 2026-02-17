@@ -46,7 +46,7 @@
 
 <script>
 
-import { defineComponent, nextTick, onBeforeMount, onMounted, reactive, ref, toRaw, watch } from 'vue';
+import { defineComponent, nextTick, onBeforeMount, reactive, ref, toRaw, watch } from 'vue';
 import { useWindowScroll } from '@vueuse/core';
 import { onBeforeRouteLeave } from 'vue-router';
 import { ajax } from '../../../utils/AjaxRequest';
@@ -96,6 +96,11 @@ export default defineComponent({
             html: t('enrollBtn.defaultText'),
             loadingHtml: '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only"> '+ t('enrollBtn.loading') +'</span>'
         });
+        const event = reactive({
+            id: null,
+            editionId: null,
+            typeId: null
+         });
         const eventStore = useEventStore();
         const userAccountStore = useUserAccountStore();
         const enrollAlert = ref(null);
@@ -187,10 +192,6 @@ export default defineComponent({
             .then(function (rs) {
             
                 if(rs.status === 200 && rs.data.event) {
-                    
-                    localStorage.setItem("eventId", rs.data.event.event_id);
-                    localStorage.setItem("eventEditionId", rs.data.event.event_edition_id);
-                    localStorage.setItem("eventTypeId", rs.data.event.event_type_id);
                 
                     eventStore.$patch((store) => {
                         store.state.editionId = rs.data.event.event_id;
@@ -313,17 +314,9 @@ export default defineComponent({
         };
 
         onBeforeMount(() => {
-            
-            if(typeof eventStore.state.id === "undefined" || eventStore.state.id === null) {
       
-                getEventDataStorage();
-
-            }
+            getEventDataStorage();
             
-        });
-
-        onMounted(() => {
-
         });
 
         watch(
@@ -337,10 +330,6 @@ export default defineComponent({
         );
 
         onBeforeRouteLeave((to, from) => {
-        
-            localStorage.removeItem('eventEditionId');
-            localStorage.removeItem('eventId');
-            localStorage.removeItem('eventEditionTypeId');
 
             eventStore.$patch((store) => {
                 store.state.editionId = null;

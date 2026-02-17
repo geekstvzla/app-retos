@@ -91,10 +91,6 @@ export default defineComponent({
 
         const goToEventInfo = () => {
             
-            localStorage.setItem("eventId", props.data.event_id);
-            localStorage.setItem("eventEditionId", props.data.event_edition_id);
-            localStorage.setItem("eventEditionTypeId", props.data.event_type_id);
-            
             eventStore.$patch((store) => {
                 store.state.editionId = props.data.event_edition_id;
                 store.state.id = props.data.event_id;
