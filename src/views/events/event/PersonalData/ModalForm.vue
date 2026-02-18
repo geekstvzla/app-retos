@@ -11,47 +11,49 @@
                 <form class="row">
                     <div :class=" (v$.firstName.$errors.length > 0) ? 'field-error mb-4 col-md-6' : 'mb-4 col-md-6'">
                         <label for="firstName" class="form-label">Primer nombre</label>
-                        <input class="form-control"
+                        <input autocomplete="off"
+                               class="form-control"
                                :disabled="attrs.firstName.disabled"
                                id="firstName"
+                               @input="onlyLetters('firstName')"
                                type="text"
                                v-model="data.firstName">
                         <div class="error-msg" v-for="error of v$.firstName.$errors" :key="error.$uid">
                             <p>{{ error.$message }}</p>
                         </div>
                     </div>
-                    <div :class=" (v$.middleName.$errors.length > 0) ? 'field-error mb-4 col-md-6' : 'mb-4 col-md-6'">
+                    <div class=" mb-4 col-md-6">
                         <label for="middleName" class="form-label">Segundo nombre</label>
-                        <input class="form-control"
+                        <input autocomplete="off"
+                               class="form-control"
                                :disabled="attrs.middleName.disabled"
                                id="middleName"
+                               @input="onlyLetters('middleName')"
                                type="text"
                                v-model="data.middleName">
-                        <div class="error-msg" v-for="error of v$.middleName.$errors" :key="error.$uid">
-                            <p>{{ error.$message }}</p>
-                        </div>
                     </div>
                     <div :class=" (v$.lastName.$errors.length > 0) ? 'field-error mb-4 col-md-6' : 'mb-4 col-md-6'">
                         <label for="lastName" class="form-label">Primer apellido</label>
-                        <input class="form-control"
+                        <input autocomplete="off"
+                               class="form-control"
                                :disabled="attrs.lastName.disabled"
                                id="lastName"
+                               @input="onlyLetters('lastName')"
                                type="text"
                                v-model="data.lastName">
                         <div class="error-msg" v-for="error of v$.lastName.$errors" :key="error.$uid">
                             <p>{{ error.$message }}</p>
                         </div>
                     </div>
-                    <div :class=" (v$.secondLastName.$errors.length > 0) ? 'field-error mb-4 col-md-6' : 'mb-4 col-md-6'">
+                    <div class="mb-4 col-md-6">
                         <label for="secondLastName" class="form-label">Segundo apellido</label>
-                        <input class="form-control"
+                        <input autocomplete="off"
+                               class="form-control"
                                :disabled="attrs.secondLastName.disabled"
                                id="secondLastName"
+                               @input="onlyLetters('secondLastName')"
                                type="text"
                                v-model="data.secondLastName">
-                        <div class="error-msg" v-for="error of v$.secondLastName.$errors" :key="error.$uid">
-                            <p>{{ error.$message }}</p>
-                        </div>
                     </div>
                     <div :class=" (v$.documentTypeId.$errors.length > 0 || v$.document.$errors.length > 0) ? 'field-error mb-4 col-md-4' : 'mb-4 col-md-4'">
                         <label for="documentType" class="form-label">Número de cédula</label>
@@ -135,9 +137,11 @@
                                     <option :value="item.phone_number_code" v-for="(item, index) in countriesPhoneCodes">{{ item.phone_number_code }}</option>
                                 </select>
                             </span>
-                            <input class="form-control"
+                            <input autocomplete="off"
+                                   class="form-control"
                                    :disabled="attrs.phoneNumber.disabled"
                                    id="phoneNumber"
+                                   @input="onlyNumbers('phoneNumber')"
                                    type="text"
                                    v-model="data.phoneNumber">
                         </div>
@@ -160,9 +164,11 @@
                                     <option :value="item.phone_number_code" v-for="(item, index) in countriesEmergencyPhoneCodes">{{ item.phone_number_code }}</option>
                                 </select>
                             </span>
-                            <input class="form-control"
+                            <input autocomplete="off" 
+                                   class="form-control"
                                    :disabled="attrs.emergencyPhoneNumber.disabled"
                                    id="emergencyPhoneNumber"
+                                   @input="onlyNumbers('emergencyPhoneNumber')"
                                    type="text"
                                    v-model="data.emergencyPhoneNumber">
                         </div>
@@ -172,11 +178,11 @@
                         <div class="error-msg" v-for="error of v$.emergencyPhoneNumber.$errors" :key="error.$uid">
                             <p>{{ error.$message }}</p>
                         </div>
-                        <div class="form-text">Ejemplo: 04244422598.</div>
+                        <div class="form-text">Ejemplo: 04244422598</div>
                     </div>
                     <div :class=" (v$.medicalCondition.$errors.length > 0) ? 'field-error mb-4 col-12' : 'mb-4 col-12'">
                         <label for="medicalCondition" class="form-label">¿Es alérgico a algún medicamento, alimento, mordedura o picada de animales o insectos, tiene alguna condición médica o discapacidad que debamos saber?</label>
-                        <textarea class="form-control" :disabled="attrs.medicalCondition.disabled" id="medicalCondition" rows="3" v-model="data.medicalCondition"></textarea>
+                        <textarea autocomplete="off" class="form-control" :disabled="attrs.medicalCondition.disabled" id="medicalCondition" rows="3" v-model="data.medicalCondition"></textarea>
                         <div class="error-msg" v-for="error of v$.medicalCondition.$errors" :key="error.$uid">
                             <p>{{ error.$message }}</p>
                         </div>
@@ -313,59 +319,13 @@ export default defineComponent({
         const { t } = useI18n({
             messages
         });  
-        
-        const validName = (value) => {
-           
-            const regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(?: [a-zA-ZÀ-ÿ\u00f1\u00d1]+)*$/;
-            return regex.test(value);
-
-        };
 
         const rules = {
             firstName: { 
-                alpha: helpers.withMessage(t('validator.alphaWithSingleSpace'), validName),
                 required: helpers.withMessage(t('validator.required'), required) 
-            },
-            middleName: { 
-                alpha: {requiredIf: helpers.withMessage(t('validator.alphaWithSingleSpace'), requiredIf(() => {
-
-                    if(data.middleName !== null) {
-
-                        if(data.middleName !== '') {
-
-                            const regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(?: [a-zA-ZÀ-ÿ\u00f1\u00d1]+)*$/;
-                            return (regex.test(data.middleName)) ? false : true;
-                            //return validName(data.middleName);
-
-                        }
-
-                    }
-
-                    return false;
-
-                }))}
             },
             lastName: { 
-                alpha: helpers.withMessage(t('validator.alphaWithSingleSpace'), validName),
                 required: helpers.withMessage(t('validator.required'), required) 
-            },
-            secondLastName: { 
-                alpha: {requiredIf: helpers.withMessage(t('validator.alphaWithSingleSpace'), requiredIf(() => {
-
-                        if(data.secondLastName !== null) {
-
-                           if(data.secondLastName !== '') {
-
-                               const regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(?: [a-zA-ZÀ-ÿ\u00f1\u00d1]+)*$/;
-                               return (regex.test(data.secondLastName)) ? false : true;
-
-                           }
-
-                        }
-
-                        return false;
-
-                    }))}
             },
             documentTypeId: { required: helpers.withMessage(t('validator.required'), required) },
             document: { 
@@ -552,6 +512,32 @@ export default defineComponent({
 
         };
 
+        const onlyLetters = (index) => {
+
+            if(data[index]) {
+                
+                data[index] = data[index].replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1\s]/g, '');
+                data[index] = data[index].replace(/\s{2,}/g, ' ');
+                data[index] = data[index].trimStart(); 
+
+            }
+
+        };
+
+        const onlyNumbers = (index) => {
+
+            if(index === 'phoneNumber') {
+
+                data.phoneNumber = data.phoneNumber.replace(/\D/g, '');
+
+            } else if(index === 'emergencyPhoneNumber') {
+
+                data.emergencyPhoneNumber = data.emergencyPhoneNumber.replace(/\D/g, '');
+
+            }
+
+        };
+
         async function save() {
             
             let isFormCorrect = await v$.value.$validate();
@@ -571,10 +557,10 @@ export default defineComponent({
                     params: {
                         userId: userAccountStore.state.id,
                         email: userAccountStore.state.email,
-                        firstName: validatingName(data.firstName),
-                        middleName: validatingName(data.middleName),
-                        lastName: validatingName(data.lastName),
-                        secondLastName: validatingName(data.secondLastName),
+                        firstName: data.firstName.trim(),
+                        middleName: data.middleName.trim(),
+                        lastName: data.lastName.trim(),
+                        secondLastName: data.secondLastName.trim(),
                         documentTypeId: data.documentTypeId,
                         document: data.document,
                         birthday: data.birthday,
@@ -660,12 +646,6 @@ export default defineComponent({
 
         };
 
-        const validatingName = (nameString) => {
-
-            return nameString.trim().split(/\s+/).join(" ");
-
-        }
-
         onBeforeMount(() => {
 
             getBloodTypes();
@@ -716,11 +696,12 @@ export default defineComponent({
             dateFormat,
             documentTypes,
             genders,
+            onlyLetters,
+            onlyNumbers,
             rules,
             save,
             t,
-            v$,
-            validatingName
+            v$
         };
 
     }

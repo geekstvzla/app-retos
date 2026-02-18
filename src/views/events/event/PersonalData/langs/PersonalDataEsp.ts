@@ -7,7 +7,6 @@ export const EventDetailEsp = {
     },
     validator: {
         alpha: "Solo letras",
-        alphaWithSingleSpace: "Solo letras con un espacio simple entre letras.",
         countryPhoneCode: "El código del país es requerido",
         noSession: "Debes iniciar sesión.",
         numeric: "Solo números",
