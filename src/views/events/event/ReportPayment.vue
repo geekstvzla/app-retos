@@ -27,10 +27,10 @@
                         </div>
                         <div :class=" (v$.operationNumber.$errors.length > 0) ? 'field-error mb-3' : 'mb-3'">
                             <label for="operationNumber" class="form-label">Número o referencia de la operación</label>
-                            <input @keydown="isAlphaNumeric"
-                                   class="form-control"
+                            <input class="form-control"
+                                   @input="isAlphaNumeric"
                                    type="text" 
-                                   v-model.trim="data.operationNumber">
+                                   v-model="data.operationNumber">
                             <span id="operationNumberHelp" class="form-text">
                                 Caracteres permitidos: letras (A-Z, a-z), números (0-9) y guiones (-)
                             </span>
@@ -170,6 +170,7 @@ export default defineComponent({
             if(isValidImage) {
 
                 data.voucherFile = file;
+                console.log(data.voucherFile)
                 eventStore.$patch((store) => {
                     store.state.userEnroll.voucherFile = data.voucherFile
                 });
@@ -187,7 +188,12 @@ export default defineComponent({
         };
 
         const isAlphaNumeric = (value) => {
-          
+            
+            data.operationNumber = value.target.value.replace(/[^a-zA-Z0-9-]/g, '');
+            data.operationNumber = data.operationNumber.replace(/\s{2,}/g, ' ');
+            data.operationNumber = data.operationNumber.trimStart();
+            data.operationNumber = data.operationNumber.trimEnd().toUpperCase(); 
+
             eventStore.$patch((store) => {
                 store.state.userEnroll.operationNumber = data.operationNumber
             });
