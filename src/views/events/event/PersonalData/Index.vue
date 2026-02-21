@@ -66,8 +66,8 @@ export default defineComponent({
         const v$ = useVuelidate(rules, { userId: userAccountStore.state.id }, { $scope: props.scope });
 
         const openModal = () => {
-
-            if(userAccountStore.state.id === null) {
+           
+            if(userAccountStore.state.id === null || parseInt(userAccountStore.state.statusId) === 3) {
                
                 modalNoSession.value.show();
 

@@ -272,12 +272,14 @@ export default defineComponent({
                             localStorage.setItem("userEmail", response.data.email);
                             localStorage.setItem("userId", response.data.userId);
                             localStorage.setItem("username", response.data.username);
+                            localStorage.setItem("userStatusId", response.data.userStatusId);
 
                             userAccountStore.$patch((store) => {
                                 store.state.avatar = response.data.avatar,
                                 store.state.email = data.email,
                                 store.state.id = response.data.userId,
-                                store.state.username = response.data.username
+                                store.state.username = response.data.username,
+                                store.state.userStatusId = response.data.userStatusId
                             });
                             
                         } else {

@@ -48,14 +48,13 @@
 
 import { defineComponent, nextTick, onBeforeMount, reactive, ref, toRaw, watch } from 'vue';
 import { useWindowScroll } from '@vueuse/core';
-import { onBeforeRouteLeave } from 'vue-router';
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
 import { ajax } from '../../../utils/AjaxRequest';
 import { useI18n } from 'vue-i18n';
 import en from './langs/EventDetailEng.js';
 import es from './langs/EventDetailEsp.js';
 import { useEventStore } from '../../../stores/Event.js';
 import { useUserAccountStore } from '../../../stores/UserAccount.js';
-import { useRoute } from 'vue-router';
 import AdditionalAccessories from './AdditionalAccessories.vue';
 import Alert from '../../../components/Alert.vue';
 import Modalities from './Modalities.vue';
@@ -112,6 +111,7 @@ export default defineComponent({
         });
         const moveToEle = ref(null); 
         const route = useRoute();
+        const router = useRouter();
         const scope = 'eventEnrollment';
         const v$ = useVuelidate({}, {}, { $scope: true });
         const { x, y } = useWindowScroll(moveToEle);
@@ -262,22 +262,17 @@ export default defineComponent({
                     };
 
                     if(rs.data.response.status === "success") {
-
-                        //router.push({ name: "home" });
-
+                        
+                        router.push({ name: "user-enrolled", params: { url: route.params.url } });
 
                     } else {
 
-                       /* btnEnroll.disabled = false;
-                        btnEnroll.html = t('enrollBtn.defaultText');*/
+                       btnEnroll.disabled = false;
+                       btnEnroll.html = t('enrollBtn.defaultText');
 
-                        
-                        
                     }
-
-                     btnEnroll.disabled = false;
-                     btnEnroll.html = t('enrollBtn.defaultText');
-
+btnEnroll.disabled = false;
+                       btnEnroll.html = t('enrollBtn.defaultText');
                     Object.assign(alertProps, alertData);  
                        
                 };

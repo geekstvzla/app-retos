@@ -15,6 +15,11 @@ const router = createRouter({
       component: () => import('../views/events/event/EventDetail.vue')
     },
     {
+      path: "/event/:url/user-enrolled",
+      name: "user-enrolled",
+      component: () => import('../views/events/event/userEnrolled.vue')
+    },
+    {
       path: "/qr-code/",
       name: "qr-code",
       component: () => import('../views/events/event/QRCode.vue')

@@ -11,6 +11,7 @@ export const useUserAccountStore = defineStore('userAccount', () => {
         langId: 'esp',
         lastname: (localStorage.getItem('userLastName')) ? localStorage.getItem('userLastName') : null,
         logged: (localStorage.getItem('userId')) ? true : false,
+        statusId: (localStorage.getItem('userStatusId')) ? localStorage.getItem('userStatusId') : null,
         username: (localStorage.getItem('username')) ? localStorage.getItem('username') : null
     })
 
