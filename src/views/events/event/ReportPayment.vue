@@ -170,7 +170,6 @@ export default defineComponent({
             if(isValidImage) {
 
                 data.voucherFile = file;
-                console.log(data.voucherFile)
                 eventStore.$patch((store) => {
                     store.state.userEnroll.voucherFile = data.voucherFile
                 });

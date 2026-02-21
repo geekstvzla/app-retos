@@ -241,7 +241,7 @@ export default defineComponent({
        
             ajax(ajaxData)
             .then(function (rs) {
-                 console.log(rs.data);
+       
                 if(rs.status === 200 && rs.data) {
                     
                     let alertData = {
@@ -261,18 +261,20 @@ export default defineComponent({
                         type: rs.data.response.status
                     };
 
-                    if(rs.data.response.status === "success") {
+                   /* if(rs.data.response.status === "success") {
                         
-                        router.push({ name: "user-enrolled", params: { url: route.params.url } });
+                        router.push({ 
+                            name: "user-enrolled", 
+                            params: { url: route.params.url, eventEditionId: eventStore.state.editionId } 
+                        });
 
-                    } else {
+                    } else {*/
 
                        btnEnroll.disabled = false;
                        btnEnroll.html = t('enrollBtn.defaultText');
 
-                    }
-btnEnroll.disabled = false;
-                       btnEnroll.html = t('enrollBtn.defaultText');
+                    //}
+
                     Object.assign(alertProps, alertData);  
                        
                 };

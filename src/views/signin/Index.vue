@@ -274,19 +274,21 @@ export default defineComponent({
         };
 
         const sessionData = (data) => {
-
+           
             localStorage.setItem("userAvatar", data.avatar);
             localStorage.setItem("userEmail", data.email);
             localStorage.setItem("userFirstName", data.name);
             localStorage.setItem("userId", data.id);
             localStorage.setItem("username", data.username);
+            localStorage.setItem("userStatusId", data.userStatusId);
 
             userAccountStore.$patch((store) => {
                 store.state.avatar = data.avatar
                 store.state.email = data.email
                 store.state.id = data.id
                 store.state.name = data.name
-                store.state.username = data.username
+                store.state.username = data.username,
+                store.state.userStatusId = data.userStatusId
             });
 
         };
