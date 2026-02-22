@@ -59,14 +59,19 @@ export default defineComponent({
                     return (userAccountStore.state.id !== null);
                 }),
                 noPersonalData: helpers.withMessage(t('validator.personalDataRequired'), () => {
-                    return (userAccountStore.state.name !== null && userAccountStore.state.lastname !== null);
+                    return (
+                        userAccountStore.state.name !== null &&
+                        userAccountStore.state.name !== '' && 
+                        userAccountStore.state.lastname !== null && 
+                        userAccountStore.state.lastname !== ''
+                    );
                 })
             }
         };
         const v$ = useVuelidate(rules, { userId: userAccountStore.state.id }, { $scope: props.scope });
 
         const openModal = () => {
-           // console.log(parseInt(userAccountStore.state.statusId));
+           
             if(userAccountStore.state.id === null || parseInt(userAccountStore.state.statusId) === 3) {
                
                 modalNoSession.value.show();

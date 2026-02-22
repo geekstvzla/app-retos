@@ -499,6 +499,14 @@ export default defineComponent({
                     data.phoneNumber = userData.phone_number;
                     data.secondLastName = (userData.second_last_name !== null) ? userData.second_last_name.trim() : '';
 
+                    localStorage.setItem("userFirstName", data.firstName);
+                    localStorage.setItem("userLastName", data.lastName);
+
+                    userAccountStore.$patch((store) => {
+                        store.state.lastname = data.lastName
+                        store.state.name = data.firstName
+                    });
+
                     closeModal();
 
                 };
@@ -666,7 +674,7 @@ export default defineComponent({
             });
             
             if(userAccountStore.state.id !== null) {
-
+                console.log("getting personal data...");
                 getPersonalData();
 
             };

@@ -261,19 +261,19 @@ export default defineComponent({
                         type: rs.data.response.status
                     };
 
-                   /* if(rs.data.response.status === "success") {
+                    if(rs.data.response.status === "success") {
                         
                         router.push({ 
                             name: "user-enrolled", 
                             params: { url: route.params.url, eventEditionId: eventStore.state.editionId } 
                         });
 
-                    } else {*/
+                    } else {
 
                        btnEnroll.disabled = false;
                        btnEnroll.html = t('enrollBtn.defaultText');
 
-                    //}
+                    }
 
                     Object.assign(alertProps, alertData);  
                        

@@ -1,0 +1,85 @@
+@import "../../Variables.less";
+
+#wrapper-user-enrolled {
+    padding-bottom: 50px;
+    padding-top: 50px;
+    font-size: 17px;
+
+     .title{
+        font-family: "poppins-bold";
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    p {
+        text-align: center;
+    }
+
+    .btn-whatsapp-group {
+        background-color: #FBB512;
+        border: 2px solid #000;
+        border-radius: 18px;
+        color: #000;
+        display: block;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 30px;
+        padding: 10px 20px;
+        text-decoration: none;
+        width: fit-content;
+
+        &:hover {
+            background-color: #000;
+            color: #FBB512;
+        }
+
+    }
+    
+    table {
+        border: 1px solid;
+        border-radius: 18px !important;
+        width: 100%;
+
+        thead {
+
+            tr {
+
+                th {
+                    background-color: #000;
+                    color: #fff;
+                    padding: 5px;
+                    text-align: center;
+
+                    &:nth-child(1) {
+                        border-top-left-radius: 18px;
+                    }
+
+                    &:nth-last-of-type(1) {
+                        border-top-right-radius: 18px;
+                    }
+
+                }
+
+            }
+
+        }
+
+        tbody {
+
+            tr {
+
+                td {
+                    padding: 5px;
+                    text-align: center;
+                }
+
+            }
+
+        }
+
+    }
+
+}
