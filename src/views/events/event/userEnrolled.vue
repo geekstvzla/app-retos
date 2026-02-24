@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid container-md" id="wrapper-user-enrolled">
-        <div class="row">
-            <div class="col">
+        <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-7">
                 <h2 class="title">¡Felicidades {{ userEnrolledInfoData.userFullname }} por tu inscripción! 🥳</h2>
                 <p>{{ userEnrolledInfoData.userFullname }} te has registrado en el evento <b>{{ userEnrolledInfoData.title }}</b> con el número de inscripción <b>{{ userEnrolledInfoData.enrollNumber }}</b> en la modalidad <b>{{ userEnrolledInfoData.eventModality }}</b>. Este número de inscripción es tu identificación única para el evento, <b>NO LO PIERDAS</b>.</p>
                 <p v-if="userEnrolledInfoData.eventTypeId === 1">Elegistes el kit: <b>{{ userEnrolledInfoData.kit }}</b></p>

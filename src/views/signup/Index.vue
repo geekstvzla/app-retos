@@ -267,7 +267,7 @@ export default defineComponent({
                         if(response.data.statusCode === 1) {
                                 
                             attrs.signUpBtn.html = t('signUpBtn.text');
-                          
+                            
                             localStorage.setItem("userAvatar", response.data.avatar);
                             localStorage.setItem("userEmail", response.data.email);
                             localStorage.setItem("userId", response.data.userId);

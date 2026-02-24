@@ -84,7 +84,6 @@ export default defineComponent({
                 locale = "en";
             }
 
-            console.log(props.data.departure_date)
             departureDate.value = dayjs(props.data.departure_date).locale(locale).format(format);
 
         };

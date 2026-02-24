@@ -115,7 +115,7 @@ export default defineComponent({
                 
                 ajax(ajaxData)
                 .then(function (response) {
-
+                      
                     if(response.status === 200) {
 
                         var message = response.data.message;
@@ -124,6 +124,16 @@ export default defineComponent({
 
                         attrs.goBackBtn.disabled = false;
                         attrs.activationBtn.html = t('activationBtn.text');
+
+                        if(response.data.userStatusId === 1) {
+
+                            localStorage.setItem("userStatusId", response.data.userStatusId);
+
+                            userAccountStore.$patch((store) => {
+                                store.state.userStatusId = response.data.userStatusId
+                            });
+
+                        }
 
                         if(response.data.statusCode !== 1) {
                                 
