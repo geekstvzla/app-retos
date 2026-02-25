@@ -46,20 +46,20 @@
                                 <span class="price" v-if="data.kit && kits.length > 0">
                                     {{ kitPrice }} 
                                 </span>
-                                <span class="badge bg-danger" v-else>
+                                <div class="badge bg-danger" v-else>
                                     Debe seleccionar un kit
-                                </span>
+                                </div>
                                     <select @change="changingCurrency"
                                             class="form-select form-select-sm d-inline-block w-auto ms-3"
                                             v-if="data.kit && kits.length > 0"
                                             v-model="currentCurrency">
                                         <option :value="item.priceFormatted"
-                                                v-for="(item, index) in currencyExchange">Precio en {{ item.currencyDesc }}</option>
+                                                v-for="(item, index) in currencyExchange">{{ item.currencyDesc }}</option>
                                     </select>
                             </div>
                             <label for="kits" class="col-form-label" v-if="kitItems.length > 0">¿Qué incluye?</label>
                             <div class="wrapper-kit-includes" v-if="kitItems.length > 0">
-                                <span :class="'badge ' + item.class" v-for="(item, index) in kitItems">{{ item.desc }}</span>
+                                <div :class="'badge ' + item.class" v-for="(item, index) in kitItems">{{ item.desc }}</div>
                             </div>
                             <div class="row mb-3 wrapper-customize-your-kit-title" v-if="kitItemsAttrs.length > 0">
                                 <h2 class="title">Personaliza tu kit</h2>

@@ -43,7 +43,11 @@
                 font-size: 22px;
                 margin-bottom: 15px;
                 padding-left: 16px;
-            
+
+                @media (max-width: 991px) {
+                    font-size: 16px;
+                }
+
                 .price {
                     color: #00ac47;
                     font-weight: 600;
@@ -65,6 +69,12 @@
 
                 .badge {
                     font-size: 16px;
+                    white-space: inherit;
+
+                    @media (max-width: 991px) {
+                        font-size: 14px;
+                    }
+
                 }
 
             }
